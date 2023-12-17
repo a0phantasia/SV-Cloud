@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 468a46d0ae32c3544b7d98094e6448a9, type: 3}
   m_Name: AddressableAssetSettings
   m_EditorClassIdentifier: 
-  m_DefaultGroup: 1b958f2a3e0815e4698b151cda19c11c
+  m_DefaultGroup: 645c737f918d63d42b67745bfe26a75a
   m_OptimizeCatalogSize: 0
   m_BuildRemoteCatalog: 0
   m_BundleLocalCatalog: 0
@@ -37,6 +37,7 @@ MonoBehaviour:
   m_overridePlayerVersion: 
   m_GroupAssets:
   - {fileID: 11400000, guid: 9e30a06ea582e0d428f78ba07a1329b9, type: 2}
+  - {fileID: 11400000, guid: 1388f03f9fd876544a86ee0c0669bd8c, type: 2}
   - {fileID: 11400000, guid: 952222991ea94fd4cb21dfa0b490a0ea, type: 2}
   m_BuildSettings:
     m_CompileScriptsInVirtualMode: 0
@@ -58,7 +59,7 @@ MonoBehaviour:
       - m_Id: df40ce22e78d9ed47a0f3aed31157ec8
         m_Value: ServerData/[BuildTarget]
       - m_Id: 76636c5a94870bf4aab7206b981c12ac
-        m_Value: http://localhost/[BuildTarget]
+        m_Value: https://raw.githubusercontent.com/Brady29655751/SV-Cloud/main/ServerData/[BuildTarget]
     m_ProfileEntryNames:
     - m_Id: 6bdd2ca5c76250641847b79d48ac1cc1
       m_Name: BuildTarget
