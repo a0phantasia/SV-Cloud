@@ -1,0 +1,30 @@
+using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
+using UnityEngine;
+using DM = DatabaseManager;
+
+public class CardDetailModel : SelectModel<Card>
+{
+    public Card InitCard { get; private set; }
+    public Card CurrentCard => Selections[0];
+
+    public List<Card> TokenCards { get; private set; } = new List<Card>();
+
+    public void SetInitCard(Card card) {
+        InitCard = card;
+        TokenCards.Clear();
+        GetTokenCards(InitCard);
+        SetStorage(TokenCards);
+    }
+
+    public void GetTokenCards(Card card) {
+        if (TokenCards.Contains(card))
+            return;
+
+        TokenCards.Add(card);
+        for (int i = 0; i < card.tokenIds.Count; i++) {
+            GetTokenCards(DM.instance.GetCardInfo(card.tokenIds[i]));   
+        }
+    }
+}

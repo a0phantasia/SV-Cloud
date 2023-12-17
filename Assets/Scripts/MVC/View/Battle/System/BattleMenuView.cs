@@ -1,0 +1,42 @@
+using System.Collections;
+using System.Collections.Generic;
+using Photon.Pun;
+using Photon.Realtime;
+using UnityEngine;
+using UnityEngine.UI;
+
+public class BattleMenuView : BattleBaseView
+{
+    [SerializeField] private Image myLeader, opLeader;
+    [SerializeField] private Text myName, opName;
+
+    public void SetActive(bool active) {
+        gameObject.SetActive(active);
+    }
+
+    public void InitPlayerInfo() {
+        var myUnit = Battle.currentState.myUnit;
+        var opUnit = Battle.currentState.opUnit;
+        myName?.SetText(myUnit.name);
+        opName?.SetText(opUnit.name);
+        myLeader?.SetSprite(SpriteResources.GetLeaderProfileSprite(myUnit.leader.CraftId));
+        opLeader?.SetSprite(SpriteResources.GetLeaderProfileSprite(opUnit.leader.CraftId));
+    }
+
+    public void Retire() {
+        Hintbox hintbox = Hintbox.OpenHintbox();
+        hintbox.SetTitle("放棄對戰");
+        hintbox.SetContent("確定要放棄對戰嗎？");
+        hintbox.SetOutline(Color.red);
+        hintbox.SetOptionNum(2);
+        hintbox.SetOptionCallback(OnCofirmRetire);
+    }
+
+    private void OnCofirmRetire() {
+        if (Battle.settings.isLocal)
+            SceneLoader.instance.ChangeScene(SceneId.Main);
+        else
+            SceneLoader.instance.ChangeScene(SceneId.Room);
+    }
+
+}

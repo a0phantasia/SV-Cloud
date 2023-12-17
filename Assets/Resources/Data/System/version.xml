@@ -1,0 +1,25 @@
+<versionData>
+    <gameVersion>0.1</gameVersion>
+    <buildVersion>0.1</buildVersion>
+    <releaseDate>2023-12-01+08:00</releaseDate>
+    <releaseNote>
+    【當前版本】0.1
+    【版本日期】2023/12/01
+
+    當前版本為測試版本，流量達到上限後無法進行私人對戰
+    </releaseNote>
+    
+    <cardCount>1</cardCount>
+    <cardPack>0/0</cardPack>
+    <topicDeck>
+        <deck>
+          <name>Topic</name>
+          <zone>1</zone>
+          <format>1</format>
+          <craft>3</craft>
+          <cards>
+            <id>100000111</id>
+          </cards>
+        </deck>
+    </topicDeck>
+</versionData>

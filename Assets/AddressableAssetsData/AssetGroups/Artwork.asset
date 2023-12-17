@@ -1,0 +1,30 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bbb281ee3bf0b054c82ac2347e9e782c, type: 3}
+  m_Name: Artwork
+  m_EditorClassIdentifier: 
+  m_GroupName: Artwork
+  m_Data:
+    m_SerializedData: []
+  m_GUID: 1b958f2a3e0815e4698b151cda19c11c
+  m_SerializeEntries:
+  - m_GUID: b41ffdf98bf7fe64f938f26237d7f971
+    m_Address: Artwork/100000111
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - basic
+  m_ReadOnly: 0
+  m_Settings: {fileID: 11400000, guid: 69e741ee149781a478094fca2d01f357, type: 2}
+  m_SchemaSet:
+    m_Schemas:
+    - {fileID: 11400000, guid: 2c39d169c8532024d9c7fe33a0baf424, type: 2}
+    - {fileID: 11400000, guid: c37524679d9fdd0428ad11b748fda9ab, type: 2}
