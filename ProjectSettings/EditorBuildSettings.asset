@@ -7,7 +7,22 @@ EditorBuildSettings:
   m_Scenes:
   - enabled: 1
     path: Assets/Scenes/Title.unity
+    guid: c9c58bb8533554942b60c390ac507836
+  - enabled: 1
+    path: Assets/Scenes/Main.unity
+    guid: 4b5276225c3f5524480c8768ea2298e6
+  - enabled: 1
+    path: Assets/Scenes/Deck Builder.unity
+    guid: e3a7b69fc24b5c646bd114ff0191189e
+  - enabled: 1
+    path: Assets/Scenes/Portal.unity
     guid: 9fc0d4010bbf28b4594072e72b8655ab
+  - enabled: 1
+    path: Assets/Scenes/Battle.unity
+    guid: 6e85f263fb83e454bbda12ed8c76ddb3
+  - enabled: 1
+    path: Assets/Scenes/Room.unity
+    guid: 9be1f0695098d8f46b6d0a66e6c9485c
   m_configObjects:
-    com.unity.addressableassets: {fileID: 11400000, guid: bf752a33fbff7914db5a5581836e540d,
+    com.unity.addressableassets: {fileID: 11400000, guid: ee04086d57200b5468e719c0fb5687cd,
       type: 2}
