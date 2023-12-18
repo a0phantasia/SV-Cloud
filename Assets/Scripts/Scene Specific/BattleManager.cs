@@ -49,7 +49,7 @@ public class BattleManager : Manager<BattleManager>
         NetworkManager.instance.onOtherPlayerLeftRoomEvent -= OnOtherPlayerDisconnect;
     }
 
-    public void EnemyPlayerAction(int action, int[] data) {
+    public void EnemyPlayerAction(short action, int[] data) {
         if (Battle.settings.isLocal)
             return;
 
@@ -58,13 +58,14 @@ public class BattleManager : Manager<BattleManager>
     }
 
     [PunRPC]
-    private void RPCPlayerAction(int action, int[] data) {
+    private void RPCPlayerAction(short action, int[] data) {
         Battle.PlayerAction(action, data, false);
     }
 
 
-    public void SetState() {
-        myView.SetUnit(Battle?.currentState?.myUnit);
-        opView.SetUnit(Battle?.currentState?.opUnit);
+    public void SetState(BattleState state) {
+        var hudState = (state == null) ? null : new BattleState(state);
+        myView.SetUnit(hudState?.myUnit);
+        opView.SetUnit(hudState?.opUnit);
     }
 }

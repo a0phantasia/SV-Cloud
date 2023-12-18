@@ -15,6 +15,17 @@ public class BattleCard : IIdentifyHandler
     public BattleCard(Card baseCard) {
         card = (baseCard == null) ? null : new Card(baseCard);
         evolveCard = (card?.EvolveCard == null) ? null : new Card(card.EvolveCard);
+        
+        card?.effects.ForEach(x => x.source = this);
+        evolveCard?.effects.ForEach(x => x.source = this);
+    }
+
+    public BattleCard(BattleCard rhs) {
+        IsEvolved = rhs.IsEvolved;
+        HpMax = rhs.HpMax;
+        
+        card = (rhs.card == null) ? null : new Card(rhs.card);
+        evolveCard = (rhs.evolveCard == null) ? null : new Card(rhs.evolveCard);
     }
 
     public static BattleCard Get(Card baseCard) {

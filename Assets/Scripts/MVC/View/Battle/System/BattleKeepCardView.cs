@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -40,9 +41,13 @@ public class BattleKeepCardView : BattleBaseView
 
     public void OnConfirmKeep(float leftSeconds) {
         timer.onDoneEvent -= OnConfirmKeep;
-        
-        Hud.SetState();
         SetActive(false);
+
+        var change = Enumerable.Range(0, cardViews.Count)
+            .Where(x => cardViews[x].rectTransform.anchoredPosition.y == leavePosY)
+            .ToArray();
+
+        Battle.PlayerAction((short)EffectAbility.KeepCard, change , true);
     }
 
     private void OnBeginDrag(RectTransform rectTransform, int index) {

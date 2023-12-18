@@ -52,7 +52,7 @@ public class Battle
         Player.currentBattle = this;
     }
 
-    public void PlayerAction(int action, int[] data, bool isMe) {
+    public void PlayerAction(short action, int[] data, bool isMe) {
         if (isMe) {
             Hud.EnemyPlayerAction(action, data);
         }
@@ -60,6 +60,21 @@ public class Battle
         var leader = (isMe ? currentState.myUnit : currentState.opUnit).leader.leaderCard;
         Effect effect = new Effect(action, data);
         effect.source = leader;
+        effect.invokeUnit = isMe ? currentState.myUnit : currentState.opUnit;
+        Enqueue(effect);
+
+        if (effectQueue.Count == 1)
+            ProcessEffects();
+    }
+
+    public void ProcessEffects() {
+        while (effectQueue.Count > 0) {
+            var e = effectQueue.Dequeue();
+            e.Apply(currentState);
+        }
+    }
+
+    public void Enqueue(Effect effect) {
         effectQueue.Enqueue(effect);
     }
 }

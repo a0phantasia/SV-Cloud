@@ -12,12 +12,13 @@ public class Effect : IIdentifyHandler
         return (effect == null) ? null : new Effect(effect);
     }
 
-    public object source = null;
-    public object invokeUnit = null;
+    public BattleCard source = null;
+    public List<BattleCard> invokeTarget = null;
+    public BattleUnit invokeUnit = null;
 
     public int id;
     public int Id => id;
-    public EffectTiming timing { get; private set; }
+    public string timing { get; private set; }
     public EffectTarget target { get; private set; }
     public EffectCondition condition { get; private set; }
     public List<List<ICondition>> condOptionDictList { get; private set; } = new List<List<ICondition>>();
@@ -30,7 +31,7 @@ public class Effect : IIdentifyHandler
 
         source = null;
         id = int.Parse(_slicedData[0]);
-        timing = _slicedData[1].ToEffectTiming();
+        timing = _slicedData[1];
         target = _slicedData[2].ToEffectTarget();
         condition = _slicedData[3].ToEffectCondition();
         condOptionDictList.ParseMultipleCondition(_slicedData[4]);
@@ -38,7 +39,7 @@ public class Effect : IIdentifyHandler
         abilityOptionDict.ParseOptions(_slicedData[6]);
     }
 
-    public Effect(EffectTiming _timing, EffectTarget _target, 
+    public Effect(string _timing, EffectTarget _target, 
         EffectCondition _condition, List<List<ICondition>> _condition_option,
         EffectAbility _ability, Dictionary<string, string> _ability_option) {
         source = null;
@@ -56,12 +57,12 @@ public class Effect : IIdentifyHandler
 
     public Effect(int action, int[] data) {
         source = null;
-        timing = EffectTiming.None;
+        timing = "none";
         target = EffectTarget.None;
         condition = EffectCondition.None;
         condOptionDictList.Add(new List<ICondition>());
         ability = (EffectAbility)action;
-        abilityOptionDict = new Dictionary<string, string>();
+        abilityOptionDict = Parse(action, data);
     }
 
     public Effect(Effect rhs) {
@@ -72,6 +73,9 @@ public class Effect : IIdentifyHandler
         ability = rhs.ability;
         condOptionDictList = rhs.condOptionDictList.Select(x => x.Select(y => new ICondition(y.op, y.lhs, y.rhs)).ToList()).ToList();
         abilityOptionDict = new Dictionary<string, string>(rhs.abilityOptionDict);
+
+        invokeUnit = rhs.invokeUnit;
+        invokeTarget = rhs.invokeTarget;
     }
 
     public bool TryGetIdenfier(string id, out float value)
@@ -89,41 +93,34 @@ public class Effect : IIdentifyHandler
         throw new NotImplementedException();
     }
 
-    /*
-    public bool Condition(object invokeUnit, BattleState state, bool checkPhase = true, bool checkTurn = true) {
-        bool isCorrectPhase = ((state == null) && (timing == EffectTiming.Resident)) || 
-            ((state != null) && (state.phase == timing));
+    public Dictionary<string, string> Parse(int action, int[] data) {
+        Func<int[], Dictionary<string, string>> ParseFunc = (EffectAbility)action switch {
+            EffectAbility.KeepCard => EffectParseHandler.KeepCard,
+            _ => ((data) => new Dictionary<string, string>()),
+        };
+        return ParseFunc.Invoke(data);
+    }
 
-        if (checkPhase && !isCorrectPhase)
-            return false;
-
-        this.invokeUnit = invokeUnit;
-
-        if (checkTurn && !condOptionDictList.Select(x => this.IsCorrectTurn(state, x)).Any(x => x))
-            return false;
-
-        if (!condOptionDictList.Select(x => this.RandomNumber(state, x)).Any(x => x))
-            return false;
-        
-        Func<Dictionary<string, string>, bool> ConditionFunc = condition switch {
+    public bool Condition(BattleState state) {
+        Func<List<ICondition>, bool> ConditionFunc = condition switch {
             _ => ((x) => true)
         };
 
         return condOptionDictList.Select(x => ConditionFunc.Invoke(x)).Any(x => x);
     }
-
-    public bool Apply(object invokeUnit, BattleState state = null) {
-        this.invokeUnit = invokeUnit;
-        return type switch {
-            _ => true
+    
+    public bool Apply(BattleState state = null) {
+        return ability switch {
+            EffectAbility.KeepCard => this.KeepCard(state),
+            EffectAbility.TurnStart => this.OnTurnStart(state),
+            _ => true,
         };
     }
 
-    public bool CheckAndApply(object invokeUnit, BattleState state = null, bool checkPhase = true, bool checkTurn = true) {
-        if (!Condition(invokeUnit, state, checkPhase, checkTurn))
+    public bool CheckAndApply(BattleState state = null) {
+        if (!Condition(state))
             return false;
         
-        return Apply(invokeUnit, state);
+        return Apply(state);
     }
-    */
 }

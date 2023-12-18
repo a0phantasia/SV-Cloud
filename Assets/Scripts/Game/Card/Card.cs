@@ -112,13 +112,7 @@ public class Card : IIdentifyHandler
 
     public void SetEffects(List<int> effectIds, Func<int, Effect> effectFunc = null) {
         effectFunc ??= (x => Effect.Get(x));
-        effects = effectIds.Select(effectFunc).ToList();
-        foreach (var e in effects) {
-            if (e == null)
-                continue;
-
-            e.source = this;
-        }
+        effects = effectIds.Select(effectFunc).Where(x => x != null).ToList();
     }
 
     public void SetDescription(string[] _data) {

@@ -22,5 +22,8 @@ public class BattleSettings
         isLocal = rhs.isLocal;
         zone = rhs.zone;
         format = rhs.format;
+        leaderHp = rhs.leaderHp;
+        masterName = rhs.masterName;
+        clientName = rhs.clientName;
     }
 }

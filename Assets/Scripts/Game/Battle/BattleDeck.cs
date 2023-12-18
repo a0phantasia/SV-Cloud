@@ -16,4 +16,11 @@ public class BattleDeck
         cards = cardIds.Select(x => BattleCard.Get(Card.Get(x))).ToList();
     }
 
+    public BattleDeck(BattleDeck rhs) {
+        zone = rhs.zone;
+        format = rhs.format;
+        craft = rhs.craft;
+        cards = rhs.cards.Select(x => (x == null) ? null : new BattleCard(x)).ToList();
+    }
+
 }

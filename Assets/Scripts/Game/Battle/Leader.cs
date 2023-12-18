@@ -23,6 +23,16 @@ public class Leader
         isEpUsed = false;
     }
 
+    public Leader(Leader rhs) {
+        leaderCard = new BattleCard(rhs.leaderCard);
+        options = new Dictionary<string, float>(rhs.options);
+        pp = rhs.pp;
+        ppMax = rhs.ppMax;
+        ep = rhs.ep;
+        epMax = rhs.epMax;
+        isEpUsed = rhs.isEpUsed;
+    }
+
     public Color GetHpTextColor() {
         if (Hp == HpInit)
             return Color.white;

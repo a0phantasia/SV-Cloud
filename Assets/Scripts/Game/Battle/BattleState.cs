@@ -5,7 +5,6 @@ using UnityEngine;
 
 public class BattleState
 {
-    public BattleState lastTurnState = null;
     public BattleSettings settings;
 
     public bool isMasterTurn;
@@ -18,6 +17,13 @@ public class BattleState
         isMasterTurn = Random.Range(0, 2) == 0;
         masterUnit = new BattleUnit(0, settings.masterName , masterDeck, isMasterTurn);
         clientUnit = new BattleUnit(1, settings.clientName , clientDeck, !isMasterTurn);
+    }
+
+    public BattleState(BattleState rhs) {
+        isMasterTurn = rhs.isMasterTurn;
+        settings = new BattleSettings(rhs.settings);
+        masterUnit = new BattleUnit(rhs.masterUnit);
+        clientUnit = new BattleUnit(rhs.clientUnit);
     }
 
     public virtual BattleUnit GetUnitById(int id) {

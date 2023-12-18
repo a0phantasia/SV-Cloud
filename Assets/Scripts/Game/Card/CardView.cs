@@ -42,15 +42,7 @@ public class CardView : IMonoBehaviour
         SetStatus("hp", card.hp);
         SetCount(count);
         SetTag(tag ? card : null);
-
-        try 
-        {
-            SetArtwork(await card.Artwork, card.Type);
-        } 
-        catch (Exception)
-        {
-            SetArtwork(SpriteResources.DefaultSleeve.texture, card.Type);
-        }
+        SetArtwork(await card.Artwork ?? SpriteResources.DefaultSleeve.texture, card.Type);
     }
 
     public void SetBattleCard(BattleCard card) {
