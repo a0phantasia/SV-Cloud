@@ -28,8 +28,19 @@ public static class EffectDatabase {
         {"none", EffectCondition.None},
     };
 
-    private static Dictionary<string, EffectAbility> typeConvDict = new Dictionary<string, EffectAbility>() {
+    private static Dictionary<string, EffectAbility> abilityConvDict = new Dictionary<string, EffectAbility>() {
         {"none", EffectAbility.None},
+        {"result", EffectAbility.SetResult},
+        {"keep", EffectAbility.KeepCard},
+        {"turn_start", EffectAbility.TurnStart},
+        {"turn_end", EffectAbility.TurnEnd},
+        {"use", EffectAbility.Use},
+        {"attack", EffectAbility.Attack},
+        {"evolve", EffectAbility.Evolve},
+        {"fusion", EffectAbility.Fusion},
+        {"act", EffectAbility.Act},
+        
+        {"draw", EffectAbility.Draw},
     };
 
     public static EffectTiming ToEffectTiming(this string timing) {
@@ -45,7 +56,7 @@ public static class EffectDatabase {
     }
 
     public static EffectAbility ToEffectAbility(this string ability) {
-        return typeConvDict.Get(ability, EffectAbility.None);
+        return abilityConvDict.Get(ability, EffectAbility.None);
     }
 }
 
@@ -65,5 +76,16 @@ public enum EffectCondition {
 }
 
 public enum EffectAbility {
-    None,
+    None = 0,
+    SetResult = 1,
+    KeepCard = 2,
+    TurnStart = 3,
+    TurnEnd = 4,
+    Use = 5,
+    Attack = 6,
+    Evolve = 7,
+    Fusion = 8,
+    Act = 9,
+
+    Draw = 31,
 }

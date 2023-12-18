@@ -7,7 +7,7 @@ using UnityEngine.UI;
 public class CardView : IMonoBehaviour
 {
     public Card CurrentCard { get; private set; }
-    private RectTransform rectTransform;
+    public RectTransform rectTransform { get; private set; }
     [SerializeField] public IDraggable draggable;
 
     [SerializeField] private Text nameText;
@@ -105,10 +105,6 @@ public class CardView : IMonoBehaviour
 
     public void SetCallback(Action callback, string which = "onClick") {
         cardFrameButton?.onPointerClickEvent.SetListener(callback.Invoke);
-    }
-
-    public void SetAnchoredPos(Vector2 anchoredPos) {
-        rectTransform.anchoredPosition = anchoredPos;
     }
 
     public void SetCount(int count) {

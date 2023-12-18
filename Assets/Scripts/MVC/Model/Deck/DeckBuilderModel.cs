@@ -32,6 +32,11 @@ public class DeckBuilderModel : IMonoBehaviour
     }
 
     public void SaveDeck() {
+        if (CurrentDeck.CardCount == 0) {
+            Hintbox.OpenHintbox("牌組至少需要放入一張牌");
+            return;
+        }
+
         if (InitDeck.IsDefault()) {
             var inputHintbox = Hintbox.OpenHintbox<InputHintbox>();
             inputHintbox.SetTitle("保存牌組");

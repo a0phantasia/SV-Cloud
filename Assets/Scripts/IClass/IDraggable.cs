@@ -37,7 +37,7 @@ public class IDraggable : IMonoBehaviour, IPointerDownHandler, IBeginDragHandler
     }
 
     public virtual void OnDrag(PointerEventData eventData) {
-        rectTransform.anchoredPosition += eventData.delta / canvas.scaleFactor;
+        rectTransform.anchoredPosition += eventData.delta / (canvas.scaleFactor * transform.parent.localScale);
         onDragEvent?.Invoke(rectTransform);
     }
 

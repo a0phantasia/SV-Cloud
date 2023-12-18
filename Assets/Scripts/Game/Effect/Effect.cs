@@ -54,6 +54,16 @@ public class Effect : IIdentifyHandler
         abilityOptionDict = _ability_option ?? new Dictionary<string, string>();
     }
 
+    public Effect(int action, int[] data) {
+        source = null;
+        timing = EffectTiming.None;
+        target = EffectTarget.None;
+        condition = EffectCondition.None;
+        condOptionDictList.Add(new List<ICondition>());
+        ability = (EffectAbility)action;
+        abilityOptionDict = new Dictionary<string, string>();
+    }
+
     public Effect(Effect rhs) {
         id = rhs.id;
         timing = rhs.timing;

@@ -8,7 +8,10 @@ public class Battle
 {
     public BattleManager Hud => BattleManager.instance;
     public BattleSettings settings;
+    public BattleResult result;
     public BattleState currentState;
+
+    public Queue<Effect> effectQueue = new Queue<Effect>();
 
     public Battle() {}
 
@@ -45,6 +48,7 @@ public class Battle
     private void Init(BattleDeck masterDeck, BattleDeck clientDeck, BattleSettings settings) {
         this.currentState = new BattleState(masterDeck, clientDeck, settings);
         this.settings = settings;
+        this.result = new BattleResult();
         Player.currentBattle = this;
     }
 
@@ -52,5 +56,10 @@ public class Battle
         if (isMe) {
             Hud.EnemyPlayerAction(action, data);
         }
+
+        var leader = (isMe ? currentState.myUnit : currentState.opUnit).leader.leaderCard;
+        Effect effect = new Effect(action, data);
+        effect.source = leader;
+        effectQueue.Enqueue(effect);
     }
 }
