@@ -1,14 +1,14 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.Lumin;
 
-public class BattleUnit 
+public class BattleUnit : IIdentifyHandler
 {
     public int id;
     public string name;
-    public bool isFirst;
     public int turn = 0;
     public Leader leader;
     public BattleCard territory = null;
@@ -18,7 +18,12 @@ public class BattleUnit
     public BattleGrave grave;
 
     public bool isDone = false;
+    public bool isMyTurn = false;
+    public bool isFirst;
     public string IsFirstText => isFirst ? "先手" : "後手";
+    public bool IsMasterUnit => id == 0;
+
+    public int Id => id;
 
     public BattleUnit(int unitId, string nickname, BattleDeck initDeck, bool first) {
         id = unitId;
@@ -33,6 +38,7 @@ public class BattleUnit
 
         isFirst = first;
         isDone = false;
+        isMyTurn = first;
 
         Draw(3);
     }
@@ -51,6 +57,7 @@ public class BattleUnit
 
         isFirst = rhs.isFirst;
         isDone = rhs.isDone;
+        isMyTurn = rhs.isMyTurn;
     }
 
     public List<BattleCard> Draw(int count = 1) {
@@ -65,5 +72,25 @@ public class BattleUnit
         hand.cards.AddRange(result);
         deck.cards.RemoveAll(x => result.Contains(x));
         return result;
+    }
+
+    public bool TryGetIdenfier(string id, out float value)
+    {
+        value = GetIdentifier(id);
+        return value == float.MinValue;
+    }
+
+    public float GetIdentifier(string id)
+    {
+        return id switch {
+            "id" => Id,
+            "isFirst" => isFirst ? 1 : 0,
+            _ => float.MinValue,
+        };
+    }
+
+    public void SetIdentifier(string id, float value)
+    {
+        throw new NotImplementedException();
     }
 }

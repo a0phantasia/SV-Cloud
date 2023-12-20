@@ -13,8 +13,8 @@ public class OptionSelectView : IMonoBehaviour
         base.Awake();
         for (int i = 0; i < optionButtons.Count; i++) {
             int copy = i;
-            optionButtons[i].onPointerEnterEvent.AddListener(() => OnPointerEnter(copy));
-            optionButtons[i].onPointerExitEvent.AddListener(() => OnPointerExit(copy));
+            optionButtons[i]?.onPointerEnterEvent.AddListener(() => OnPointerEnter(copy));
+            optionButtons[i]?.onPointerExitEvent.AddListener(() => OnPointerExit(copy));
         }
         isSelected = new bool[optionButtons.Count];
     }

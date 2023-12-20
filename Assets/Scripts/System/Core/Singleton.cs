@@ -35,10 +35,10 @@ public abstract class PunSingleton<T> : MonoBehaviourPunCallbacks where T: MonoB
     }
 }
 
-public abstract class Manager<T> : MonoBehaviour where T : MonoBehaviour 
+public abstract class Manager<T> : IMonoBehaviour where T : IMonoBehaviour 
 {
     public static T instance {get; private set;}
-    protected virtual void Awake() {
+    protected override void Awake() {
         if(instance != null) {
             Destroy(gameObject);
             return;

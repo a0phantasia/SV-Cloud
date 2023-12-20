@@ -17,9 +17,7 @@ public class CardInfoView : IMonoBehaviour
     protected override void Awake()
     {
         base.Awake();
-        if (costObject != null)
-            costText = costObject?.GetComponentInChildren<Text>();
-        
+        costText = costObject?.GetComponentInChildren<Text>();
         atkText = atkObject?.GetComponentInChildren<Text>();
         hpText = hpObject?.GetComponentInChildren<Text>();
     }
@@ -51,21 +49,9 @@ public class CardInfoView : IMonoBehaviour
         descriptionText?.Rect?.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, descriptionText.PreferredSize.y);
         evolveView?.SetCard(card.EvolveCard);
 
-        switch (card.Type) {
-            default:
-                break;
-            case CardType.Leader:
-                costObject?.SetActive(false);
-                atkObject?.SetActive(false);
-                hpObject?.SetActive(false);
-                break;    
-            case CardType.Spell:
-            case CardType.Amulet:
-            case CardType.Territory:
-                atkObject?.SetActive(false);
-                hpObject?.SetActive(false);
-                break;    
-        }
+        costObject?.SetActive((card.Type != CardType.Leader) && (card.Type != CardType.Evolved));
+        atkObject?.SetActive((card.Type == CardType.Follower) || (card.Type == CardType.Evolved));
+        hpObject?.SetActive((card.Type == CardType.Follower) || (card.Type == CardType.Evolved));
 
         float normalSizeY = Mathf.Clamp(GetDescriptionTextPreferredSize(false), 160, 240);
         float evovleSizeY = Mathf.Clamp(GetDescriptionTextPreferredSize(true), 110, 350 - normalSizeY);

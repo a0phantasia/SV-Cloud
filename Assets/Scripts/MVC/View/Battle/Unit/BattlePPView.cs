@@ -21,4 +21,12 @@ public class BattlePPView : BattleBaseView
             ppOrbImages[i].SetSprite((i < leader.pp) ? SpriteResources.PP : SpriteResources.PPUsed);
         }
     }
+
+    public void SetTurnEndButtonActive(bool active) {
+        turnEndButton?.gameObject.SetActive(active);
+    }
+
+    public void SetTurnEnd() {
+        Battle.PlayerAction(new int[] { (int)EffectAbility.TurnEnd }, true);
+    }
 }

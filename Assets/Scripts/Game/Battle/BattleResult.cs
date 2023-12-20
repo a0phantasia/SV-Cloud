@@ -4,8 +4,11 @@ using UnityEngine;
 
 public class BattleResult 
 {
-    public BattleResultState state = BattleResultState.None;
-
+    public BattleResultState masterState = BattleResultState.None;
+    public BattleResult() {}
+    public BattleResult(BattleResult rhs) {
+        masterState = rhs.masterState;
+    }
 }
 
 public enum BattleResultState {

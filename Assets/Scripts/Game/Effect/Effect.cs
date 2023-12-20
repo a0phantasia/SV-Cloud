@@ -24,6 +24,7 @@ public class Effect : IIdentifyHandler
     public List<List<ICondition>> condOptionDictList { get; private set; } = new List<List<ICondition>>();
     public EffectAbility ability { get; private set; }
     public Dictionary<string, string> abilityOptionDict { get; private set; } = new Dictionary<string, string>();
+    public Dictionary<string, string> hudOptionDict { get; private set; } = new Dictionary<string, string>();
 
     public Effect(string[] _data, int startIndex) {
         string[] _slicedData = new string[DATA_COL];
@@ -37,6 +38,7 @@ public class Effect : IIdentifyHandler
         condOptionDictList.ParseMultipleCondition(_slicedData[4]);
         ability = _slicedData[5].ToEffectAbility();
         abilityOptionDict.ParseOptions(_slicedData[6]);
+        hudOptionDict = new Dictionary<string, string>();
     }
 
     public Effect(string _timing, EffectTarget _target, 
@@ -53,16 +55,18 @@ public class Effect : IIdentifyHandler
         }
         ability = _ability;
         abilityOptionDict = _ability_option ?? new Dictionary<string, string>();
+        hudOptionDict = new Dictionary<string, string>();
     }
 
-    public Effect(int action, int[] data) {
+    public Effect(int[] data) {
         source = null;
         timing = "none";
         target = EffectTarget.None;
         condition = EffectCondition.None;
         condOptionDictList.Add(new List<ICondition>());
-        ability = (EffectAbility)action;
-        abilityOptionDict = Parse(action, data);
+        ability = (EffectAbility)data[0];
+        abilityOptionDict = Parse(ability, data.SubArray(1));
+        hudOptionDict = new Dictionary<string, string>();
     }
 
     public Effect(Effect rhs) {
@@ -73,7 +77,9 @@ public class Effect : IIdentifyHandler
         ability = rhs.ability;
         condOptionDictList = rhs.condOptionDictList.Select(x => x.Select(y => new ICondition(y.op, y.lhs, y.rhs)).ToList()).ToList();
         abilityOptionDict = new Dictionary<string, string>(rhs.abilityOptionDict);
+        hudOptionDict = new Dictionary<string, string>(rhs.hudOptionDict);
 
+        source = rhs.source;
         invokeUnit = rhs.invokeUnit;
         invokeTarget = rhs.invokeTarget;
     }
@@ -93,8 +99,9 @@ public class Effect : IIdentifyHandler
         throw new NotImplementedException();
     }
 
-    public Dictionary<string, string> Parse(int action, int[] data) {
-        Func<int[], Dictionary<string, string>> ParseFunc = (EffectAbility)action switch {
+    public Dictionary<string, string> Parse(EffectAbility action, int[] data) {
+        Func<int[], Dictionary<string, string>> ParseFunc = action switch {
+            EffectAbility.SetResult => EffectParseHandler.SetResult,
             EffectAbility.KeepCard => EffectParseHandler.KeepCard,
             _ => ((data) => new Dictionary<string, string>()),
         };
@@ -110,11 +117,16 @@ public class Effect : IIdentifyHandler
     }
     
     public bool Apply(BattleState state = null) {
-        return ability switch {
-            EffectAbility.KeepCard => this.KeepCard(state),
-            EffectAbility.TurnStart => this.OnTurnStart(state),
-            _ => true,
+        if (state != null)
+            state.currentEffect = this;
+
+        Func<Effect, BattleState, bool> AbilityFunc = ability switch {
+            EffectAbility.SetResult => EffectAbilityHandler.SetResult,
+            EffectAbility.KeepCard => EffectAbilityHandler.KeepCard,
+            EffectAbility.TurnStart => EffectAbilityHandler.OnTurnStart,
+            _ => (e, s) => true,
         };
+        return AbilityFunc.Invoke(this, state);
     }
 
     public bool CheckAndApply(BattleState state = null) {

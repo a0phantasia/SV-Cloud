@@ -6,8 +6,8 @@ using UnityEngine;
 public class BattleCard : IIdentifyHandler
 {
     public bool IsEvolved { get; protected set; }
-    private Card card;
-    private Card evolveCard;
+    public Card card;
+    public Card evolveCard;
     public Card CurrentCard => IsEvolved ? evolveCard : card;
     public int Id => CurrentCard.Id;
     public int HpMax;

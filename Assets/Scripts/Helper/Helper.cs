@@ -96,7 +96,7 @@ public static class String {
         if (string.IsNullOrEmpty(str) || (str == "none"))
             return new List<int>();
             
-        return str.ToFloatList(delimeter).Select(x => (int)x).ToList();
+        return str.ToFloatList(delimeter)?.Select(x => (int)x).ToList();
     }
     /// <summary>
     /// Parse the given string to Vector2. <br/>

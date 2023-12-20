@@ -33,10 +33,9 @@ public class BattleMenuView : BattleBaseView
     }
 
     private void OnCofirmRetire() {
-        if (Battle.settings.isLocal)
-            SceneLoader.instance.ChangeScene(SceneId.Main);
-        else
-            SceneLoader.instance.ChangeScene(SceneId.Room);
+        gameObject.SetActive(false);
+        Hud.SetLock(true);
+        Battle.PlayerAction(new int[] { (int)EffectAbility.SetResult, (int)BattleResultState.Lose }, true);
     }
 
 }

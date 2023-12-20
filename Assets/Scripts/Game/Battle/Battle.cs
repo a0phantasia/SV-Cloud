@@ -7,8 +7,8 @@ using UnityEngine;
 public class Battle
 {
     public BattleManager Hud => BattleManager.instance;
-    public BattleSettings settings;
-    public BattleResult result;
+    public BattleSettings settings => currentState?.settings;
+    public BattleResult result => currentState?.result;
     public BattleState currentState;
 
     public Queue<Effect> effectQueue = new Queue<Effect>();
@@ -47,31 +47,34 @@ public class Battle
 
     private void Init(BattleDeck masterDeck, BattleDeck clientDeck, BattleSettings settings) {
         this.currentState = new BattleState(masterDeck, clientDeck, settings);
-        this.settings = settings;
-        this.result = new BattleResult();
         Player.currentBattle = this;
     }
 
-    public void PlayerAction(short action, int[] data, bool isMe) {
+    public void PlayerAction(int[] data, bool isMe) {
         if (isMe) {
-            Hud.EnemyPlayerAction(action, data);
+            Hud.EnemyPlayerAction(data);
         }
 
         var leader = (isMe ? currentState.myUnit : currentState.opUnit).leader.leaderCard;
-        Effect effect = new Effect(action, data);
+        Effect effect = new Effect(data);
         effect.source = leader;
         effect.invokeUnit = isMe ? currentState.myUnit : currentState.opUnit;
         Enqueue(effect);
 
         if (effectQueue.Count == 1)
-            ProcessEffects();
+            ProcessQueue();
     }
 
-    public void ProcessEffects() {
+    public void ProcessQueue() {
         while (effectQueue.Count > 0) {
-            var e = effectQueue.Dequeue();
+            if (currentState.result.masterState != BattleResultState.None)
+                break;
+
+            var e = effectQueue.Peek();
             e.Apply(currentState);
+            effectQueue.Dequeue();
         }
+        Hud.ProcessQueue();
     }
 
     public void Enqueue(Effect effect) {

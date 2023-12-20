@@ -6,7 +6,7 @@ public class DeckBuilderManager : Manager<DeckBuilderManager>
 {
     [SerializeField] private DeckBuilderController deckBuilderController;
 
-    private void Start() {
+    protected override void Start() {
         deckBuilderController.SetInitDeck(Player.currentDeck);
     }
 }

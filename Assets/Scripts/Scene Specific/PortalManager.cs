@@ -9,7 +9,7 @@ public class PortalManager : Manager<PortalManager>
     [SerializeField] private PortalResultController resultController;
     [SerializeField] private ScrollRect scrollRect;
 
-    private void Start() {
+    protected override void Start() {
         resultController.SetStorage(CardDatabase.CardMaster);
         searchController.Search();
     }

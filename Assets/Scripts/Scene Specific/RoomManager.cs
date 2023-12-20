@@ -18,7 +18,7 @@ public class RoomManager : Manager<RoomManager>
         InitSubscriptions();
     }
 
-    private void Start() {
+    protected override void Start() {
         AudioSystem.instance.PlayMusic("Main");
 
         InitPlayer();

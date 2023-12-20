@@ -69,6 +69,7 @@ public static class SpriteSize {
 }
 
 public static class SpriteResources {
+    public static GameObject Log => RM.instance.GetPrefab("Log");
     public static Sprite Empty => GetCardEmblemSprite(0);
     public static Sprite DefaultSleeve => RM.instance.GetSprite("Game/sleeve");
     public static Sprite PP => RM.instance.GetSprite("Game/pp/pp");

@@ -6,7 +6,7 @@ public class TitleManager : Manager<TitleManager>
 {
     [SerializeField] private InputHintbox inputHintbox;
 
-    private void Start() {
+    protected override void Start() {
         AudioSystem.instance.PlayMusic("Title");
     }
 

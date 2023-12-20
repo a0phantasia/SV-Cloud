@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -9,15 +10,16 @@ public class BattleTurnView : BattleBaseView
     [SerializeField] private Text whosTurnText;
     [SerializeField] private Text descriptionText;
 
-    public void ShowTurnInfo(string whosTurn, string description) {
+    public void ShowTurnInfo(string whosTurn, string description, Action callback = null) {
         gameObject.SetActive(true);
         whosTurnText?.SetText(whosTurn);
         descriptionText?.SetText(description);
-        StartCoroutine(ShowTurnCoroutine());
+        StartCoroutine(ShowTurnCoroutine(callback));
     }
 
-    private IEnumerator ShowTurnCoroutine() {
+    private IEnumerator ShowTurnCoroutine(Action callback) {
         yield return new WaitForSeconds(waitSeconds);
         gameObject.SetActive(false);
+        callback?.Invoke();
     }
 }

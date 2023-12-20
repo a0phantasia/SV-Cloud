@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -6,10 +7,12 @@ using UnityEngine.UI;
 
 public class BattleKeepCardView : BattleBaseView
 {
+    [SerializeField] private float waitSeconds = 2;
     [SerializeField] private float leavePosY, leaveThresholdY;
     [SerializeField] private float keepPosY, keepThresholdY;
     [SerializeField] private Timer timer;
     [SerializeField] private Text orderText;
+    [SerializeField] private IButton keepButton;
     [SerializeField] private List<CardView> cardViews;
 
     private Vector2[] initPos = new Vector2[3];
@@ -41,13 +44,24 @@ public class BattleKeepCardView : BattleBaseView
 
     public void OnConfirmKeep(float leftSeconds) {
         timer.onDoneEvent -= OnConfirmKeep;
-        SetActive(false);
+        timer.gameObject.SetActive(false);
 
+        keepButton?.gameObject.SetActive(false);
         var change = Enumerable.Range(0, cardViews.Count)
             .Where(x => cardViews[x].rectTransform.anchoredPosition.y == leavePosY)
             .ToArray();
 
-        Battle.PlayerAction((short)EffectAbility.KeepCard, change , true);
+        var data = (new int[] { (int)EffectAbility.KeepCard }).Concat(change).ToArray();
+        Battle.PlayerAction(data, true);
+    }
+
+    public void ShowKeepResult(List<BattleCard> newHandCards, Action callback = null) {
+        for (int i = 0; i < cardViews.Count; i++) {
+            var x = cardViews[i].rectTransform.anchoredPosition.x;
+            cardViews[i].SetCard(newHandCards[i].CurrentCard);
+            cardViews[i].rectTransform.anchoredPosition = new Vector2(x, keepPosY);
+        }
+        StartCoroutine(WaitForSeconds(waitSeconds, callback));
     }
 
     private void OnBeginDrag(RectTransform rectTransform, int index) {

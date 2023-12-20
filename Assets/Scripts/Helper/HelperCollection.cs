@@ -95,7 +95,8 @@ public static class List {
         return list;
     }
 
-    public static T[] SubArray<T>(this T[] array, int start, int length) {
+    public static T[] SubArray<T>(this T[] array, int start, int length = -1) {
+        length = (length == -1) ? (array.Length - start) : length;
         T[] result = new T[length];
         Array.Copy(array, start, result, 0, length);
         return result;

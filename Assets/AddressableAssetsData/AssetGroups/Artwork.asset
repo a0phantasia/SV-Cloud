@@ -22,6 +22,11 @@ MonoBehaviour:
     m_ReadOnly: 0
     m_SerializedLabels:
     - basic
+  - m_GUID: e51bfea80066535438fd60bad6f5cdfe
+    m_Address: Artwork/100000112
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - basic
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: 69e741ee149781a478094fca2d01f357, type: 2}
   m_SchemaSet:

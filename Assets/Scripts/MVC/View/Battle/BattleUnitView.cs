@@ -13,9 +13,12 @@ public class BattleUnitView : BattleBaseView
     [SerializeField] private BattleDeckView deckView;
     [SerializeField] private BattleCornerView cornerView;
 
+    public bool isDone = true;
+
     public void SetUnit(BattleUnit unit) {
         leaderView?.SetLeader(unit?.leader);
         ppView.SetLeader(unit?.leader);
+        ppView?.SetTurnEndButtonActive((unit == null) ? false : unit.isMyTurn);
         epView?.SetLeader(unit?.leader);
         handView?.SetHand(unit?.hand);
         fieldView?.SetField(unit?.field);

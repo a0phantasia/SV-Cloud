@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using Photon.Pun;
@@ -8,11 +9,16 @@ public class BattleManager : Manager<BattleManager>
 {
     public Battle Battle => Player.currentBattle;
 
+    [SerializeField] private GameObject lockObject;
     [SerializeField] private BattleSystemView systemView;
     [SerializeField] private BattleUnitView myView, opView;
     [SerializeField] private PhotonView masterPhotonView, clientPhotonView;
 
     public PhotonView myPhotonView => PhotonNetwork.IsMasterClient ? masterPhotonView : clientPhotonView;
+    public bool IsDone => systemView.isDone && myView.isDone && opView.isDone;
+    private bool isProcessing = false;
+
+    private Queue<BattleState> hudQueue = new Queue<BattleState>();
 
     protected override void Awake()
     {
@@ -24,11 +30,6 @@ public class BattleManager : Manager<BattleManager>
         NetworkManager.instance.onOtherPlayerLeftRoomEvent += OnOtherPlayerDisconnect;
 
         myPhotonView.RequestOwnership();
-    }
-
-    public void OnConfirmBattleResult() {
-        var scene = Battle.settings.isLocal ? SceneId.Main : SceneId.Room;
-        SceneLoader.instance.ChangeScene(scene);
     }
 
     protected void OpenDisconnectHintbox(string message) {
@@ -49,23 +50,47 @@ public class BattleManager : Manager<BattleManager>
         NetworkManager.instance.onOtherPlayerLeftRoomEvent -= OnOtherPlayerDisconnect;
     }
 
-    public void EnemyPlayerAction(short action, int[] data) {
+    public void EnemyPlayerAction(int[] data) {
         if (Battle.settings.isLocal)
             return;
 
         var photonView = masterPhotonView.IsMine ? masterPhotonView : clientPhotonView;
-        photonView.RPC("RPCPlayerAction", RpcTarget.Others, (object)action, (object)data);
+        photonView.RPC("RPCPlayerAction", RpcTarget.Others, (object)data);
     }
 
     [PunRPC]
-    private void RPCPlayerAction(short action, int[] data) {
-        Battle.PlayerAction(action, data, false);
+    private void RPCPlayerAction(int[] data) {
+        Battle.PlayerAction(data, false);
     }
 
+    public void SetLock(bool locked) {
+        lockObject?.SetActive(locked);
+    }
+
+    public void OnConfirmBattleResult() {
+        var scene = Battle.settings.isLocal ? SceneId.Main : SceneId.Room;
+        SceneLoader.instance.ChangeScene(scene);
+    }
 
     public void SetState(BattleState state) {
         var hudState = (state == null) ? null : new BattleState(state);
+        hudQueue.Enqueue(hudState);
+    }
+    
+    public void ProcessQueue() {
+        if (hudQueue.Count == 0) {
+            isProcessing = false;   
+            return;
+        }
+
+        if (isProcessing)
+            return;
+
+        var hudState = hudQueue.Dequeue();
+        systemView.SetState(hudState);
         myView.SetUnit(hudState?.myUnit);
         opView.SetUnit(hudState?.opUnit);
+
+        StartCoroutine(WaitForCondition(() => IsDone, ProcessQueue));
     }
 }

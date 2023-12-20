@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class MainManager : Manager<MainManager>
 {
-    private void Start() {
+    protected override void Start() {
         AudioSystem.instance.PlayMusic("Main");
     }
 
