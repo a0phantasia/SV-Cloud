@@ -5,11 +5,13 @@ using UnityEngine;
 
 public class BattleHand 
 {
+    public int MaxCount = 9;
     public int Count => cards.Count;
     public List<BattleCard> cards = new List<BattleCard>();
 
     public BattleHand() {}
     public BattleHand(BattleHand rhs) {
+        MaxCount = rhs.MaxCount;
         cards = rhs.cards.Select(x => (x == null) ? null : new BattleCard(x)).ToList();
     }
 }

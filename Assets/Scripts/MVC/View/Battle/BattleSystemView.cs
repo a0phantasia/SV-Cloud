@@ -34,7 +34,11 @@ public class BattleSystemView : BattleBaseView
                     BattleResultState.Lose => state.myUnit.IsMasterUnit ? "LOSE" : "WIN",
                     _ => "DRAW",
                 };
-                turnView?.ShowTurnInfo("YOU " + result, string.Empty, () => {
+                string reason = int.Parse(effect.abilityOptionDict.Get("reason", "0")) switch {
+                    1 => (result == "LOSE" ? "你" : "對手") + "已放棄對戰",
+                    _ => string.Empty,
+                };
+                turnView?.ShowTurnInfo("YOU " + result, reason, () => {
                     isDone = true;
                     Hud.OnConfirmBattleResult();
                 }); 
@@ -50,12 +54,10 @@ public class BattleSystemView : BattleBaseView
                 }
                 break;
             case EffectAbility.TurnStart:
-                if (effect.hudOptionDict.Get("stage", "start") == "start") {
-                    string who = (state.myUnit.isMyTurn ? "YOUR" : "ENEMY") + " TURN";
-                    string turn = (effect.hudOptionDict.Get("ep", "false") == "false") ?
-                        ("第 " + state.currentUnit.turn + " 回合") : "進化解禁";
-                    turnView?.ShowTurnInfo(who, turn, () => isDone = true);
-                }
+                string who = (state.myUnit.isMyTurn ? "YOUR" : "ENEMY") + " TURN";
+                string turn = (effect.hudOptionDict.Get("ep", "false") == "false") ?
+                    ("第 " + state.currentUnit.turn + " 回合") : "進化解禁";
+                turnView?.ShowTurnInfo(who, turn, () => isDone = true);
                 break;
         }
     }

@@ -3,7 +3,6 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-using UnityEngine.Lumin;
 
 public class BattleUnit : IIdentifyHandler
 {
@@ -40,7 +39,7 @@ public class BattleUnit : IIdentifyHandler
         isDone = false;
         isMyTurn = first;
 
-        Draw(3);
+        Draw(3, out _, out _);
     }
 
     public BattleUnit(BattleUnit rhs) {
@@ -60,17 +59,28 @@ public class BattleUnit : IIdentifyHandler
         isMyTurn = rhs.isMyTurn;
     }
 
-    public List<BattleCard> Draw(int count = 1) {
+    /// <summary>
+    /// Draw cards.
+    /// </summary>
+    /// <returns>Total cards drawn, including inHand and inGrave.</returns>
+    public List<BattleCard> Draw(int count, out List<BattleCard> inHand, out List<BattleCard> inGrave) {
+        var availableCount = hand.MaxCount - hand.Count;
         var result = deck.cards.Take(count).ToList();
-        hand.cards.AddRange(result);
-        deck.cards.RemoveAll(x => result.Contains(x));
-        return result;
-    }
 
-    public List<BattleCard> DrawWithFilter(CardFilter filter, int count = 1) {
-        var result = deck.cards.Where(x => filter.Filter(x.CurrentCard)).Take(count).ToList();
-        hand.cards.AddRange(result);
-        deck.cards.RemoveAll(x => result.Contains(x));
+        if (result.Count > availableCount) {
+            inHand = result.GetRange(0, availableCount);
+            inGrave = result.GetRange(availableCount, result.Count - availableCount);
+        } else {
+            inHand = result.GetRange(0, result.Count);
+            inGrave = new List<BattleCard>();
+        }
+
+        hand.cards.AddRange(inHand);
+        grave.cards.AddRange(inGrave.Select(x => x.card));
+        deck.cards.RemoveRange(0, result.Count);
+
+        grave.Count += inGrave.Count;
+
         return result;
     }
 

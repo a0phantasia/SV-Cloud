@@ -12,6 +12,7 @@ public class BattleKeepCardView : BattleBaseView
     [SerializeField] private float keepPosY, keepThresholdY;
     [SerializeField] private Timer timer;
     [SerializeField] private Text orderText;
+    [SerializeField] private Text indicatorText;
     [SerializeField] private IButton keepButton;
     [SerializeField] private List<CardView> cardViews;
 
@@ -47,6 +48,7 @@ public class BattleKeepCardView : BattleBaseView
         timer.gameObject.SetActive(false);
 
         keepButton?.gameObject.SetActive(false);
+        indicatorText?.SetText("等待對手交換完成");
         var change = Enumerable.Range(0, cardViews.Count)
             .Where(x => cardViews[x].rectTransform.anchoredPosition.y == leavePosY)
             .ToArray();

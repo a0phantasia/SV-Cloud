@@ -8,18 +8,19 @@ public class BattleHandView : BattleBaseView
 {
     [SerializeField] private bool isMe = true;
     [SerializeField] private float useThresholdY;
-    [SerializeField] private Vector2 useExhibitPos;
+    [SerializeField] private float useExhibitPosY;
     [SerializeField] private RectTransform rectTransform;
     [SerializeField] private HorizontalLayoutGroup layoutGroup;
     [SerializeField] private IButton handGroupButton;
     [SerializeField] private List<GameObject> sleeves;
     [SerializeField] private List<CardView> cardViews;
 
+    private bool mode = false;
     private List<Vector2> initPos = Enumerable.Repeat(default(Vector2), 9).ToList();
     private List<BattleCard> handCards = new List<BattleCard>();
     private int handCount => handCards.Count;
 
-    public void SetHand(BattleHand hand) {
+    public void SetHand(Leader leader, BattleHand hand) {
         if (!isMe) {
             for (int i = 0; i < sleeves.Count; i++)
                 sleeves[i].SetActive(i < hand.Count);
@@ -28,8 +29,13 @@ public class BattleHandView : BattleBaseView
         }
 
         handCards = hand.cards.Select(x => x).ToList();
-        for (int i = 0; i < cardViews.Count; i++)
+        for (int i = 0; i < cardViews.Count; i++) {
             cardViews[i].SetBattleCard((i < hand.Count) ? hand.cards[i] : null);
+            cardViews[i].SetStatus("cost", (i < hand.Count) ? hand.cards[i].GetUseCost(leader) : 0);
+            cardViews[i].draggable.SetEnable((i < hand.Count) ? hand.cards[i].IsUsable(leader) : false);
+        }
+
+        SetHandMode(mode);
     }
 
     public void ShowHandInfo(int index) {
@@ -37,6 +43,7 @@ public class BattleHandView : BattleBaseView
     }
 
     public void SetHandMode(bool active) {
+        mode = active;
         handGroupButton.gameObject.SetActive(!active);
         rectTransform.localScale = (active ? 2 : 1) * Vector3.one;
         rectTransform.anchoredPosition = active ? new Vector2(GetLayoutGroupPosition(), -36) : new Vector2(520, -18);
@@ -76,7 +83,8 @@ public class BattleHandView : BattleBaseView
             return;
 
         if (cardViews[index].rectTransform.anchoredPosition.y > useThresholdY) {
-            cardViews[index].rectTransform.anchoredPosition = useExhibitPos;
+            float x = 197.5f - GetLayoutGroupPosition() / 2;
+            cardViews[index].rectTransform.anchoredPosition = new Vector2(x, useExhibitPosY);
             Battle.PlayerAction(new int[2] { (int)EffectAbility.Use, index }, true);
             return;
         }

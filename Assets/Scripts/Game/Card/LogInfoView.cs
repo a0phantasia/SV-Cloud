@@ -19,11 +19,10 @@ public class LogInfoView : IMonoBehaviour
         rectTransform = gameObject.GetComponent<RectTransform>();
     }
 
-    public void LogEffect(BattleState state, Action onClickCallback = null) {
+    public void LogEffect(string log, BattleState state, Action onClickCallback = null) {
         var effect = state.currentEffect;
         bool isMyUnit = state.myUnit.id == effect.invokeUnit.id;
         bool buttonMode = effect.ability != EffectAbility.TurnStart;
-        var log = effect.hudOptionDict.Get("log", string.Empty);
         Color color = isMyUnit ? Color.cyan : Color.red;
 
         buttonObject?.SetActive(buttonMode);

@@ -10,7 +10,6 @@ public class BattleLogView : BattleBaseView
     [SerializeField] private OptionSelectModel selectModel;
     [SerializeField] private Text titleText;
     [SerializeField] private BattleLogMainView mainView;
-    [SerializeField] private PageView pageView;
 
 
     public void SetActive(bool active) {
@@ -22,17 +21,16 @@ public class BattleLogView : BattleBaseView
     }
 
     private void OnLogSetPage() {
-        titleText?.SetText(title[selectModel.Page]);
-        pageView?.SetPage(selectModel.Page, selectModel.LastPage);
+        titleText?.SetText(title[selectModel.Cursor[0]]);
     }
 
     public void OnLogPrevPage() {
-        selectModel.PrevPage();
+        selectModel.Select((selectModel.Cursor[0] + title.Length - 1) % title.Length);
         OnLogSetPage();
     }
 
     public void OnLogNextPage() {
-        selectModel.NextPage();
+        selectModel.Select((selectModel.Cursor[0] + 1) % title.Length);
         OnLogSetPage();
     }
 }

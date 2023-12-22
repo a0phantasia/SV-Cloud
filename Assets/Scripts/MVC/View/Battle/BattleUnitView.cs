@@ -18,9 +18,9 @@ public class BattleUnitView : BattleBaseView
     public void SetUnit(BattleUnit unit) {
         leaderView?.SetLeader(unit?.leader);
         ppView.SetLeader(unit?.leader);
-        ppView?.SetTurnEndButtonActive((unit == null) ? false : unit.isMyTurn);
+        ppView?.SetTurnEndButtonActive((unit == null) ? false : unit.isMyTurn && (!unit.isDone));
         epView?.SetLeader(unit?.leader);
-        handView?.SetHand(unit?.hand);
+        handView?.SetHand(unit?.leader, unit?.hand);
         fieldView?.SetField(unit?.field);
         deckView?.SetDeck(unit?.deck);
         cornerView.SetUnit(unit);

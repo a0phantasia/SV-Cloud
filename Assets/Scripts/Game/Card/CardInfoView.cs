@@ -53,7 +53,8 @@ public class CardInfoView : IMonoBehaviour
         atkObject?.SetActive((card.Type == CardType.Follower) || (card.Type == CardType.Evolved));
         hpObject?.SetActive((card.Type == CardType.Follower) || (card.Type == CardType.Evolved));
 
-        float normalSizeY = Mathf.Clamp(GetDescriptionTextPreferredSize(false), 160, 240);
+        float normalMinSizeY = (card.Type == CardType.Leader) ? 85 : 160; 
+        float normalSizeY = Mathf.Clamp(GetDescriptionTextPreferredSize(false), normalMinSizeY, 240);
         float evovleSizeY = Mathf.Clamp(GetDescriptionTextPreferredSize(true), 110, 350 - normalSizeY);
         backgroundRect?.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, normalSizeY);
         evolveView?.SetBackgroundAnchoredPos(new Vector2(0, -(normalSizeY + 5)));
@@ -61,7 +62,7 @@ public class CardInfoView : IMonoBehaviour
     }
 
     public void SetBattleCard(BattleCard card) {
-        SetCard(card?.CurrentCard);
+        SetCard(card?.OriginalCard);
     }
 
     public float GetDescriptionTextPreferredSize(bool isEvolve = false) {

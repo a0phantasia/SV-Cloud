@@ -5,7 +5,7 @@ using System;
 
 public class GameManager : Singleton<GameManager>
 {
-    [SerializeField] private bool debugMode = false;
+    public bool debugMode = false;
     public static string serverUrl => instance.debugMode ? "Data/" : "https://raw.githubusercontent.com/Brady29655751/Shadowverse/main/";
     public static string versionDataUrl => serverUrl + "System/version.xml";
     public static string gameDownloadUrl => serverUrl + "Release/Shadowverse_Windows.zip";

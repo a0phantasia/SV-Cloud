@@ -5,27 +5,36 @@ using UnityEngine;
 
 public class BattleCard : IIdentifyHandler
 {
+    public int Id => CurrentCard.Id;
     public bool IsEvolved { get; protected set; }
     public Card card;
     public Card evolveCard;
-    public Card CurrentCard => IsEvolved ? evolveCard : card;
-    public int Id => CurrentCard.Id;
-    public int HpMax;
-
+    public Card OriginalCard => IsEvolved ? evolveCard : card;
+    public Card CurrentCard => GetCurrentCard();
+    public BattleCardStatusController statusController;
+    
     public BattleCard(Card baseCard) {
+        IsEvolved = false;
+
         card = (baseCard == null) ? null : new Card(baseCard);
         evolveCard = (card?.EvolveCard == null) ? null : new Card(card.EvolveCard);
         
         card?.effects.ForEach(x => x.source = this);
         evolveCard?.effects.ForEach(x => x.source = this);
+
+        statusController = new BattleCardStatusController(baseCard);
     }
 
     public BattleCard(BattleCard rhs) {
         IsEvolved = rhs.IsEvolved;
-        HpMax = rhs.HpMax;
         
         card = (rhs.card == null) ? null : new Card(rhs.card);
         evolveCard = (rhs.evolveCard == null) ? null : new Card(rhs.evolveCard);
+
+        card?.effects.ForEach(x => x.source = this);
+        evolveCard?.effects.ForEach(x => x.source = this);
+
+        statusController = new BattleCardStatusController(rhs.statusController);
     }
 
     public static BattleCard Get(Card baseCard) {
@@ -46,5 +55,21 @@ public class BattleCard : IIdentifyHandler
     public void SetIdentifier(string id, float value)
     {
         return;
+    }
+
+    public Card GetCurrentCard() {
+        var result = new Card(OriginalCard);
+        result.cost += statusController.costBuff;
+        result.atk += statusController.atkBuff;
+        result.hp -= statusController.hpBuff;
+        return result;
+    }
+
+    public int GetUseCost(Leader leader) {
+        return CurrentCard.cost;
+    }
+
+    public bool IsUsable(Leader leader) {
+        return leader.PP >= GetUseCost(leader);
     }
 }

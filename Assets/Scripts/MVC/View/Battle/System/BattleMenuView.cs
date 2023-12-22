@@ -35,7 +35,7 @@ public class BattleMenuView : BattleBaseView
     private void OnCofirmRetire() {
         gameObject.SetActive(false);
         Hud.SetLock(true);
-        Battle.PlayerAction(new int[] { (int)EffectAbility.SetResult, (int)BattleResultState.Lose }, true);
+        Battle.PlayerAction(new int[] { (int)EffectAbility.SetResult, (int)BattleResultState.Lose, 1 }, true);
     }
 
 }

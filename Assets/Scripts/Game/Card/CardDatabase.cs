@@ -105,6 +105,10 @@ public struct CardFilter
     public List<int> craftList, packList, typeList, rarityList, costList, atkList, hpList;
     public bool isWithToken;
 
+    /// <summary>
+    /// Create a filter to search card from database.
+    /// </summary>
+    /// <param name="formatId">Format id. Set -1 if don't filter format</param>
     public CardFilter(int formatId) {
         format = formatId;
         zone = 1;
@@ -208,7 +212,7 @@ public struct CardFilter
             && DescriptionFilter(card) && AuthorFilter(card) && TokenFilter(card);
     }
 
-    public bool FormatFilter(Card card) => card.IsFormat((GameFormat)format);
+    public bool FormatFilter(Card card) => (format == -1) || card.IsFormat((GameFormat)format);
     public bool ZoneFilter(Card card) => (card.ZoneId == zone) || (card.PackId == 0);
     public bool NameFilter(Card card) => string.IsNullOrEmpty(name) || card.name.Contains(name);
     public bool CraftFilter(Card card) => craftList.IsNullOrEmpty() || craftList.Contains(card.CraftId);

@@ -50,6 +50,14 @@ public class Battle
         Player.currentBattle = this;
     }
 
+    /// <summary>
+    /// Player do actions, and will send RPC to notify other players IF "isMe = true". <br/>
+    /// Same action should call this with isMe set to either true or false. <br/><br/>
+    /// Eg. Player A draw 1 card. <br/>
+    ///     "Draw" on side A deals with effect (Draw, isMe = true), <br/>
+    ///     and A will then send RPC to B with (Draw, isMe = false), <br/>
+    ///     "Draw" on side B deals with effect (Draw, isMe = false), <br/>
+    /// </summary>
     public void PlayerAction(int[] data, bool isMe) {
         if (isMe) {
             Hud.EnemyPlayerAction(data);
@@ -59,7 +67,7 @@ public class Battle
         Effect effect = new Effect(data);
         effect.source = leader;
         effect.invokeUnit = isMe ? currentState.myUnit : currentState.opUnit;
-        Enqueue(effect);
+        EnqueueEffect(effect);
 
         if (effectQueue.Count == 1)
             ProcessQueue();
@@ -77,7 +85,13 @@ public class Battle
         Hud.ProcessQueue();
     }
 
-    public void Enqueue(Effect effect) {
+    public void EnqueueEffect(Effect effect) {
         effectQueue.Enqueue(effect);
+    }
+
+    public void EnqueueEffect(List<Effect> effects) {
+       for (int i = 0; i < effects.Count; i++) {
+            EnqueueEffect(effects[i]);
+        }
     }
 }

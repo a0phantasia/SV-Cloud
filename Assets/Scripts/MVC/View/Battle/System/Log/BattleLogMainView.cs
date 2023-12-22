@@ -1,5 +1,7 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -17,16 +19,19 @@ public class BattleLogMainView : BattleBaseView
         if (string.IsNullOrEmpty(log))
             return;
 
-        if (battleLogs.Count >= maxLogCount) {
-            Destroy(battleLogs[0].gameObject);
-            battleLogs.RemoveAt(0);
+        var logArray = log.Split('\n');
+        for (int i = 0; i < logArray.Length; i++) {
+            if (battleLogs.Count >= maxLogCount) {
+                Destroy(battleLogs[0].gameObject);
+                battleLogs.RemoveAt(0);
+            }
+
+            var obj = Instantiate(SpriteResources.Log, scrollRect.content);
+            var logPrefab = obj.GetComponent<LogInfoView>();
+
+            logPrefab.LogEffect(logArray[i], state, () => cardInfoView?.SetCard(effect.source.card));
+            battleLogs.Add(logPrefab);
         }
-
-        var obj = Instantiate(SpriteResources.Log, scrollRect.content);
-        var logPrefab = obj.GetComponent<LogInfoView>();
-
-        logPrefab.LogEffect(state, () => cardInfoView?.SetCard(effect.source.card));
-        battleLogs.Add(logPrefab);
     }
 
 }

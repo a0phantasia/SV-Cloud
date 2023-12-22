@@ -10,6 +10,7 @@ public class BattleGrave
 
     public BattleGrave() {}
     public BattleGrave(BattleGrave rhs) {
+        Count = rhs.Count;
         cards = rhs.cards.Select(x => (x == null) ? null : new Card(x)).ToList();
     }
 }

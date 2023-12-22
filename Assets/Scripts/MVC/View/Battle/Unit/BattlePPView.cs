@@ -10,15 +10,15 @@ public class BattlePPView : BattleBaseView
     [SerializeField] private List<Image> ppOrbImages;
 
     public void SetLeader(Leader leader) {
-        ppText?.SetText(leader.pp.ToString());
-        ppMaxText?.SetText(leader.ppMax.ToString());
+        ppText?.SetText(leader.PP.ToString());
+        ppMaxText?.SetText(leader.PPMax.ToString());
 
         if (ppOrbImages == null)
             return;
 
         for (int i = 0; i < ppOrbImages.Count; i++) {
-            ppOrbImages[i].gameObject.SetActive(i < leader.ppMax);
-            ppOrbImages[i].SetSprite((i < leader.pp) ? SpriteResources.PP : SpriteResources.PPUsed);
+            ppOrbImages[i].gameObject.SetActive(i < leader.PPMax);
+            ppOrbImages[i].SetSprite((i < leader.PP) ? SpriteResources.PP : SpriteResources.PPUsed);
         }
     }
 

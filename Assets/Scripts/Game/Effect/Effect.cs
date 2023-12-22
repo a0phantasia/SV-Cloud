@@ -102,7 +102,9 @@ public class Effect : IIdentifyHandler
     public Dictionary<string, string> Parse(EffectAbility action, int[] data) {
         Func<int[], Dictionary<string, string>> ParseFunc = action switch {
             EffectAbility.SetResult => EffectParseHandler.SetResult,
-            EffectAbility.KeepCard => EffectParseHandler.KeepCard,
+            EffectAbility.KeepCard  => EffectParseHandler.KeepCard,
+            EffectAbility.Use       => EffectParseHandler.Use,
+            EffectAbility.Draw      => EffectParseHandler.Draw,
             _ => ((data) => new Dictionary<string, string>()),
         };
         return ParseFunc.Invoke(data);
@@ -122,8 +124,11 @@ public class Effect : IIdentifyHandler
 
         Func<Effect, BattleState, bool> AbilityFunc = ability switch {
             EffectAbility.SetResult => EffectAbilityHandler.SetResult,
-            EffectAbility.KeepCard => EffectAbilityHandler.KeepCard,
+            EffectAbility.KeepCard  => EffectAbilityHandler.KeepCard,
             EffectAbility.TurnStart => EffectAbilityHandler.OnTurnStart,
+            EffectAbility.TurnEnd   => EffectAbilityHandler.OnTurnEnd,
+            EffectAbility.Use       => EffectAbilityHandler.Use,
+            EffectAbility.Draw      => EffectAbilityHandler.Draw,
             _ => (e, s) => true,
         };
         return AbilityFunc.Invoke(this, state);

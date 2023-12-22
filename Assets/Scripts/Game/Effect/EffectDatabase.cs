@@ -62,5 +62,5 @@ public enum EffectAbility {
     Fusion = 9,
     Act = 10,
 
-    Draw = 31,
+    Draw = 101,
 }

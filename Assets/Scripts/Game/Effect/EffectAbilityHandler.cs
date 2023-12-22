@@ -9,10 +9,51 @@ public static class EffectAbilityHandler
     public static Battle Battle => Player.currentBattle;
     public static BattleManager Hud => BattleManager.instance;
 
+    /// <summary>
+    /// Check if cards have effects with correct timing and condition.
+    /// Enqueue these effects.
+    /// </summary>
+    private static void EnqueueEffect(string timing, List<Card> cards, BattleState state) {
+        for (int i = 0; i < cards.Count; i++) {
+            if (cards[i] == null)
+                continue;
+
+            var effects = cards[i].effects;
+            for (int j = 0; j < effects.Count; j++) {
+                if ((effects[j].timing == timing) && (effects[j].Condition(state))) {
+                    Battle.EnqueueEffect(effects[j]);
+                }
+            }
+        }                                                                
+    }
+
+    /// <summary>
+    /// Check hand, leader, territory, field, deck cards, <br/>
+    /// and enqueue effects with correct timing and condition.
+    /// </summary>
+    /// <param name="timing"></param>
+    /// <param name="state"></param>
+    private static void OnPhaseChange(string timing, BattleState state) {
+        var lhsUnit = state.currentUnit;
+        var rhsUnit = state.GetRhsUnitById(lhsUnit.id);
+        var cards = lhsUnit.hand.cards.Concat(rhsUnit.hand.cards);
+
+        cards.Append(lhsUnit.leader.leaderCard);
+        cards.Append(rhsUnit.leader.leaderCard);
+        cards.Append(rhsUnit.territory);
+        cards.Append(rhsUnit.territory);
+        
+        cards = cards.Concat(lhsUnit.field.cards).Concat(rhsUnit.field.cards)
+            .Concat(lhsUnit.deck.cards).Concat(rhsUnit.deck.cards);
+
+        EnqueueEffect(timing, cards.Select(x => x.CurrentCard).ToList(), state);
+    }
+
     public static bool SetResult(this Effect effect, BattleState state) {
         if (state == null)
             return false;
 
+        // Get Master's Result State.
         string who = effect.abilityOptionDict.Get("who", "me");
         string result = effect.abilityOptionDict.Get("result", "none");
         var unit = (who == "me") ? effect.invokeUnit : state.GetRhsUnitById(effect.invokeUnit.id);
@@ -32,9 +73,11 @@ public static class EffectAbilityHandler
     public static bool KeepCard(this Effect effect, BattleState state) {
         string indexList = effect.abilityOptionDict.Get("change", "none");
         var changeList = indexList.ToIntList('/');
-        if ((state == null) || (changeList.IsNullOrEmpty()))
-            return true;
+        
+        if ((state == null) || (changeList == null))
+            return false;
 
+        // Check if change index OK.
         var unit = effect.invokeUnit;
         bool isMyUnit = state.myUnit.id == unit.id;
         for (int i = 0; i < changeList.Count; i++) {
@@ -42,29 +85,40 @@ public static class EffectAbilityHandler
                 return false;
         }
         
+        // Replace hand with new cards.
         var changeCards = changeList.Select(x => unit.hand.cards[x]).ToList();
         var newCards = unit.deck.cards.Take(changeList.Count).ToList();
         for (int i = 0; i < changeList.Count; i++) {
             unit.hand.cards[changeList[i]] = newCards[i];
         }
 
-        unit.deck.cards.RemoveRange(0, Mathf.Min(newCards.Count, unit.deck.Count));
-        unit.deck.cards.AddRange(changeCards);
-        unit.deck.cards.Shuffle();
+        // Remove new cards from deck and Shuffle.
+        if (changeCards.Count > 0) {
+            unit.deck.cards.RemoveRange(0, Mathf.Min(newCards.Count, unit.deck.Count));
+            unit.deck.cards.AddRange(changeCards);
+            unit.deck.cards.Shuffle();
+        }
         effect.invokeTarget = newCards;
         unit.isDone = true;
 
-        effect.hudOptionDict.Set("log", (isMyUnit ? "你" : "對手") + "交換了 " + newCards.Count + " 張手牌");
+        // Set UI.
+        string log = (isMyUnit ? "我方" : "對方") + "交換了 " + newCards.Count + " 張手牌";
+        effect.hudOptionDict.Set("log", log);
         Hud.SetState(state);
 
-        if (state.settings.isLocal && (state.myUnit.id == unit.id)) {
-            Battle.PlayerAction(new int[4] { (int)EffectAbility.KeepCard, 0, 1, 2 }, false);
-            return true;
-        }
-
+        // Handle next action.
+        if (state.settings.isLocal && (state.myUnit.id == unit.id))
+            Battle.PlayerAction(new int[] { (int)EffectAbility.KeepCard }, false);
+        
         if (state.myUnit.isDone && state.opUnit.isDone) {
-            Battle.PlayerAction(new int[1] { (int)EffectAbility.TurnStart }, state.myUnit.isFirst);
+            Effect turnStart = new Effect(new int[] { (int)EffectAbility.TurnStart })
+            {
+                source = state.currentUnit.leader.leaderCard,
+                invokeUnit = state.currentUnit
+            };
+            Battle.EnqueueEffect(turnStart);
         }
+            
 
         return true;
     }
@@ -75,21 +129,25 @@ public static class EffectAbilityHandler
 
         state.myUnit.isDone = state.opUnit.isDone = false;
 
+        // Add turn and Recover pp (max 10)
         unit.turn += 1;
-        unit.leader.ppMax = Mathf.Min(unit.leader.ppMax + 1, 10);
-        unit.leader.pp = unit.leader.ppMax;
+        unit.leader.PPMax = Mathf.Min(unit.leader.PPMax + 1, 10);
+        unit.leader.PP = unit.leader.PPMax;
         
+        // If specific turn comes, give player EP.
         var first = unit.isFirst ? 1 : 0;
         if (unit.turn - first == 4) {
-            unit.leader.epMax = unit.isFirst ? 2 : 3;
-            unit.leader.ep = unit.leader.epMax;
+            unit.leader.EpMax = unit.isFirst ? 2 : 3;
+            unit.leader.EP = unit.leader.EpMax;
             effect.hudOptionDict.Set("ep", "true");
         }
 
-        effect.hudOptionDict.Set("stage", "start");
-        effect.hudOptionDict.Set("log", (isMyUnit ? "YOUR" : "ENEMY") + " TURN (" + unit.turn + ")");
+        // Set UI
+        string log = (isMyUnit ? "YOUR" : "ENEMY") + " TURN (" + unit.turn + ")";
+        effect.hudOptionDict.Set("log", log);
         Hud.SetState(state);
 
+        // If turn over 40, lose.
         if (unit.turn > 40) {
             Effect lose = new Effect(new int[] { (int)EffectAbility.SetResult, (int)BattleResultState.Lose })
             {
@@ -100,12 +158,124 @@ public static class EffectAbilityHandler
             return true;
         }
 
-        // on turn start
+        // On turn start.
+        OnPhaseChange("on_turn_start", state);
 
-        if ((!unit.isFirst) && (unit.turn == 1)) {
-
-        }
+        // Draw cards.
+        int drawCount = ((!unit.isFirst) && (unit.turn == 1)) ? 2 : 1;
+        Effect draw = new Effect(new int[] { (int)EffectAbility.Draw, drawCount })
+        {
+            source = unit.leader.leaderCard,
+            invokeUnit = unit
+        };
+        Battle.EnqueueEffect(draw);
         
+        if (GameManager.instance.debugMode && (unit.id != state.myUnit.id)) {
+            Effect turnEnd = new Effect(new int[] { (int)EffectAbility.TurnEnd })
+            {
+                source = unit.leader.leaderCard,
+                invokeUnit = unit
+            };
+            Battle.EnqueueEffect(turnEnd);
+        }
+
+        return true;
+    }
+
+    public static bool OnTurnEnd(this Effect effect, BattleState state) {
+        var unit = effect.invokeUnit;
+        bool isMyUnit = state.myUnit.id == unit.id;
+
+        unit.isDone = true;
+
+        // Set UI
+        string log = (isMyUnit ? "你" : "對方") + "的回合結束";
+        effect.hudOptionDict.Set("log", log);
+        Hud.SetState(state);
+
+        // On turn end.
+        OnPhaseChange("on_turn_end", state);
+        
+        // Check if next turn is mine (Add turn effect)
+        int addTurn = (int)unit.leader.GetIdentifier("addTurn");
+        if (addTurn > 0) {
+            unit.leader.SetIdentifier("addTurn", addTurn - 1);
+        } else {
+            state.IsMasterTurn = !state.IsMasterTurn;
+        }
+
+        // Change turn.
+        Effect turnStart = new Effect(new int[] { (int)EffectAbility.TurnStart })
+        {
+            source = state.currentUnit.leader.leaderCard,
+            invokeUnit = state.currentUnit
+        };
+        Battle.EnqueueEffect(turnStart);
+
+        return true;
+    }
+
+    public static bool Use(this Effect effect, BattleState state) {
+        var unit = effect.invokeUnit;
+        bool isMyUnit = state.myUnit.id == unit.id;
+
+        int index = int.Parse(effect.abilityOptionDict.Get("index", "0"));
+        if (!index.IsInRange(0, unit.hand.Count))
+            return false;
+
+        var card = unit.hand.cards[index];
+        
+
+        return true;
+    }
+
+    public static bool Draw(this Effect effect, BattleState state) {
+        var unit = effect.invokeUnit;
+        bool isMyUnit = state.myUnit.id == unit.id;
+
+        int drawCount = int.Parse(effect.abilityOptionDict.Get("count", "1"));
+        var filterOptions = effect.abilityOptionDict.Get("filter", "none");
+        var inGraveCards = new List<BattleCard>();
+
+
+        if (filterOptions == "none") {
+            var total = unit.Draw(drawCount, out effect.invokeTarget, out inGraveCards);
+
+            string logSource = effect.source.CurrentCard.name + "的效果";
+            string logTarget = (isMyUnit ? "我方" : "對方") + "抽取" + drawCount + "張卡片";
+            effect.hudOptionDict.Set("log", logSource + "\n" + logTarget);
+            Hud.SetState(state);
+
+            if (total.Count < drawCount) {
+                int result = (int)unit.leader.GetIdentifier("deckOutResult");            
+                var resultState = (result == 0) ? BattleResultState.Lose : BattleResultState.Win;
+                Effect resultEffect = new Effect(new int[] { (int)EffectAbility.SetResult, (int)resultState })
+                {
+                    source = unit.leader.leaderCard,
+                    invokeUnit = unit
+                };
+                resultEffect.Apply();
+                return true;
+            }
+        } else {
+            //TODO Filter cards. Don't invoke win/lose when deck out.
+            //TODO filter format -> filter=(type:option)(type:option)(type:option)
+            /*
+            var filterConditions = filterOptions.TrimStart("(").TrimEnd(")").Split(new string[] { ")(" }, StringSplitOptions.RemoveEmptyEntries);
+
+            for (int i = 0; i < filterConditions.Length; i++) {
+                var entry = filterConditions[i].Split(':');
+                
+            }
+            */
+        }
+
+        EnqueueEffect("on_be_draw", effect.invokeTarget.Select(x => x.CurrentCard).ToList() , state);
+
+        EnqueueEffect("on_be_draw_discard", inGraveCards.Select(x => x.CurrentCard).ToList() , state);
+
+        OnPhaseChange("on_draw", state);
+
         return true;
     }
 }
