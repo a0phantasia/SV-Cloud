@@ -42,17 +42,6 @@ public class Leader
         isEpUsed = rhs.isEpUsed;
     }
 
-    public Color GetHpTextColor() {
-        if (Hp == HpInit)
-            return Color.white;
-
-        return (Hp > HpInit) ? new Color(119, 226, 12) : Color.red;
-    }
-
-    public Color GetHpOutlineColor() {
-        return (GetHpTextColor() == Color.red) ? Color.white : Color.black;
-    }
-
     public float GetIdentifier(string id) 
     {
         return id switch {

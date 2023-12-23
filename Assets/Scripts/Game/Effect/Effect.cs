@@ -105,6 +105,7 @@ public class Effect : IIdentifyHandler
             EffectAbility.KeepCard  => EffectParseHandler.KeepCard,
             EffectAbility.Use       => EffectParseHandler.Use,
             EffectAbility.Draw      => EffectParseHandler.Draw,
+            EffectAbility.Summon    => EffectParseHandler.Summon,
             _ => ((data) => new Dictionary<string, string>()),
         };
         return ParseFunc.Invoke(data);
@@ -129,6 +130,7 @@ public class Effect : IIdentifyHandler
             EffectAbility.TurnEnd   => EffectAbilityHandler.OnTurnEnd,
             EffectAbility.Use       => EffectAbilityHandler.Use,
             EffectAbility.Draw      => EffectAbilityHandler.Draw,
+            EffectAbility.Summon    => EffectAbilityHandler.Summon,
             _ => (e, s) => true,
         };
         return AbilityFunc.Invoke(this, state);

@@ -7,6 +7,7 @@ public class BattleHand
 {
     public int MaxCount = 9;
     public int Count => cards.Count;
+    public bool IsFull => Count >= MaxCount;
     public List<BattleCard> cards = new List<BattleCard>();
 
     public BattleHand() {}

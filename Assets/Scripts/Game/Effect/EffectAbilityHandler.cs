@@ -62,11 +62,8 @@ public static class EffectAbilityHandler
             "lose" => unit.IsMasterUnit ? BattleResultState.Lose : BattleResultState.Win,
             _ => BattleResultState.None,
         };  
-
         state.result.masterState = resultState;
-
         Hud.SetState(state);
-        
         return true;
     }
 
@@ -118,8 +115,6 @@ public static class EffectAbilityHandler
             };
             Battle.EnqueueEffect(turnStart);
         }
-            
-
         return true;
     }
 
@@ -178,7 +173,6 @@ public static class EffectAbilityHandler
             };
             Battle.EnqueueEffect(turnEnd);
         }
-
         return true;
     }
 
@@ -189,7 +183,7 @@ public static class EffectAbilityHandler
         unit.isDone = true;
 
         // Set UI
-        string log = (isMyUnit ? "你" : "對方") + "的回合結束";
+        string log = "回合結束";
         effect.hudOptionDict.Set("log", log);
         Hud.SetState(state);
 
@@ -211,7 +205,6 @@ public static class EffectAbilityHandler
             invokeUnit = state.currentUnit
         };
         Battle.EnqueueEffect(turnStart);
-
         return true;
     }
 
@@ -224,8 +217,33 @@ public static class EffectAbilityHandler
             return false;
 
         var card = unit.hand.cards[index];
-        
+        if (!card.IsUsable(unit))
+            return false;
 
+        effect.invokeTarget = new List<BattleCard>() { card };
+
+        var cost = card.GetUseCost(unit.leader);
+        unit.leader.PP -= cost;
+        unit.hand.cards.Remove(card);
+
+        effect.hudOptionDict.Set("log", "使用" + card.CurrentCard.name);
+        Hud.SetState(state);
+
+        switch (card.CurrentCard.Type) {
+            default:
+                break;
+            case CardType.Follower:
+            case CardType.Amulet:
+                Effect summon = new Effect(new int[] { (int)EffectAbility.Summon }) 
+                {
+                    source = card,
+                    invokeUnit = unit
+                };
+                Battle.EnqueueEffect(summon);
+                break;
+        };
+        EnqueueEffect("on_be_use", effect.invokeTarget.Select(x => x.CurrentCard).ToList() , state);
+        OnPhaseChange("on_use", state);
         return true;
     }
 
@@ -242,7 +260,7 @@ public static class EffectAbilityHandler
             var total = unit.Draw(drawCount, out effect.invokeTarget, out inGraveCards);
 
             string logSource = effect.source.CurrentCard.name + "的效果";
-            string logTarget = (isMyUnit ? "我方" : "對方") + "抽取" + drawCount + "張卡片";
+            string logTarget = (isMyUnit ? "我方" : "對方") + "抽取 " + drawCount + " 張卡片";
             effect.hudOptionDict.Set("log", logSource + "\n" + logTarget);
             Hud.SetState(state);
 
@@ -269,12 +287,29 @@ public static class EffectAbilityHandler
             }
             */
         }
-
         EnqueueEffect("on_be_draw", effect.invokeTarget.Select(x => x.CurrentCard).ToList() , state);
-
         EnqueueEffect("on_be_draw_discard", inGraveCards.Select(x => x.CurrentCard).ToList() , state);
-
         OnPhaseChange("on_draw", state);
+        return true;
+    }
+
+    public static bool Summon(this Effect effect, BattleState state) {
+        var unit = effect.invokeUnit;
+        bool isMyUnit = state.myUnit.id == unit.id;
+        
+        string who = effect.abilityOptionDict.Get("who", "me");
+        var fieldUnit = (who == "me") ? unit : state.GetRhsUnitById(unit.id);
+
+        if (fieldUnit.field.Count < fieldUnit.field.MaxCount) {
+            effect.invokeTarget = new List<BattleCard>() { effect.source };
+            fieldUnit.field.cards.Add(effect.source);
+
+            effect.hudOptionDict.Set("log", effect.source.CurrentCard.name + "進入戰場");
+            Hud.SetState(state);
+            
+            EnqueueEffect("on_be_summon", effect.invokeTarget.Select(x => x.CurrentCard).ToList() , state);
+        }
+        OnPhaseChange("on_summon", state);
 
         return true;
     }

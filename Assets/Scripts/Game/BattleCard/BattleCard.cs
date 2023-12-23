@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class BattleCard : IIdentifyHandler
@@ -69,7 +70,10 @@ public class BattleCard : IIdentifyHandler
         return CurrentCard.cost;
     }
 
-    public bool IsUsable(Leader leader) {
-        return leader.PP >= GetUseCost(leader);
+    public bool IsUsable(BattleUnit unit) {
+        bool IsCostEnough() => unit.leader.PP >= GetUseCost(unit.leader);
+        bool IsFieldFull()  => (CurrentCard.Type == CardType.Follower) && (unit.field.IsFull);
+
+        return IsCostEnough() && (!IsFieldFull());
     }
 }

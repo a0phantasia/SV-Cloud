@@ -63,7 +63,7 @@ public class CardView : IMonoBehaviour
     public void SetArtwork(Texture2D artwork, CardType type = CardType.Follower) {
         var euler = new Vector3(0, type == CardType.Evolved ? 180 : 0, 0);
         artworkRawImage.rectTransform.rotation = Quaternion.Euler(euler);
-        artworkRawImage.SetTexture(artwork == null ? SpriteResources.Empty?.texture : artwork);
+        artworkRawImage.SetTexture(artwork ?? SpriteResources.DefaultSleeve?.texture);
     }
 
     public void SetGem(int craft) {

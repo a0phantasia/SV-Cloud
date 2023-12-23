@@ -10,7 +10,7 @@ public class BattleSystemView : BattleBaseView
     [SerializeField] private BattleTurnView turnView;
     [SerializeField] private BattleLogView logView;
 
-    public bool isDone = true;
+    public bool IsDone { get; protected set; } = true;
 
     public override void Init()
     {
@@ -20,13 +20,13 @@ public class BattleSystemView : BattleBaseView
     }
 
     public void SetState(BattleState state) {
-        isDone = false;
+        IsDone = false;
         logView?.SetState(state);
 
         var effect = state.currentEffect;
         switch (effect.ability) {
             default:
-                isDone = true;
+                IsDone = true;
                 break;
             case EffectAbility.SetResult:
                 string result = state.result.masterState switch {
@@ -39,7 +39,7 @@ public class BattleSystemView : BattleBaseView
                     _ => string.Empty,
                 };
                 turnView?.ShowTurnInfo("YOU " + result, reason, () => {
-                    isDone = true;
+                    IsDone = true;
                     Hud.OnConfirmBattleResult();
                 }); 
                 break;
@@ -49,7 +49,7 @@ public class BattleSystemView : BattleBaseView
                         if (state.opUnit.isDone)
                             keepView.SetActive(false);
                         
-                        isDone = true;
+                        IsDone = true;
                     });
                 }
                 break;
@@ -57,7 +57,7 @@ public class BattleSystemView : BattleBaseView
                 string who = (state.myUnit.isMyTurn ? "YOUR" : "ENEMY") + " TURN";
                 string turn = (effect.hudOptionDict.Get("ep", "false") == "false") ?
                     ("第 " + state.currentUnit.turn + " 回合") : "進化解禁";
-                turnView?.ShowTurnInfo(who, turn, () => isDone = true);
+                turnView?.ShowTurnInfo(who, turn, () => IsDone = true);
                 break;
         }
     }

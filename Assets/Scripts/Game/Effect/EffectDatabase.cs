@@ -63,4 +63,5 @@ public enum EffectAbility {
     Act = 10,
 
     Draw = 101,
+    Summon = 102,
 }

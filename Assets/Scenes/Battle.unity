@@ -1841,6 +1841,126 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3868350202156750522, guid: 16c94b1ac1add5c40b49cb817885064b,
+        type: 3}
+      propertyPath: onPointerClickEvent.m_PersistentCalls.m_Calls.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3868350202156750522, guid: 16c94b1ac1add5c40b49cb817885064b,
+        type: 3}
+      propertyPath: onPointerClickEvent.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 3868350202156750522, guid: 16c94b1ac1add5c40b49cb817885064b,
+        type: 3}
+      propertyPath: onPointerClickEvent.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 486509573}
+    - target: {fileID: 3868350202156750522, guid: 16c94b1ac1add5c40b49cb817885064b,
+        type: 3}
+      propertyPath: onPointerClickEvent.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 3868350202156750522, guid: 16c94b1ac1add5c40b49cb817885064b,
+        type: 3}
+      propertyPath: onPointerClickEvent.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: ShowFieldInfo
+      objectReference: {fileID: 0}
+    - target: {fileID: 3868350202156750522, guid: 16c94b1ac1add5c40b49cb817885064b,
+        type: 3}
+      propertyPath: onPointerClickEvent.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: BattleFieldView, Assembly-CSharp
+      objectReference: {fileID: 0}
+    - target: {fileID: 3868350202156750522, guid: 16c94b1ac1add5c40b49cb817885064b,
+        type: 3}
+      propertyPath: onPointerClickEvent.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_IntArgument
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 3868350202156750522, guid: 16c94b1ac1add5c40b49cb817885064b,
+        type: 3}
+      propertyPath: onPointerClickEvent.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.Object, UnityEngine
+      objectReference: {fileID: 0}
+    - target: {fileID: 6030730338456732514, guid: 16c94b1ac1add5c40b49cb817885064b,
+        type: 3}
+      propertyPath: onPointerClickEvent.m_PersistentCalls.m_Calls.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6030730338456732514, guid: 16c94b1ac1add5c40b49cb817885064b,
+        type: 3}
+      propertyPath: onPointerClickEvent.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 6030730338456732514, guid: 16c94b1ac1add5c40b49cb817885064b,
+        type: 3}
+      propertyPath: onPointerClickEvent.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 486509573}
+    - target: {fileID: 6030730338456732514, guid: 16c94b1ac1add5c40b49cb817885064b,
+        type: 3}
+      propertyPath: onPointerClickEvent.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 6030730338456732514, guid: 16c94b1ac1add5c40b49cb817885064b,
+        type: 3}
+      propertyPath: onPointerClickEvent.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: ShowFieldInfo
+      objectReference: {fileID: 0}
+    - target: {fileID: 6030730338456732514, guid: 16c94b1ac1add5c40b49cb817885064b,
+        type: 3}
+      propertyPath: onPointerClickEvent.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: BattleFieldView, Assembly-CSharp
+      objectReference: {fileID: 0}
+    - target: {fileID: 6030730338456732514, guid: 16c94b1ac1add5c40b49cb817885064b,
+        type: 3}
+      propertyPath: onPointerClickEvent.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_IntArgument
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 6030730338456732514, guid: 16c94b1ac1add5c40b49cb817885064b,
+        type: 3}
+      propertyPath: onPointerClickEvent.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.Object, UnityEngine
+      objectReference: {fileID: 0}
+    - target: {fileID: 8717696240957014883, guid: 16c94b1ac1add5c40b49cb817885064b,
+        type: 3}
+      propertyPath: onPointerClickEvent.m_PersistentCalls.m_Calls.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8717696240957014883, guid: 16c94b1ac1add5c40b49cb817885064b,
+        type: 3}
+      propertyPath: onPointerClickEvent.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 8717696240957014883, guid: 16c94b1ac1add5c40b49cb817885064b,
+        type: 3}
+      propertyPath: onPointerClickEvent.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 486509573}
+    - target: {fileID: 8717696240957014883, guid: 16c94b1ac1add5c40b49cb817885064b,
+        type: 3}
+      propertyPath: onPointerClickEvent.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 8717696240957014883, guid: 16c94b1ac1add5c40b49cb817885064b,
+        type: 3}
+      propertyPath: onPointerClickEvent.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: ShowFieldInfo
+      objectReference: {fileID: 0}
+    - target: {fileID: 8717696240957014883, guid: 16c94b1ac1add5c40b49cb817885064b,
+        type: 3}
+      propertyPath: onPointerClickEvent.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: BattleFieldView, Assembly-CSharp
+      objectReference: {fileID: 0}
+    - target: {fileID: 8717696240957014883, guid: 16c94b1ac1add5c40b49cb817885064b,
+        type: 3}
+      propertyPath: onPointerClickEvent.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_IntArgument
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 8717696240957014883, guid: 16c94b1ac1add5c40b49cb817885064b,
+        type: 3}
+      propertyPath: onPointerClickEvent.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.Object, UnityEngine
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 16c94b1ac1add5c40b49cb817885064b, type: 3}
 --- !u!224 &167134892 stripped
@@ -2606,6 +2726,111 @@ PrefabInstance:
         type: 3}
       propertyPath: m_IsActive
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3868350202156750522, guid: 16c94b1ac1add5c40b49cb817885064b,
+        type: 3}
+      propertyPath: onPointerClickEvent.m_PersistentCalls.m_Calls.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3868350202156750522, guid: 16c94b1ac1add5c40b49cb817885064b,
+        type: 3}
+      propertyPath: onPointerClickEvent.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 3868350202156750522, guid: 16c94b1ac1add5c40b49cb817885064b,
+        type: 3}
+      propertyPath: onPointerClickEvent.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 823512793}
+    - target: {fileID: 3868350202156750522, guid: 16c94b1ac1add5c40b49cb817885064b,
+        type: 3}
+      propertyPath: onPointerClickEvent.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 3868350202156750522, guid: 16c94b1ac1add5c40b49cb817885064b,
+        type: 3}
+      propertyPath: onPointerClickEvent.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: ShowFieldInfo
+      objectReference: {fileID: 0}
+    - target: {fileID: 3868350202156750522, guid: 16c94b1ac1add5c40b49cb817885064b,
+        type: 3}
+      propertyPath: onPointerClickEvent.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: BattleFieldView, Assembly-CSharp
+      objectReference: {fileID: 0}
+    - target: {fileID: 3868350202156750522, guid: 16c94b1ac1add5c40b49cb817885064b,
+        type: 3}
+      propertyPath: onPointerClickEvent.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.Object, UnityEngine
+      objectReference: {fileID: 0}
+    - target: {fileID: 6030730338456732514, guid: 16c94b1ac1add5c40b49cb817885064b,
+        type: 3}
+      propertyPath: onPointerClickEvent.m_PersistentCalls.m_Calls.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6030730338456732514, guid: 16c94b1ac1add5c40b49cb817885064b,
+        type: 3}
+      propertyPath: onPointerClickEvent.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 6030730338456732514, guid: 16c94b1ac1add5c40b49cb817885064b,
+        type: 3}
+      propertyPath: onPointerClickEvent.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 823512793}
+    - target: {fileID: 6030730338456732514, guid: 16c94b1ac1add5c40b49cb817885064b,
+        type: 3}
+      propertyPath: onPointerClickEvent.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 6030730338456732514, guid: 16c94b1ac1add5c40b49cb817885064b,
+        type: 3}
+      propertyPath: onPointerClickEvent.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: ShowFieldInfo
+      objectReference: {fileID: 0}
+    - target: {fileID: 6030730338456732514, guid: 16c94b1ac1add5c40b49cb817885064b,
+        type: 3}
+      propertyPath: onPointerClickEvent.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: BattleFieldView, Assembly-CSharp
+      objectReference: {fileID: 0}
+    - target: {fileID: 6030730338456732514, guid: 16c94b1ac1add5c40b49cb817885064b,
+        type: 3}
+      propertyPath: onPointerClickEvent.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.Object, UnityEngine
+      objectReference: {fileID: 0}
+    - target: {fileID: 8717696240957014883, guid: 16c94b1ac1add5c40b49cb817885064b,
+        type: 3}
+      propertyPath: onPointerClickEvent.m_PersistentCalls.m_Calls.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8717696240957014883, guid: 16c94b1ac1add5c40b49cb817885064b,
+        type: 3}
+      propertyPath: onPointerClickEvent.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 8717696240957014883, guid: 16c94b1ac1add5c40b49cb817885064b,
+        type: 3}
+      propertyPath: onPointerClickEvent.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 823512793}
+    - target: {fileID: 8717696240957014883, guid: 16c94b1ac1add5c40b49cb817885064b,
+        type: 3}
+      propertyPath: onPointerClickEvent.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 8717696240957014883, guid: 16c94b1ac1add5c40b49cb817885064b,
+        type: 3}
+      propertyPath: onPointerClickEvent.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: ShowFieldInfo
+      objectReference: {fileID: 0}
+    - target: {fileID: 8717696240957014883, guid: 16c94b1ac1add5c40b49cb817885064b,
+        type: 3}
+      propertyPath: onPointerClickEvent.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: BattleFieldView, Assembly-CSharp
+      objectReference: {fileID: 0}
+    - target: {fileID: 8717696240957014883, guid: 16c94b1ac1add5c40b49cb817885064b,
+        type: 3}
+      propertyPath: onPointerClickEvent.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.Object, UnityEngine
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 16c94b1ac1add5c40b49cb817885064b, type: 3}
@@ -4396,6 +4621,41 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 411592307}
   m_CullTransparentMesh: 0
+--- !u!1 &415641858
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 415641859}
+  m_Layer: 5
+  m_Name: -------- (4)
+  m_TagString: EditorOnly
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &415641859
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 415641858}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 1429742202}
+  m_RootOrder: 14
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 100, y: 100}
+  m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &416677333
 GameObject:
   m_ObjectHideFlags: 0
@@ -4851,6 +5111,126 @@ PrefabInstance:
         type: 3}
       propertyPath: m_IsActive
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3868350202156750522, guid: 16c94b1ac1add5c40b49cb817885064b,
+        type: 3}
+      propertyPath: onPointerClickEvent.m_PersistentCalls.m_Calls.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3868350202156750522, guid: 16c94b1ac1add5c40b49cb817885064b,
+        type: 3}
+      propertyPath: onPointerClickEvent.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 3868350202156750522, guid: 16c94b1ac1add5c40b49cb817885064b,
+        type: 3}
+      propertyPath: onPointerClickEvent.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 823512793}
+    - target: {fileID: 3868350202156750522, guid: 16c94b1ac1add5c40b49cb817885064b,
+        type: 3}
+      propertyPath: onPointerClickEvent.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 3868350202156750522, guid: 16c94b1ac1add5c40b49cb817885064b,
+        type: 3}
+      propertyPath: onPointerClickEvent.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: ShowFieldInfo
+      objectReference: {fileID: 0}
+    - target: {fileID: 3868350202156750522, guid: 16c94b1ac1add5c40b49cb817885064b,
+        type: 3}
+      propertyPath: onPointerClickEvent.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: BattleFieldView, Assembly-CSharp
+      objectReference: {fileID: 0}
+    - target: {fileID: 3868350202156750522, guid: 16c94b1ac1add5c40b49cb817885064b,
+        type: 3}
+      propertyPath: onPointerClickEvent.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_IntArgument
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 3868350202156750522, guid: 16c94b1ac1add5c40b49cb817885064b,
+        type: 3}
+      propertyPath: onPointerClickEvent.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.Object, UnityEngine
+      objectReference: {fileID: 0}
+    - target: {fileID: 6030730338456732514, guid: 16c94b1ac1add5c40b49cb817885064b,
+        type: 3}
+      propertyPath: onPointerClickEvent.m_PersistentCalls.m_Calls.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6030730338456732514, guid: 16c94b1ac1add5c40b49cb817885064b,
+        type: 3}
+      propertyPath: onPointerClickEvent.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 6030730338456732514, guid: 16c94b1ac1add5c40b49cb817885064b,
+        type: 3}
+      propertyPath: onPointerClickEvent.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 823512793}
+    - target: {fileID: 6030730338456732514, guid: 16c94b1ac1add5c40b49cb817885064b,
+        type: 3}
+      propertyPath: onPointerClickEvent.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 6030730338456732514, guid: 16c94b1ac1add5c40b49cb817885064b,
+        type: 3}
+      propertyPath: onPointerClickEvent.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: ShowFieldInfo
+      objectReference: {fileID: 0}
+    - target: {fileID: 6030730338456732514, guid: 16c94b1ac1add5c40b49cb817885064b,
+        type: 3}
+      propertyPath: onPointerClickEvent.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: BattleFieldView, Assembly-CSharp
+      objectReference: {fileID: 0}
+    - target: {fileID: 6030730338456732514, guid: 16c94b1ac1add5c40b49cb817885064b,
+        type: 3}
+      propertyPath: onPointerClickEvent.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_IntArgument
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 6030730338456732514, guid: 16c94b1ac1add5c40b49cb817885064b,
+        type: 3}
+      propertyPath: onPointerClickEvent.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.Object, UnityEngine
+      objectReference: {fileID: 0}
+    - target: {fileID: 8717696240957014883, guid: 16c94b1ac1add5c40b49cb817885064b,
+        type: 3}
+      propertyPath: onPointerClickEvent.m_PersistentCalls.m_Calls.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8717696240957014883, guid: 16c94b1ac1add5c40b49cb817885064b,
+        type: 3}
+      propertyPath: onPointerClickEvent.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 8717696240957014883, guid: 16c94b1ac1add5c40b49cb817885064b,
+        type: 3}
+      propertyPath: onPointerClickEvent.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 823512793}
+    - target: {fileID: 8717696240957014883, guid: 16c94b1ac1add5c40b49cb817885064b,
+        type: 3}
+      propertyPath: onPointerClickEvent.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 8717696240957014883, guid: 16c94b1ac1add5c40b49cb817885064b,
+        type: 3}
+      propertyPath: onPointerClickEvent.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: ShowFieldInfo
+      objectReference: {fileID: 0}
+    - target: {fileID: 8717696240957014883, guid: 16c94b1ac1add5c40b49cb817885064b,
+        type: 3}
+      propertyPath: onPointerClickEvent.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: BattleFieldView, Assembly-CSharp
+      objectReference: {fileID: 0}
+    - target: {fileID: 8717696240957014883, guid: 16c94b1ac1add5c40b49cb817885064b,
+        type: 3}
+      propertyPath: onPointerClickEvent.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_IntArgument
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 8717696240957014883, guid: 16c94b1ac1add5c40b49cb817885064b,
+        type: 3}
+      propertyPath: onPointerClickEvent.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.Object, UnityEngine
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 16c94b1ac1add5c40b49cb817885064b, type: 3}
@@ -5335,7 +5715,7 @@ RectTransform:
   - {fileID: 179888250}
   - {fileID: 443899149}
   m_Father: {fileID: 1429742202}
-  m_RootOrder: 16
+  m_RootOrder: 17
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
@@ -7435,7 +7815,7 @@ RectTransform:
   - {fileID: 2047173416}
   - {fileID: 876217622}
   m_Father: {fileID: 1429742202}
-  m_RootOrder: 19
+  m_RootOrder: 20
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
@@ -9075,6 +9455,126 @@ PrefabInstance:
         type: 3}
       propertyPath: m_IsActive
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3868350202156750522, guid: 16c94b1ac1add5c40b49cb817885064b,
+        type: 3}
+      propertyPath: onPointerClickEvent.m_PersistentCalls.m_Calls.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3868350202156750522, guid: 16c94b1ac1add5c40b49cb817885064b,
+        type: 3}
+      propertyPath: onPointerClickEvent.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 3868350202156750522, guid: 16c94b1ac1add5c40b49cb817885064b,
+        type: 3}
+      propertyPath: onPointerClickEvent.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 823512793}
+    - target: {fileID: 3868350202156750522, guid: 16c94b1ac1add5c40b49cb817885064b,
+        type: 3}
+      propertyPath: onPointerClickEvent.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 3868350202156750522, guid: 16c94b1ac1add5c40b49cb817885064b,
+        type: 3}
+      propertyPath: onPointerClickEvent.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: ShowFieldInfo
+      objectReference: {fileID: 0}
+    - target: {fileID: 3868350202156750522, guid: 16c94b1ac1add5c40b49cb817885064b,
+        type: 3}
+      propertyPath: onPointerClickEvent.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: BattleFieldView, Assembly-CSharp
+      objectReference: {fileID: 0}
+    - target: {fileID: 3868350202156750522, guid: 16c94b1ac1add5c40b49cb817885064b,
+        type: 3}
+      propertyPath: onPointerClickEvent.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_IntArgument
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 3868350202156750522, guid: 16c94b1ac1add5c40b49cb817885064b,
+        type: 3}
+      propertyPath: onPointerClickEvent.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.Object, UnityEngine
+      objectReference: {fileID: 0}
+    - target: {fileID: 6030730338456732514, guid: 16c94b1ac1add5c40b49cb817885064b,
+        type: 3}
+      propertyPath: onPointerClickEvent.m_PersistentCalls.m_Calls.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6030730338456732514, guid: 16c94b1ac1add5c40b49cb817885064b,
+        type: 3}
+      propertyPath: onPointerClickEvent.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 6030730338456732514, guid: 16c94b1ac1add5c40b49cb817885064b,
+        type: 3}
+      propertyPath: onPointerClickEvent.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 823512793}
+    - target: {fileID: 6030730338456732514, guid: 16c94b1ac1add5c40b49cb817885064b,
+        type: 3}
+      propertyPath: onPointerClickEvent.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 6030730338456732514, guid: 16c94b1ac1add5c40b49cb817885064b,
+        type: 3}
+      propertyPath: onPointerClickEvent.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: ShowFieldInfo
+      objectReference: {fileID: 0}
+    - target: {fileID: 6030730338456732514, guid: 16c94b1ac1add5c40b49cb817885064b,
+        type: 3}
+      propertyPath: onPointerClickEvent.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: BattleFieldView, Assembly-CSharp
+      objectReference: {fileID: 0}
+    - target: {fileID: 6030730338456732514, guid: 16c94b1ac1add5c40b49cb817885064b,
+        type: 3}
+      propertyPath: onPointerClickEvent.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_IntArgument
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 6030730338456732514, guid: 16c94b1ac1add5c40b49cb817885064b,
+        type: 3}
+      propertyPath: onPointerClickEvent.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.Object, UnityEngine
+      objectReference: {fileID: 0}
+    - target: {fileID: 8717696240957014883, guid: 16c94b1ac1add5c40b49cb817885064b,
+        type: 3}
+      propertyPath: onPointerClickEvent.m_PersistentCalls.m_Calls.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8717696240957014883, guid: 16c94b1ac1add5c40b49cb817885064b,
+        type: 3}
+      propertyPath: onPointerClickEvent.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 8717696240957014883, guid: 16c94b1ac1add5c40b49cb817885064b,
+        type: 3}
+      propertyPath: onPointerClickEvent.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 823512793}
+    - target: {fileID: 8717696240957014883, guid: 16c94b1ac1add5c40b49cb817885064b,
+        type: 3}
+      propertyPath: onPointerClickEvent.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 8717696240957014883, guid: 16c94b1ac1add5c40b49cb817885064b,
+        type: 3}
+      propertyPath: onPointerClickEvent.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: ShowFieldInfo
+      objectReference: {fileID: 0}
+    - target: {fileID: 8717696240957014883, guid: 16c94b1ac1add5c40b49cb817885064b,
+        type: 3}
+      propertyPath: onPointerClickEvent.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: BattleFieldView, Assembly-CSharp
+      objectReference: {fileID: 0}
+    - target: {fileID: 8717696240957014883, guid: 16c94b1ac1add5c40b49cb817885064b,
+        type: 3}
+      propertyPath: onPointerClickEvent.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_IntArgument
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 8717696240957014883, guid: 16c94b1ac1add5c40b49cb817885064b,
+        type: 3}
+      propertyPath: onPointerClickEvent.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.Object, UnityEngine
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 16c94b1ac1add5c40b49cb817885064b, type: 3}
@@ -10934,6 +11434,126 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3868350202156750522, guid: 16c94b1ac1add5c40b49cb817885064b,
+        type: 3}
+      propertyPath: onPointerClickEvent.m_PersistentCalls.m_Calls.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3868350202156750522, guid: 16c94b1ac1add5c40b49cb817885064b,
+        type: 3}
+      propertyPath: onPointerClickEvent.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 3868350202156750522, guid: 16c94b1ac1add5c40b49cb817885064b,
+        type: 3}
+      propertyPath: onPointerClickEvent.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 823512793}
+    - target: {fileID: 3868350202156750522, guid: 16c94b1ac1add5c40b49cb817885064b,
+        type: 3}
+      propertyPath: onPointerClickEvent.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 3868350202156750522, guid: 16c94b1ac1add5c40b49cb817885064b,
+        type: 3}
+      propertyPath: onPointerClickEvent.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: ShowFieldInfo
+      objectReference: {fileID: 0}
+    - target: {fileID: 3868350202156750522, guid: 16c94b1ac1add5c40b49cb817885064b,
+        type: 3}
+      propertyPath: onPointerClickEvent.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: BattleFieldView, Assembly-CSharp
+      objectReference: {fileID: 0}
+    - target: {fileID: 3868350202156750522, guid: 16c94b1ac1add5c40b49cb817885064b,
+        type: 3}
+      propertyPath: onPointerClickEvent.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_IntArgument
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 3868350202156750522, guid: 16c94b1ac1add5c40b49cb817885064b,
+        type: 3}
+      propertyPath: onPointerClickEvent.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.Object, UnityEngine
+      objectReference: {fileID: 0}
+    - target: {fileID: 6030730338456732514, guid: 16c94b1ac1add5c40b49cb817885064b,
+        type: 3}
+      propertyPath: onPointerClickEvent.m_PersistentCalls.m_Calls.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6030730338456732514, guid: 16c94b1ac1add5c40b49cb817885064b,
+        type: 3}
+      propertyPath: onPointerClickEvent.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 6030730338456732514, guid: 16c94b1ac1add5c40b49cb817885064b,
+        type: 3}
+      propertyPath: onPointerClickEvent.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 823512793}
+    - target: {fileID: 6030730338456732514, guid: 16c94b1ac1add5c40b49cb817885064b,
+        type: 3}
+      propertyPath: onPointerClickEvent.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 6030730338456732514, guid: 16c94b1ac1add5c40b49cb817885064b,
+        type: 3}
+      propertyPath: onPointerClickEvent.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: ShowFieldInfo
+      objectReference: {fileID: 0}
+    - target: {fileID: 6030730338456732514, guid: 16c94b1ac1add5c40b49cb817885064b,
+        type: 3}
+      propertyPath: onPointerClickEvent.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: BattleFieldView, Assembly-CSharp
+      objectReference: {fileID: 0}
+    - target: {fileID: 6030730338456732514, guid: 16c94b1ac1add5c40b49cb817885064b,
+        type: 3}
+      propertyPath: onPointerClickEvent.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_IntArgument
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 6030730338456732514, guid: 16c94b1ac1add5c40b49cb817885064b,
+        type: 3}
+      propertyPath: onPointerClickEvent.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.Object, UnityEngine
+      objectReference: {fileID: 0}
+    - target: {fileID: 8717696240957014883, guid: 16c94b1ac1add5c40b49cb817885064b,
+        type: 3}
+      propertyPath: onPointerClickEvent.m_PersistentCalls.m_Calls.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8717696240957014883, guid: 16c94b1ac1add5c40b49cb817885064b,
+        type: 3}
+      propertyPath: onPointerClickEvent.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 8717696240957014883, guid: 16c94b1ac1add5c40b49cb817885064b,
+        type: 3}
+      propertyPath: onPointerClickEvent.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 823512793}
+    - target: {fileID: 8717696240957014883, guid: 16c94b1ac1add5c40b49cb817885064b,
+        type: 3}
+      propertyPath: onPointerClickEvent.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 8717696240957014883, guid: 16c94b1ac1add5c40b49cb817885064b,
+        type: 3}
+      propertyPath: onPointerClickEvent.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: ShowFieldInfo
+      objectReference: {fileID: 0}
+    - target: {fileID: 8717696240957014883, guid: 16c94b1ac1add5c40b49cb817885064b,
+        type: 3}
+      propertyPath: onPointerClickEvent.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: BattleFieldView, Assembly-CSharp
+      objectReference: {fileID: 0}
+    - target: {fileID: 8717696240957014883, guid: 16c94b1ac1add5c40b49cb817885064b,
+        type: 3}
+      propertyPath: onPointerClickEvent.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_IntArgument
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 8717696240957014883, guid: 16c94b1ac1add5c40b49cb817885064b,
+        type: 3}
+      propertyPath: onPointerClickEvent.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.Object, UnityEngine
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 16c94b1ac1add5c40b49cb817885064b, type: 3}
 --- !u!224 &847963017 stripped
@@ -11188,7 +11808,7 @@ RectTransform:
   - {fileID: 710963951}
   - {fileID: 1116161685}
   m_Father: {fileID: 1429742202}
-  m_RootOrder: 18
+  m_RootOrder: 19
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
@@ -12450,7 +13070,7 @@ RectTransform:
   - {fileID: 443459807}
   - {fileID: 61137076}
   m_Father: {fileID: 1429742202}
-  m_RootOrder: 15
+  m_RootOrder: 16
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
@@ -13175,7 +13795,7 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1429742202}
-  m_RootOrder: 12
+  m_RootOrder: 11
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -14574,6 +15194,126 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3868350202156750522, guid: 16c94b1ac1add5c40b49cb817885064b,
+        type: 3}
+      propertyPath: onPointerClickEvent.m_PersistentCalls.m_Calls.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3868350202156750522, guid: 16c94b1ac1add5c40b49cb817885064b,
+        type: 3}
+      propertyPath: onPointerClickEvent.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 3868350202156750522, guid: 16c94b1ac1add5c40b49cb817885064b,
+        type: 3}
+      propertyPath: onPointerClickEvent.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 486509573}
+    - target: {fileID: 3868350202156750522, guid: 16c94b1ac1add5c40b49cb817885064b,
+        type: 3}
+      propertyPath: onPointerClickEvent.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 3868350202156750522, guid: 16c94b1ac1add5c40b49cb817885064b,
+        type: 3}
+      propertyPath: onPointerClickEvent.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: ShowFieldInfo
+      objectReference: {fileID: 0}
+    - target: {fileID: 3868350202156750522, guid: 16c94b1ac1add5c40b49cb817885064b,
+        type: 3}
+      propertyPath: onPointerClickEvent.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: BattleFieldView, Assembly-CSharp
+      objectReference: {fileID: 0}
+    - target: {fileID: 3868350202156750522, guid: 16c94b1ac1add5c40b49cb817885064b,
+        type: 3}
+      propertyPath: onPointerClickEvent.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_IntArgument
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 3868350202156750522, guid: 16c94b1ac1add5c40b49cb817885064b,
+        type: 3}
+      propertyPath: onPointerClickEvent.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.Object, UnityEngine
+      objectReference: {fileID: 0}
+    - target: {fileID: 6030730338456732514, guid: 16c94b1ac1add5c40b49cb817885064b,
+        type: 3}
+      propertyPath: onPointerClickEvent.m_PersistentCalls.m_Calls.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6030730338456732514, guid: 16c94b1ac1add5c40b49cb817885064b,
+        type: 3}
+      propertyPath: onPointerClickEvent.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 6030730338456732514, guid: 16c94b1ac1add5c40b49cb817885064b,
+        type: 3}
+      propertyPath: onPointerClickEvent.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 486509573}
+    - target: {fileID: 6030730338456732514, guid: 16c94b1ac1add5c40b49cb817885064b,
+        type: 3}
+      propertyPath: onPointerClickEvent.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 6030730338456732514, guid: 16c94b1ac1add5c40b49cb817885064b,
+        type: 3}
+      propertyPath: onPointerClickEvent.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: ShowFieldInfo
+      objectReference: {fileID: 0}
+    - target: {fileID: 6030730338456732514, guid: 16c94b1ac1add5c40b49cb817885064b,
+        type: 3}
+      propertyPath: onPointerClickEvent.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: BattleFieldView, Assembly-CSharp
+      objectReference: {fileID: 0}
+    - target: {fileID: 6030730338456732514, guid: 16c94b1ac1add5c40b49cb817885064b,
+        type: 3}
+      propertyPath: onPointerClickEvent.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_IntArgument
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 6030730338456732514, guid: 16c94b1ac1add5c40b49cb817885064b,
+        type: 3}
+      propertyPath: onPointerClickEvent.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.Object, UnityEngine
+      objectReference: {fileID: 0}
+    - target: {fileID: 8717696240957014883, guid: 16c94b1ac1add5c40b49cb817885064b,
+        type: 3}
+      propertyPath: onPointerClickEvent.m_PersistentCalls.m_Calls.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8717696240957014883, guid: 16c94b1ac1add5c40b49cb817885064b,
+        type: 3}
+      propertyPath: onPointerClickEvent.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 8717696240957014883, guid: 16c94b1ac1add5c40b49cb817885064b,
+        type: 3}
+      propertyPath: onPointerClickEvent.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 486509573}
+    - target: {fileID: 8717696240957014883, guid: 16c94b1ac1add5c40b49cb817885064b,
+        type: 3}
+      propertyPath: onPointerClickEvent.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 8717696240957014883, guid: 16c94b1ac1add5c40b49cb817885064b,
+        type: 3}
+      propertyPath: onPointerClickEvent.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: ShowFieldInfo
+      objectReference: {fileID: 0}
+    - target: {fileID: 8717696240957014883, guid: 16c94b1ac1add5c40b49cb817885064b,
+        type: 3}
+      propertyPath: onPointerClickEvent.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: BattleFieldView, Assembly-CSharp
+      objectReference: {fileID: 0}
+    - target: {fileID: 8717696240957014883, guid: 16c94b1ac1add5c40b49cb817885064b,
+        type: 3}
+      propertyPath: onPointerClickEvent.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_IntArgument
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 8717696240957014883, guid: 16c94b1ac1add5c40b49cb817885064b,
+        type: 3}
+      propertyPath: onPointerClickEvent.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.Object, UnityEngine
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 16c94b1ac1add5c40b49cb817885064b, type: 3}
 --- !u!224 &1208219630 stripped
@@ -15711,7 +16451,7 @@ PrefabInstance:
     - target: {fileID: 8878150087039746117, guid: 4230d0f5f4577074fa1cef17cd8cec05,
         type: 3}
       propertyPath: m_RootOrder
-      value: 21
+      value: 23
       objectReference: {fileID: 0}
     - target: {fileID: 8878150087039746117, guid: 4230d0f5f4577074fa1cef17cd8cec05,
         type: 3}
@@ -18561,18 +19301,19 @@ RectTransform:
   - {fileID: 1040974451}
   - {fileID: 2130157927}
   - {fileID: 2121950525}
-  - {fileID: 1718401207}
   - {fileID: 1066422402}
+  - {fileID: 1718401207}
   - {fileID: 84767129}
+  - {fileID: 415641859}
   - {fileID: 1516748466}
   - {fileID: 1043409347}
   - {fileID: 456552279}
   - {fileID: 1549665594}
   - {fileID: 878601127}
   - {fileID: 599152700}
-  - {fileID: 1266880234}
   - {fileID: 1750519572}
   - {fileID: 234682745}
+  - {fileID: 1266880234}
   m_Father: {fileID: 0}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -19456,6 +20197,111 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3868350202156750522, guid: 16c94b1ac1add5c40b49cb817885064b,
+        type: 3}
+      propertyPath: onPointerClickEvent.m_PersistentCalls.m_Calls.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3868350202156750522, guid: 16c94b1ac1add5c40b49cb817885064b,
+        type: 3}
+      propertyPath: onPointerClickEvent.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 3868350202156750522, guid: 16c94b1ac1add5c40b49cb817885064b,
+        type: 3}
+      propertyPath: onPointerClickEvent.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 486509573}
+    - target: {fileID: 3868350202156750522, guid: 16c94b1ac1add5c40b49cb817885064b,
+        type: 3}
+      propertyPath: onPointerClickEvent.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 3868350202156750522, guid: 16c94b1ac1add5c40b49cb817885064b,
+        type: 3}
+      propertyPath: onPointerClickEvent.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: ShowFieldInfo
+      objectReference: {fileID: 0}
+    - target: {fileID: 3868350202156750522, guid: 16c94b1ac1add5c40b49cb817885064b,
+        type: 3}
+      propertyPath: onPointerClickEvent.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: BattleFieldView, Assembly-CSharp
+      objectReference: {fileID: 0}
+    - target: {fileID: 3868350202156750522, guid: 16c94b1ac1add5c40b49cb817885064b,
+        type: 3}
+      propertyPath: onPointerClickEvent.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.Object, UnityEngine
+      objectReference: {fileID: 0}
+    - target: {fileID: 6030730338456732514, guid: 16c94b1ac1add5c40b49cb817885064b,
+        type: 3}
+      propertyPath: onPointerClickEvent.m_PersistentCalls.m_Calls.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6030730338456732514, guid: 16c94b1ac1add5c40b49cb817885064b,
+        type: 3}
+      propertyPath: onPointerClickEvent.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 6030730338456732514, guid: 16c94b1ac1add5c40b49cb817885064b,
+        type: 3}
+      propertyPath: onPointerClickEvent.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 486509573}
+    - target: {fileID: 6030730338456732514, guid: 16c94b1ac1add5c40b49cb817885064b,
+        type: 3}
+      propertyPath: onPointerClickEvent.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 6030730338456732514, guid: 16c94b1ac1add5c40b49cb817885064b,
+        type: 3}
+      propertyPath: onPointerClickEvent.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: ShowFieldInfo
+      objectReference: {fileID: 0}
+    - target: {fileID: 6030730338456732514, guid: 16c94b1ac1add5c40b49cb817885064b,
+        type: 3}
+      propertyPath: onPointerClickEvent.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: BattleFieldView, Assembly-CSharp
+      objectReference: {fileID: 0}
+    - target: {fileID: 6030730338456732514, guid: 16c94b1ac1add5c40b49cb817885064b,
+        type: 3}
+      propertyPath: onPointerClickEvent.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.Object, UnityEngine
+      objectReference: {fileID: 0}
+    - target: {fileID: 8717696240957014883, guid: 16c94b1ac1add5c40b49cb817885064b,
+        type: 3}
+      propertyPath: onPointerClickEvent.m_PersistentCalls.m_Calls.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8717696240957014883, guid: 16c94b1ac1add5c40b49cb817885064b,
+        type: 3}
+      propertyPath: onPointerClickEvent.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 8717696240957014883, guid: 16c94b1ac1add5c40b49cb817885064b,
+        type: 3}
+      propertyPath: onPointerClickEvent.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 486509573}
+    - target: {fileID: 8717696240957014883, guid: 16c94b1ac1add5c40b49cb817885064b,
+        type: 3}
+      propertyPath: onPointerClickEvent.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 8717696240957014883, guid: 16c94b1ac1add5c40b49cb817885064b,
+        type: 3}
+      propertyPath: onPointerClickEvent.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: ShowFieldInfo
+      objectReference: {fileID: 0}
+    - target: {fileID: 8717696240957014883, guid: 16c94b1ac1add5c40b49cb817885064b,
+        type: 3}
+      propertyPath: onPointerClickEvent.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: BattleFieldView, Assembly-CSharp
+      objectReference: {fileID: 0}
+    - target: {fileID: 8717696240957014883, guid: 16c94b1ac1add5c40b49cb817885064b,
+        type: 3}
+      propertyPath: onPointerClickEvent.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.Object, UnityEngine
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 16c94b1ac1add5c40b49cb817885064b, type: 3}
 --- !u!224 &1473866030 stripped
@@ -19635,6 +20481,126 @@ PrefabInstance:
         type: 3}
       propertyPath: m_IsActive
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3868350202156750522, guid: 16c94b1ac1add5c40b49cb817885064b,
+        type: 3}
+      propertyPath: onPointerClickEvent.m_PersistentCalls.m_Calls.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3868350202156750522, guid: 16c94b1ac1add5c40b49cb817885064b,
+        type: 3}
+      propertyPath: onPointerClickEvent.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 3868350202156750522, guid: 16c94b1ac1add5c40b49cb817885064b,
+        type: 3}
+      propertyPath: onPointerClickEvent.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 486509573}
+    - target: {fileID: 3868350202156750522, guid: 16c94b1ac1add5c40b49cb817885064b,
+        type: 3}
+      propertyPath: onPointerClickEvent.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 3868350202156750522, guid: 16c94b1ac1add5c40b49cb817885064b,
+        type: 3}
+      propertyPath: onPointerClickEvent.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: ShowFieldInfo
+      objectReference: {fileID: 0}
+    - target: {fileID: 3868350202156750522, guid: 16c94b1ac1add5c40b49cb817885064b,
+        type: 3}
+      propertyPath: onPointerClickEvent.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: BattleFieldView, Assembly-CSharp
+      objectReference: {fileID: 0}
+    - target: {fileID: 3868350202156750522, guid: 16c94b1ac1add5c40b49cb817885064b,
+        type: 3}
+      propertyPath: onPointerClickEvent.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_IntArgument
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 3868350202156750522, guid: 16c94b1ac1add5c40b49cb817885064b,
+        type: 3}
+      propertyPath: onPointerClickEvent.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.Object, UnityEngine
+      objectReference: {fileID: 0}
+    - target: {fileID: 6030730338456732514, guid: 16c94b1ac1add5c40b49cb817885064b,
+        type: 3}
+      propertyPath: onPointerClickEvent.m_PersistentCalls.m_Calls.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6030730338456732514, guid: 16c94b1ac1add5c40b49cb817885064b,
+        type: 3}
+      propertyPath: onPointerClickEvent.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 6030730338456732514, guid: 16c94b1ac1add5c40b49cb817885064b,
+        type: 3}
+      propertyPath: onPointerClickEvent.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 486509573}
+    - target: {fileID: 6030730338456732514, guid: 16c94b1ac1add5c40b49cb817885064b,
+        type: 3}
+      propertyPath: onPointerClickEvent.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 6030730338456732514, guid: 16c94b1ac1add5c40b49cb817885064b,
+        type: 3}
+      propertyPath: onPointerClickEvent.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: ShowFieldInfo
+      objectReference: {fileID: 0}
+    - target: {fileID: 6030730338456732514, guid: 16c94b1ac1add5c40b49cb817885064b,
+        type: 3}
+      propertyPath: onPointerClickEvent.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: BattleFieldView, Assembly-CSharp
+      objectReference: {fileID: 0}
+    - target: {fileID: 6030730338456732514, guid: 16c94b1ac1add5c40b49cb817885064b,
+        type: 3}
+      propertyPath: onPointerClickEvent.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_IntArgument
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 6030730338456732514, guid: 16c94b1ac1add5c40b49cb817885064b,
+        type: 3}
+      propertyPath: onPointerClickEvent.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.Object, UnityEngine
+      objectReference: {fileID: 0}
+    - target: {fileID: 8717696240957014883, guid: 16c94b1ac1add5c40b49cb817885064b,
+        type: 3}
+      propertyPath: onPointerClickEvent.m_PersistentCalls.m_Calls.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8717696240957014883, guid: 16c94b1ac1add5c40b49cb817885064b,
+        type: 3}
+      propertyPath: onPointerClickEvent.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 8717696240957014883, guid: 16c94b1ac1add5c40b49cb817885064b,
+        type: 3}
+      propertyPath: onPointerClickEvent.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 486509573}
+    - target: {fileID: 8717696240957014883, guid: 16c94b1ac1add5c40b49cb817885064b,
+        type: 3}
+      propertyPath: onPointerClickEvent.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 8717696240957014883, guid: 16c94b1ac1add5c40b49cb817885064b,
+        type: 3}
+      propertyPath: onPointerClickEvent.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: ShowFieldInfo
+      objectReference: {fileID: 0}
+    - target: {fileID: 8717696240957014883, guid: 16c94b1ac1add5c40b49cb817885064b,
+        type: 3}
+      propertyPath: onPointerClickEvent.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: BattleFieldView, Assembly-CSharp
+      objectReference: {fileID: 0}
+    - target: {fileID: 8717696240957014883, guid: 16c94b1ac1add5c40b49cb817885064b,
+        type: 3}
+      propertyPath: onPointerClickEvent.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_IntArgument
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 8717696240957014883, guid: 16c94b1ac1add5c40b49cb817885064b,
+        type: 3}
+      propertyPath: onPointerClickEvent.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.Object, UnityEngine
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 16c94b1ac1add5c40b49cb817885064b, type: 3}
@@ -19857,6 +20823,126 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3868350202156750522, guid: 16c94b1ac1add5c40b49cb817885064b,
+        type: 3}
+      propertyPath: onPointerClickEvent.m_PersistentCalls.m_Calls.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3868350202156750522, guid: 16c94b1ac1add5c40b49cb817885064b,
+        type: 3}
+      propertyPath: onPointerClickEvent.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 3868350202156750522, guid: 16c94b1ac1add5c40b49cb817885064b,
+        type: 3}
+      propertyPath: onPointerClickEvent.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 486509573}
+    - target: {fileID: 3868350202156750522, guid: 16c94b1ac1add5c40b49cb817885064b,
+        type: 3}
+      propertyPath: onPointerClickEvent.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 3868350202156750522, guid: 16c94b1ac1add5c40b49cb817885064b,
+        type: 3}
+      propertyPath: onPointerClickEvent.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: ShowFieldInfo
+      objectReference: {fileID: 0}
+    - target: {fileID: 3868350202156750522, guid: 16c94b1ac1add5c40b49cb817885064b,
+        type: 3}
+      propertyPath: onPointerClickEvent.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: BattleFieldView, Assembly-CSharp
+      objectReference: {fileID: 0}
+    - target: {fileID: 3868350202156750522, guid: 16c94b1ac1add5c40b49cb817885064b,
+        type: 3}
+      propertyPath: onPointerClickEvent.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_IntArgument
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3868350202156750522, guid: 16c94b1ac1add5c40b49cb817885064b,
+        type: 3}
+      propertyPath: onPointerClickEvent.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.Object, UnityEngine
+      objectReference: {fileID: 0}
+    - target: {fileID: 6030730338456732514, guid: 16c94b1ac1add5c40b49cb817885064b,
+        type: 3}
+      propertyPath: onPointerClickEvent.m_PersistentCalls.m_Calls.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6030730338456732514, guid: 16c94b1ac1add5c40b49cb817885064b,
+        type: 3}
+      propertyPath: onPointerClickEvent.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 6030730338456732514, guid: 16c94b1ac1add5c40b49cb817885064b,
+        type: 3}
+      propertyPath: onPointerClickEvent.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 486509573}
+    - target: {fileID: 6030730338456732514, guid: 16c94b1ac1add5c40b49cb817885064b,
+        type: 3}
+      propertyPath: onPointerClickEvent.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 6030730338456732514, guid: 16c94b1ac1add5c40b49cb817885064b,
+        type: 3}
+      propertyPath: onPointerClickEvent.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: ShowFieldInfo
+      objectReference: {fileID: 0}
+    - target: {fileID: 6030730338456732514, guid: 16c94b1ac1add5c40b49cb817885064b,
+        type: 3}
+      propertyPath: onPointerClickEvent.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: BattleFieldView, Assembly-CSharp
+      objectReference: {fileID: 0}
+    - target: {fileID: 6030730338456732514, guid: 16c94b1ac1add5c40b49cb817885064b,
+        type: 3}
+      propertyPath: onPointerClickEvent.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_IntArgument
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6030730338456732514, guid: 16c94b1ac1add5c40b49cb817885064b,
+        type: 3}
+      propertyPath: onPointerClickEvent.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.Object, UnityEngine
+      objectReference: {fileID: 0}
+    - target: {fileID: 8717696240957014883, guid: 16c94b1ac1add5c40b49cb817885064b,
+        type: 3}
+      propertyPath: onPointerClickEvent.m_PersistentCalls.m_Calls.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8717696240957014883, guid: 16c94b1ac1add5c40b49cb817885064b,
+        type: 3}
+      propertyPath: onPointerClickEvent.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 8717696240957014883, guid: 16c94b1ac1add5c40b49cb817885064b,
+        type: 3}
+      propertyPath: onPointerClickEvent.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 486509573}
+    - target: {fileID: 8717696240957014883, guid: 16c94b1ac1add5c40b49cb817885064b,
+        type: 3}
+      propertyPath: onPointerClickEvent.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 8717696240957014883, guid: 16c94b1ac1add5c40b49cb817885064b,
+        type: 3}
+      propertyPath: onPointerClickEvent.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: ShowFieldInfo
+      objectReference: {fileID: 0}
+    - target: {fileID: 8717696240957014883, guid: 16c94b1ac1add5c40b49cb817885064b,
+        type: 3}
+      propertyPath: onPointerClickEvent.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: BattleFieldView, Assembly-CSharp
+      objectReference: {fileID: 0}
+    - target: {fileID: 8717696240957014883, guid: 16c94b1ac1add5c40b49cb817885064b,
+        type: 3}
+      propertyPath: onPointerClickEvent.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_IntArgument
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8717696240957014883, guid: 16c94b1ac1add5c40b49cb817885064b,
+        type: 3}
+      propertyPath: onPointerClickEvent.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.Object, UnityEngine
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 16c94b1ac1add5c40b49cb817885064b, type: 3}
 --- !u!224 &1495794920 stripped
@@ -20059,7 +21145,7 @@ RectTransform:
   - {fileID: 1924740156}
   - {fileID: 1409896984}
   m_Father: {fileID: 1429742202}
-  m_RootOrder: 14
+  m_RootOrder: 15
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
@@ -20422,7 +21508,7 @@ RectTransform:
   - {fileID: 925871641}
   - {fileID: 946788094}
   m_Father: {fileID: 1429742202}
-  m_RootOrder: 17
+  m_RootOrder: 18
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
@@ -21780,6 +22866,126 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3868350202156750522, guid: 16c94b1ac1add5c40b49cb817885064b,
+        type: 3}
+      propertyPath: onPointerClickEvent.m_PersistentCalls.m_Calls.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3868350202156750522, guid: 16c94b1ac1add5c40b49cb817885064b,
+        type: 3}
+      propertyPath: onPointerClickEvent.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 3868350202156750522, guid: 16c94b1ac1add5c40b49cb817885064b,
+        type: 3}
+      propertyPath: onPointerClickEvent.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 823512793}
+    - target: {fileID: 3868350202156750522, guid: 16c94b1ac1add5c40b49cb817885064b,
+        type: 3}
+      propertyPath: onPointerClickEvent.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 3868350202156750522, guid: 16c94b1ac1add5c40b49cb817885064b,
+        type: 3}
+      propertyPath: onPointerClickEvent.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: ShowFieldInfo
+      objectReference: {fileID: 0}
+    - target: {fileID: 3868350202156750522, guid: 16c94b1ac1add5c40b49cb817885064b,
+        type: 3}
+      propertyPath: onPointerClickEvent.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: BattleFieldView, Assembly-CSharp
+      objectReference: {fileID: 0}
+    - target: {fileID: 3868350202156750522, guid: 16c94b1ac1add5c40b49cb817885064b,
+        type: 3}
+      propertyPath: onPointerClickEvent.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_IntArgument
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3868350202156750522, guid: 16c94b1ac1add5c40b49cb817885064b,
+        type: 3}
+      propertyPath: onPointerClickEvent.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.Object, UnityEngine
+      objectReference: {fileID: 0}
+    - target: {fileID: 6030730338456732514, guid: 16c94b1ac1add5c40b49cb817885064b,
+        type: 3}
+      propertyPath: onPointerClickEvent.m_PersistentCalls.m_Calls.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6030730338456732514, guid: 16c94b1ac1add5c40b49cb817885064b,
+        type: 3}
+      propertyPath: onPointerClickEvent.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 6030730338456732514, guid: 16c94b1ac1add5c40b49cb817885064b,
+        type: 3}
+      propertyPath: onPointerClickEvent.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 823512793}
+    - target: {fileID: 6030730338456732514, guid: 16c94b1ac1add5c40b49cb817885064b,
+        type: 3}
+      propertyPath: onPointerClickEvent.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 6030730338456732514, guid: 16c94b1ac1add5c40b49cb817885064b,
+        type: 3}
+      propertyPath: onPointerClickEvent.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: ShowFieldInfo
+      objectReference: {fileID: 0}
+    - target: {fileID: 6030730338456732514, guid: 16c94b1ac1add5c40b49cb817885064b,
+        type: 3}
+      propertyPath: onPointerClickEvent.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: BattleFieldView, Assembly-CSharp
+      objectReference: {fileID: 0}
+    - target: {fileID: 6030730338456732514, guid: 16c94b1ac1add5c40b49cb817885064b,
+        type: 3}
+      propertyPath: onPointerClickEvent.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_IntArgument
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6030730338456732514, guid: 16c94b1ac1add5c40b49cb817885064b,
+        type: 3}
+      propertyPath: onPointerClickEvent.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.Object, UnityEngine
+      objectReference: {fileID: 0}
+    - target: {fileID: 8717696240957014883, guid: 16c94b1ac1add5c40b49cb817885064b,
+        type: 3}
+      propertyPath: onPointerClickEvent.m_PersistentCalls.m_Calls.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8717696240957014883, guid: 16c94b1ac1add5c40b49cb817885064b,
+        type: 3}
+      propertyPath: onPointerClickEvent.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 8717696240957014883, guid: 16c94b1ac1add5c40b49cb817885064b,
+        type: 3}
+      propertyPath: onPointerClickEvent.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 823512793}
+    - target: {fileID: 8717696240957014883, guid: 16c94b1ac1add5c40b49cb817885064b,
+        type: 3}
+      propertyPath: onPointerClickEvent.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 8717696240957014883, guid: 16c94b1ac1add5c40b49cb817885064b,
+        type: 3}
+      propertyPath: onPointerClickEvent.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: ShowFieldInfo
+      objectReference: {fileID: 0}
+    - target: {fileID: 8717696240957014883, guid: 16c94b1ac1add5c40b49cb817885064b,
+        type: 3}
+      propertyPath: onPointerClickEvent.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: BattleFieldView, Assembly-CSharp
+      objectReference: {fileID: 0}
+    - target: {fileID: 8717696240957014883, guid: 16c94b1ac1add5c40b49cb817885064b,
+        type: 3}
+      propertyPath: onPointerClickEvent.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_IntArgument
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8717696240957014883, guid: 16c94b1ac1add5c40b49cb817885064b,
+        type: 3}
+      propertyPath: onPointerClickEvent.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.Object, UnityEngine
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 16c94b1ac1add5c40b49cb817885064b, type: 3}
 --- !u!224 &1649060448 stripped
@@ -22104,7 +23310,6 @@ MonoBehaviour:
   fieldView: {fileID: 823512793}
   deckView: {fileID: 2036547114}
   cornerView: {fileID: 1581061588}
-  isDone: 1
 --- !u!114 &1658038651
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -22564,7 +23769,7 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1429742202}
-  m_RootOrder: 11
+  m_RootOrder: 12
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
@@ -22835,7 +24040,6 @@ MonoBehaviour:
   fieldView: {fileID: 486509573}
   deckView: {fileID: 580985273}
   cornerView: {fileID: 168620734}
-  isDone: 1
 --- !u!224 &1730593745
 RectTransform:
   m_ObjectHideFlags: 0
@@ -25562,7 +26766,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 1}
   m_AnchorMax: {x: 0.5, y: 1}
-  m_AnchoredPosition: {x: 0, y: -1}
+  m_AnchoredPosition: {x: -1, y: -1}
   m_SizeDelta: {x: 30, y: 15}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!114 &1924917634
@@ -27845,7 +29049,6 @@ MonoBehaviour:
   keepView: {fileID: 878601130}
   turnView: {fileID: 1549665595}
   logView: {fileID: 1516748469}
-  isDone: 1
 --- !u!224 &2071675903
 RectTransform:
   m_ObjectHideFlags: 0

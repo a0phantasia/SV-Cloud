@@ -20,7 +20,10 @@ public class BattleHandView : BattleBaseView
     private List<BattleCard> handCards = new List<BattleCard>();
     private int handCount => handCards.Count;
 
-    public void SetHand(Leader leader, BattleHand hand) {
+    public void SetHand(BattleUnit unit) {
+        var leader = unit.leader;
+        var hand = unit.hand;
+
         if (!isMe) {
             for (int i = 0; i < sleeves.Count; i++)
                 sleeves[i].SetActive(i < hand.Count);
@@ -32,7 +35,7 @@ public class BattleHandView : BattleBaseView
         for (int i = 0; i < cardViews.Count; i++) {
             cardViews[i].SetBattleCard((i < hand.Count) ? hand.cards[i] : null);
             cardViews[i].SetStatus("cost", (i < hand.Count) ? hand.cards[i].GetUseCost(leader) : 0);
-            cardViews[i].draggable.SetEnable((i < hand.Count) ? hand.cards[i].IsUsable(leader) : false);
+            cardViews[i].draggable.SetEnable((i < hand.Count) ? hand.cards[i].IsUsable(unit) : false);
         }
 
         SetHandMode(mode);
@@ -51,8 +54,14 @@ public class BattleHandView : BattleBaseView
     }
 
     private float GetLayoutGroupPosition() {
-        if (handCount < 5)
+        if (handCount < 4)
             return 425 - handCount * 50;
+
+        if (handCount == 4)
+            return 235;
+
+        if (handCount == 5)
+            return 210;
 
         return 190;
     }

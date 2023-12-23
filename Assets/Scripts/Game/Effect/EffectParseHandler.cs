@@ -42,4 +42,13 @@ public static class EffectParseHandler
         dict.Set("count", data[0].ToString());
         return dict;
     }
+
+    public static Dictionary<string, string> Summon(int[] data) {
+        var dict = new Dictionary<string, string>();
+        if (data.Length == 0)
+            return dict;
+
+        dict.Set("who", data[0].ToString());
+        return dict;
+    }
 }

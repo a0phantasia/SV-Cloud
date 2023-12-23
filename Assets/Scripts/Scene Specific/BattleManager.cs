@@ -15,9 +15,7 @@ public class BattleManager : Manager<BattleManager>
     [SerializeField] private PhotonView masterPhotonView, clientPhotonView;
 
     public PhotonView myPhotonView => PhotonNetwork.IsMasterClient ? masterPhotonView : clientPhotonView;
-    public bool IsDone => systemView.isDone && myView.isDone && opView.isDone;
-    private bool isProcessing = false;
-
+    public bool IsDone => systemView.IsDone && myView.IsDone && opView.IsDone;
     private Queue<BattleState> hudQueue = new Queue<BattleState>();
 
     protected override void Awake()
@@ -78,18 +76,13 @@ public class BattleManager : Manager<BattleManager>
     }
     
     public void ProcessQueue() {
-        if (hudQueue.Count == 0) {
-            isProcessing = false;   
-            return;
-        }
-
-        if (isProcessing)
+        if (hudQueue.Count == 0)
             return;
 
         var hudState = hudQueue.Dequeue();
         systemView.SetState(hudState);
-        myView.SetUnit(hudState?.myUnit);
-        opView.SetUnit(hudState?.opUnit);
+        myView.SetState(hudState);
+        opView.SetState(hudState);
 
         StartCoroutine(WaitForCondition(() => IsDone, ProcessQueue));
     }

@@ -199,6 +199,15 @@ public static class ColorHelper {
 
         image.color = color;
     }
+
+    public static Color GetAtkHpTextColor(int Hp, int HpInit) {
+        if (Hp == HpInit)
+            return Color.white;
+        return (Hp > HpInit) ? new Color(119, 226, 12) : Color.red;
+    }
+    public static Color GetAtkHpOutlineColor(int Hp, int HpInit) {
+        return (GetAtkHpTextColor(Hp, HpInit) == Color.red) ? Color.white : Color.black;
+    }
 }
 
 public static class EventHelper {
