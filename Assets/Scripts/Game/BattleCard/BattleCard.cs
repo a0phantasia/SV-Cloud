@@ -12,7 +12,9 @@ public class BattleCard : IIdentifyHandler
     public Card evolveCard;
     public Card OriginalCard => IsEvolved ? evolveCard : card;
     public Card CurrentCard => GetCurrentCard();
-    public BattleCardStatusController statusController;
+    public List<Effect> newEffects = new List<Effect>();
+    public BattleCardBuffController buffController;
+    public BattleCardActionController actionController;
     
     public BattleCard(Card baseCard) {
         IsEvolved = false;
@@ -23,7 +25,8 @@ public class BattleCard : IIdentifyHandler
         card?.effects.ForEach(x => x.source = this);
         evolveCard?.effects.ForEach(x => x.source = this);
 
-        statusController = new BattleCardStatusController(baseCard);
+        buffController = new BattleCardBuffController();
+        actionController = new BattleCardActionController();
     }
 
     public BattleCard(BattleCard rhs) {
@@ -35,7 +38,11 @@ public class BattleCard : IIdentifyHandler
         card?.effects.ForEach(x => x.source = this);
         evolveCard?.effects.ForEach(x => x.source = this);
 
-        statusController = new BattleCardStatusController(rhs.statusController);
+        newEffects = rhs.newEffects.Select(x => new Effect(x)).ToList();
+        newEffects.ForEach(x => x.source = this);
+
+        buffController = new BattleCardBuffController(rhs.buffController);
+        actionController = new BattleCardActionController(rhs.actionController);
     }
 
     public static BattleCard Get(Card baseCard) {
@@ -50,6 +57,10 @@ public class BattleCard : IIdentifyHandler
 
     public float GetIdentifier(string id)
     {
+        if (id.StartsWith("action."))
+            return actionController.GetIdentifier(id.TrimStart("action."));
+
+
         return float.MinValue;
     }
 
@@ -60,9 +71,12 @@ public class BattleCard : IIdentifyHandler
 
     public Card GetCurrentCard() {
         var result = new Card(OriginalCard);
-        result.cost += statusController.costBuff;
-        result.atk += statusController.atkBuff;
-        result.hp -= statusController.hpBuff;
+        result.cost += buffController.costBuff;
+        result.atk += buffController.atkBuff;
+        result.hpMax += buffController.hpBuff;
+        result.hp = result.hpMax - buffController.damage;
+        result.effects.AddRange(newEffects);
+        result.effects.ForEach(x => x.source = this);
         return result;
     }
 

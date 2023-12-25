@@ -42,7 +42,7 @@ public class Card : IIdentifyHandler
     public CardRarity Rarity => (CardRarity)RarityId;
 
     public string name;
-    public int cost, atk, hp;
+    public int cost, atk, hp, hpMax;
     public List<CardTrait> traits = new List<CardTrait>();
     public List<CardKeyword> keywords = new List<CardKeyword>();
     public List<int> tokenIds = new List<int>();
@@ -52,7 +52,7 @@ public class Card : IIdentifyHandler
     public string description;
     public string author;
 
-    public Task<Texture2D> Artwork => Addressables.LoadAssetAsync<Texture2D>("Artwork/" + ArtworkId).Task;
+    public Task<Texture2D> Artwork => Addressables.LoadAssetAsync<Texture2D>(ArtworkId.ToString()).Task;
     public Card EvolveCard => DatabaseManager.instance.GetCardInfo(EvolveId);
 
 
@@ -67,6 +67,7 @@ public class Card : IIdentifyHandler
         cost = status[0];
         atk = status[1];
         hp = status[2];
+        hpMax = hp;
         traits = _slicedData[2].ToIntList('/').Select(x => (CardTrait)x).ToList();
         keywords = _slicedData[3].ToIntList('/').Select(x => (CardKeyword)x).ToList();
 
@@ -93,6 +94,7 @@ public class Card : IIdentifyHandler
         cost = rhs.cost;
         atk = rhs.atk;
         hp = rhs.hp;
+        hpMax = rhs.hpMax;
         traits = rhs.traits.Select(x => x).ToList();
         keywords = rhs.keywords.Select(x => x).ToList();
         effectIds = new List<int>(rhs.effectIds);

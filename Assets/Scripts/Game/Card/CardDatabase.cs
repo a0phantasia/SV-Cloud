@@ -64,6 +64,7 @@ public static class CardDatabase
     public static Dictionary<CardKeyword, string> keywordNameDict = new Dictionary<CardKeyword, string>() {
         { CardKeyword.None,     "-"      },
         { CardKeyword.Storm,    "疾馳"   },
+        { CardKeyword.Ward,     "守護"   },
     };
 
     public static string GetPackName(this CardPack pack) => packNameDict.Get(pack, "-");
@@ -286,5 +287,5 @@ public enum CardTrait
 
 public enum CardKeyword 
 {
-    None = 0,   Storm = 1,
+    None = 0,   Storm = 1,  Ward = 2,
 }

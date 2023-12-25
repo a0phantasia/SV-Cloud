@@ -18,12 +18,12 @@ public class BattleCardFollowerView : IMonoBehaviour
         var card = battleCard.CurrentCard;
         
         atkText?.SetText(card.atk.ToString());
-        atkText?.SetColor(ColorHelper.GetAtkHpTextColor(card.atk, battleCard.OriginalCard.atk));
-        atkOutline?.SetColor(ColorHelper.GetAtkHpOutlineColor(card.atk, battleCard.OriginalCard.atk));
+        atkText?.SetColor(ColorHelper.GetAtkHpTextColor(card.atk, card.atk, battleCard.OriginalCard.atk));
+        atkOutline?.SetColor(ColorHelper.GetAtkHpOutlineColor(card.atk, card.atk, battleCard.OriginalCard.atk));
 
         hpText?.SetText(card.hp.ToString());
-        hpText?.SetColor(ColorHelper.GetAtkHpTextColor(card.hp, battleCard.OriginalCard.hp));
-        hpOutline?.SetColor(ColorHelper.GetAtkHpOutlineColor(card.hp, battleCard.OriginalCard.hp));
+        hpText?.SetColor(ColorHelper.GetAtkHpTextColor(card.hp, card.hpMax, battleCard.OriginalCard.hp));
+        hpOutline?.SetColor(ColorHelper.GetAtkHpOutlineColor(card.hp, card.hpMax, battleCard.OriginalCard.hp));
 
         SetArtwork(await card.Artwork, card.Type);
 

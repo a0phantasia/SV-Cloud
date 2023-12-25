@@ -25,7 +25,7 @@ public class CreateRoomController : IMonoBehaviour
             masterName = Player.Nickname,
             clientName = "電腦",
         };
-        BattleDeck myDeck = new BattleDeck(1, 1, 0, Enumerable.Repeat(100000111, 3)
+        BattleDeck myDeck = new BattleDeck(1, 1, 0, (new List<int>() { 100000113, 100000114, 100000115 })
             .Concat(Enumerable.Repeat(100000112 , 37)).ToArray());
         BattleDeck opDeck = new BattleDeck(1, 1, 0, Enumerable.Repeat(100000111, 40).ToArray());
         Battle battle = new Battle(myDeck, opDeck, settings);

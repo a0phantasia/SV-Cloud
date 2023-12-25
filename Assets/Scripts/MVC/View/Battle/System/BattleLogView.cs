@@ -11,9 +11,13 @@ public class BattleLogView : BattleBaseView
     [SerializeField] private Text titleText;
     [SerializeField] private BattleLogMainView mainView;
 
-
     public void SetActive(bool active) {
         gameObject.SetActive(active);
+        if (!active)
+            return;
+
+        selectModel.Select(0);
+        OnLogSetPage();
     }
 
     public void SetState(BattleState state) {
@@ -22,6 +26,7 @@ public class BattleLogView : BattleBaseView
 
     private void OnLogSetPage() {
         titleText?.SetText(title[selectModel.Cursor[0]]);
+        mainView?.AutoScrollToBottom();
     }
 
     public void OnLogPrevPage() {

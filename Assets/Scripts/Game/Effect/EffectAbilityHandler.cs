@@ -224,7 +224,6 @@ public static class EffectAbilityHandler
 
         var cost = card.GetUseCost(unit.leader);
         unit.leader.PP -= cost;
-        unit.hand.cards.Remove(card);
 
         effect.hudOptionDict.Set("log", "使用" + card.CurrentCard.name);
         Hud.SetState(state);
@@ -234,9 +233,14 @@ public static class EffectAbilityHandler
                 break;
             case CardType.Follower:
             case CardType.Amulet:
-                Effect summon = new Effect(new int[] { (int)EffectAbility.Summon }) 
+                var abilityOptionDict = new Dictionary<string, string>() 
+                { 
+                    { "where", "hand" },
+                    { "index", index.ToString() },
+                };
+                Effect summon = new Effect("none", EffectTarget.None, EffectCondition.None, null, EffectAbility.Summon, abilityOptionDict) 
                 {
-                    source = card,
+                    source = unit.leader.leaderCard,
                     invokeUnit = unit
                 };
                 Battle.EnqueueEffect(summon);
@@ -244,6 +248,29 @@ public static class EffectAbilityHandler
         };
         EnqueueEffect("on_be_use", effect.invokeTarget.Select(x => x.CurrentCard).ToList() , state);
         OnPhaseChange("on_use", state);
+        return true;
+    }
+
+    public static bool Ward(this Effect effect, BattleState state) {
+        var unit = effect.invokeUnit;
+        //TODO invokeUnit is null. Check invokeUnit of effect?
+
+        effect.invokeTarget = effect.target switch {
+            EffectTarget.Self => new List<BattleCard>() { effect.source },
+            _ => new List<BattleCard>() { effect.source },
+        };
+
+        for (int i = 0; i < effect.invokeTarget.Count; i++) {
+            var ward = effect.invokeTarget[i].actionController.GetIdentifier("ward");
+            effect.invokeTarget[i].actionController.SetIdentifier("ward", ward + 1);
+        }
+
+        string log = effect.source.CurrentCard.name + "給予" + "自己" + "守護效果";
+        effect.hudOptionDict.Set("log", log);
+        Hud.SetState(state);
+
+        EnqueueEffect("on_be_ward", effect.invokeTarget.Select(x => x.CurrentCard).ToList() , state);
+        OnPhaseChange("on_ward", state);
         return true;
     }
 
@@ -297,14 +324,29 @@ public static class EffectAbilityHandler
         var unit = effect.invokeUnit;
         bool isMyUnit = state.myUnit.id == unit.id;
         
-        string who = effect.abilityOptionDict.Get("who", "me");
-        var fieldUnit = (who == "me") ? unit : state.GetRhsUnitById(unit.id);
+        var who = effect.abilityOptionDict.Get("who", "me");
+        var summonUnit = (who == "me") ? unit : state.GetRhsUnitById(unit.id);
+        var field = effect.abilityOptionDict.Get("field", "me");
+        var fieldUnit = (field == "me") ? unit : state.GetRhsUnitById(unit.id);
+        var where = effect.abilityOptionDict.Get("where", "hand");
+        var index = effect.abilityOptionDict.Get("index", "0");
+        var data = effect.abilityOptionDict.Get("data", "none");
+        var card = effect.source;
 
+        //TODO Check summon from where and who to summon.
         if (fieldUnit.field.Count < fieldUnit.field.MaxCount) {
-            effect.invokeTarget = new List<BattleCard>() { effect.source };
-            fieldUnit.field.cards.Add(effect.source);
+            switch (where) {
+                default:
+                    break;
+                case "hand":
+                    effect.invokeTarget = new List<BattleCard>() { summonUnit.hand.cards[int.Parse(index)] };
+                    summonUnit.hand.cards.RemoveRange(effect.invokeTarget);
+                    break;
+            }
+            
+            fieldUnit.field.cards.Add(effect.invokeTarget[0]);
 
-            effect.hudOptionDict.Set("log", effect.source.CurrentCard.name + "進入戰場");
+            effect.hudOptionDict.Set("log", effect.invokeTarget[0].CurrentCard.name + "進入戰場");
             Hud.SetState(state);
             
             EnqueueEffect("on_be_summon", effect.invokeTarget.Select(x => x.CurrentCard).ToList() , state);

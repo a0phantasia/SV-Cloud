@@ -200,13 +200,14 @@ public static class ColorHelper {
         image.color = color;
     }
 
-    public static Color GetAtkHpTextColor(int Hp, int HpInit) {
+    public static Color GetAtkHpTextColor(int Hp, int HpMax, int HpInit) {
         if (Hp == HpInit)
-            return Color.white;
-        return (Hp > HpInit) ? new Color(119, 226, 12) : Color.red;
+            return (HpMax == HpInit) ? Color.white : ColorHelper.gold;
+
+        return (Hp > HpInit) ? ColorHelper.green : Color.red;
     }
-    public static Color GetAtkHpOutlineColor(int Hp, int HpInit) {
-        return (GetAtkHpTextColor(Hp, HpInit) == Color.red) ? Color.white : Color.black;
+    public static Color GetAtkHpOutlineColor(int Hp, int HpMax, int HpInit) {
+        return (GetAtkHpTextColor(Hp, HpMax, HpInit) == Color.red) ? Color.white : Color.black;
     }
 }
 

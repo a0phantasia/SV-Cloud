@@ -11,7 +11,7 @@ public class Leader
 
     public int HpInit => Card.GetLeaderCard(CraftId).hp;
     public int Hp => leaderCard.CurrentCard.hp;
-    public int HpMax => leaderCard.statusController.hpMax;
+    public int HpMax => leaderCard.CurrentCard.hpMax;
 
     private int pp, ep;
     public int PPMax, EpMax;

@@ -6,6 +6,7 @@ public static class EffectDatabase {
 
     private static Dictionary<string, EffectTarget> targetConvDict = new Dictionary<string, EffectTarget>() {
         {"none", EffectTarget.None},
+        {"self", EffectTarget.Self},
     };
 
     private static Dictionary<string, EffectCondition> condConvDict = new Dictionary<string, EffectCondition>() {
@@ -25,6 +26,8 @@ public static class EffectDatabase {
         {"fusion", EffectAbility.Fusion},
         {"act", EffectAbility.Act},
         
+        {"ward", EffectAbility.Ward},
+
         {"draw", EffectAbility.Draw},
     };
 
@@ -43,6 +46,7 @@ public static class EffectDatabase {
 
 public enum EffectTarget {
     None,
+    Self,
 }
 
 public enum EffectCondition {
@@ -61,6 +65,8 @@ public enum EffectAbility {
     Evolve = 8,
     Fusion = 9,
     Act = 10,
+
+    Ward = 92,
 
     Draw = 101,
     Summon = 102,

@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -46,9 +47,9 @@ public class BattleSystemView : BattleBaseView
             case EffectAbility.KeepCard:
                 if (state.myUnit.isDone) {
                     keepView?.ShowKeepResult(state.myUnit.hand.cards, () => {
-                        if (state.opUnit.isDone)
-                            keepView.SetActive(false);
-                        
+                        if (state.opUnit.isDone) 
+                            keepView?.SetActive(false);
+
                         IsDone = true;
                     });
                 }

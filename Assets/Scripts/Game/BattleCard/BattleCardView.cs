@@ -6,9 +6,11 @@ public class BattleCardView : IMonoBehaviour
 {
     [SerializeField] private BattleCardFollowerView normalView, evolveView;
     [SerializeField] private BattleCardAmuletView amuletView;
+    [SerializeField] private BattleCardEffectView effectView;
 
     public void SetBattleCard(BattleCard card) {
         gameObject.SetActive(card != null);
+        effectView?.SetBattleCard(card);
         if (card == null)
             return;
 

@@ -18,12 +18,32 @@ MonoBehaviour:
   m_GUID: 1b958f2a3e0815e4698b151cda19c11c
   m_SerializeEntries:
   - m_GUID: b41ffdf98bf7fe64f938f26237d7f971
-    m_Address: Artwork/100000111
+    m_Address: 100000111
     m_ReadOnly: 0
     m_SerializedLabels:
     - basic
   - m_GUID: e51bfea80066535438fd60bad6f5cdfe
-    m_Address: Artwork/100000112
+    m_Address: 100000112
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - basic
+  - m_GUID: 54d1c2e576f9752438fd1c2552d410af
+    m_Address: 100000113
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - basic
+  - m_GUID: b628d14a1432f404ba2de6fa019c07fe
+    m_Address: 100000114
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - basic
+  - m_GUID: 8f2f878146080984ab612b095e7aaa22
+    m_Address: 100000115
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - basic
+  - m_GUID: be46fb746542e8b40ad125133b9a4696
+    m_Address: 100000311
     m_ReadOnly: 0
     m_SerializedLabels:
     - basic

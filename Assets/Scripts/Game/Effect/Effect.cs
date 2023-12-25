@@ -129,6 +129,9 @@ public class Effect : IIdentifyHandler
             EffectAbility.TurnStart => EffectAbilityHandler.OnTurnStart,
             EffectAbility.TurnEnd   => EffectAbilityHandler.OnTurnEnd,
             EffectAbility.Use       => EffectAbilityHandler.Use,
+
+            EffectAbility.Ward      => EffectAbilityHandler.Ward,
+
             EffectAbility.Draw      => EffectAbilityHandler.Draw,
             EffectAbility.Summon    => EffectAbilityHandler.Summon,
             _ => (e, s) => true,
