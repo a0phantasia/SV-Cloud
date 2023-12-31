@@ -11,9 +11,11 @@ public static class EffectAbilityHandler
 
     /// <summary>
     /// Check if cards have effects with correct timing and condition.
-    /// Enqueue these effects.
+    /// Enqueue these effects with corresponding invoke unit.
     /// </summary>
-    private static void EnqueueEffect(string timing, List<Card> cards, BattleState state) {
+    private static void EnqueueEffect(string timing, List<BattleCard> battleCards, BattleState state) {
+        var units = battleCards.Select(x => state.GetInvokeUnit(x)).ToList();
+        var cards = battleCards.Select(x => x.CurrentCard).ToList();
         for (int i = 0; i < cards.Count; i++) {
             if (cards[i] == null)
                 continue;
@@ -21,6 +23,7 @@ public static class EffectAbilityHandler
             var effects = cards[i].effects;
             for (int j = 0; j < effects.Count; j++) {
                 if ((effects[j].timing == timing) && (effects[j].Condition(state))) {
+                    effects[j].invokeUnit = units[i];
                     Battle.EnqueueEffect(effects[j]);
                 }
             }
@@ -31,8 +34,6 @@ public static class EffectAbilityHandler
     /// Check hand, leader, territory, field, deck cards, <br/>
     /// and enqueue effects with correct timing and condition.
     /// </summary>
-    /// <param name="timing"></param>
-    /// <param name="state"></param>
     private static void OnPhaseChange(string timing, BattleState state) {
         var lhsUnit = state.currentUnit;
         var rhsUnit = state.GetRhsUnitById(lhsUnit.id);
@@ -46,7 +47,7 @@ public static class EffectAbilityHandler
         cards = cards.Concat(lhsUnit.field.cards).Concat(rhsUnit.field.cards)
             .Concat(lhsUnit.deck.cards).Concat(rhsUnit.deck.cards);
 
-        EnqueueEffect(timing, cards.Select(x => x.CurrentCard).ToList(), state);
+        EnqueueEffect(timing, cards.ToList(), state);
     }
 
     public static bool SetResult(this Effect effect, BattleState state) {
@@ -128,6 +129,9 @@ public static class EffectAbilityHandler
         unit.turn += 1;
         unit.leader.PPMax = Mathf.Min(unit.leader.PPMax + 1, 10);
         unit.leader.PP = unit.leader.PPMax;
+
+        // Clear data.
+        unit.leader.ClearTurnIdentifier();
         
         // If specific turn comes, give player EP.
         var first = unit.isFirst ? 1 : 0;
@@ -136,6 +140,9 @@ public static class EffectAbilityHandler
             unit.leader.EP = unit.leader.EpMax;
             effect.hudOptionDict.Set("ep", "true");
         }
+
+        // Stay field turn +1.
+        unit.field.cards.ForEach(x => x.actionController.StayFieldTurn += 1);
 
         // Set UI
         string log = (isMyUnit ? "YOUR" : "ENEMY") + " TURN (" + unit.turn + ")";
@@ -165,6 +172,7 @@ public static class EffectAbilityHandler
         };
         Battle.EnqueueEffect(draw);
         
+        //! For debug test.
         if (GameManager.instance.debugMode && (unit.id != state.myUnit.id)) {
             Effect turnEnd = new Effect(new int[] { (int)EffectAbility.TurnEnd })
             {
@@ -225,52 +233,69 @@ public static class EffectAbilityHandler
         var cost = card.GetUseCost(unit.leader);
         unit.leader.PP -= cost;
 
+        // Record used card.
+        unit.leader.AddIdentifier("combo", 1);
+        unit.grave.usedCards.Add(card.CurrentCard);
+
         effect.hudOptionDict.Set("log", "使用" + card.CurrentCard.name);
         Hud.SetState(state);
 
-        switch (card.CurrentCard.Type) {
-            default:
-                break;
-            case CardType.Follower:
-            case CardType.Amulet:
-                var abilityOptionDict = new Dictionary<string, string>() 
-                { 
-                    { "where", "hand" },
-                    { "index", index.ToString() },
-                };
-                Effect summon = new Effect("none", EffectTarget.None, EffectCondition.None, null, EffectAbility.Summon, abilityOptionDict) 
-                {
-                    source = unit.leader.leaderCard,
-                    invokeUnit = unit
-                };
-                Battle.EnqueueEffect(summon);
-                break;
-        };
-        EnqueueEffect("on_be_use", effect.invokeTarget.Select(x => x.CurrentCard).ToList() , state);
+        // Follower and Amulet goes to field.
+        if (card.CurrentCard.IsFollower() || (card.CurrentCard.Type == CardType.Amulet)) {
+            var abilityOptionDict = new Dictionary<string, string>() 
+            { 
+                { "where", "hand" },
+                { "index", index.ToString() },
+            };
+            Effect summon = new Effect("none", EffectTarget.None, EffectCondition.None, null, EffectAbility.Summon, abilityOptionDict) 
+            {
+                source = unit.leader.leaderCard,
+                invokeUnit = unit
+            };
+            Battle.EnqueueEffect(summon);
+        }
+        
+        // Use effect.
+        EnqueueEffect("on_be_use", effect.invokeTarget, state);
+
+        // Spell goes to grave immediately.
+        if (card.CurrentCard.Type == CardType.Spell)
+            unit.grave.Count += 1;
+
         OnPhaseChange("on_use", state);
         return true;
     }
 
-    public static bool Ward(this Effect effect, BattleState state) {
+    public static bool SetKeyword(this Effect effect, BattleState state) {
         var unit = effect.invokeUnit;
-        //TODO invokeUnit is null. Check invokeUnit of effect?
 
         effect.invokeTarget = effect.target switch {
             EffectTarget.Self => new List<BattleCard>() { effect.source },
             _ => new List<BattleCard>() { effect.source },
         };
 
+        var modify = effect.abilityOptionDict.Get("modify", "add");
+        var modifyOption = (modify == "add") ? ModifyOption.Add : ModifyOption.Remove;
+        var keywordId = int.Parse(effect.abilityOptionDict.Get("keyword", "1"));
+        var keyword = (CardKeyword)keywordId;
+        var keywordName = keyword.GetKeywordName();
+        var keywordEnglishName = keyword.GetKeywordEnglishName();
+
         for (int i = 0; i < effect.invokeTarget.Count; i++) {
-            var ward = effect.invokeTarget[i].actionController.GetIdentifier("ward");
-            effect.invokeTarget[i].actionController.SetIdentifier("ward", ward + 1);
+            var actionController = effect.invokeTarget[i].actionController;
+            var setNum = (modifyOption == ModifyOption.Add) ? actionController.GetIdentifier(keywordEnglishName + 1) : 0; 
+            effect.invokeTarget[i].actionController.SetIdentifier(keywordEnglishName, setNum);
+            effect.invokeTarget[i].SetKeyword(keyword, modifyOption);
         }
 
-        string log = effect.source.CurrentCard.name + "給予" + "自己" + "守護效果";
+        string log = effect.source.CurrentCard.name + "給予" + effect.target.GetEffectTargetName() 
+            + keywordName + "效果";
+
         effect.hudOptionDict.Set("log", log);
         Hud.SetState(state);
 
-        EnqueueEffect("on_be_ward", effect.invokeTarget.Select(x => x.CurrentCard).ToList() , state);
-        OnPhaseChange("on_ward", state);
+        EnqueueEffect("on_be_" + keywordEnglishName, effect.invokeTarget, state);
+        OnPhaseChange("on_" + keywordEnglishName, state);
         return true;
     }
 
@@ -314,8 +339,8 @@ public static class EffectAbilityHandler
             }
             */
         }
-        EnqueueEffect("on_be_draw", effect.invokeTarget.Select(x => x.CurrentCard).ToList() , state);
-        EnqueueEffect("on_be_draw_discard", inGraveCards.Select(x => x.CurrentCard).ToList() , state);
+        EnqueueEffect("on_be_draw", effect.invokeTarget, state);
+        EnqueueEffect("on_be_draw_discard", inGraveCards, state);
         OnPhaseChange("on_draw", state);
         return true;
     }
@@ -333,7 +358,6 @@ public static class EffectAbilityHandler
         var data = effect.abilityOptionDict.Get("data", "none");
         var card = effect.source;
 
-        //TODO Check summon from where and who to summon.
         if (fieldUnit.field.Count < fieldUnit.field.MaxCount) {
             switch (where) {
                 default:
@@ -349,7 +373,9 @@ public static class EffectAbilityHandler
             effect.hudOptionDict.Set("log", effect.invokeTarget[0].CurrentCard.name + "進入戰場");
             Hud.SetState(state);
             
-            EnqueueEffect("on_be_summon", effect.invokeTarget.Select(x => x.CurrentCard).ToList() , state);
+            EnqueueEffect("on_be_summon", effect.invokeTarget , state);
+
+            fieldUnit.leader.AddIdentifier("rally", 1);
         }
         OnPhaseChange("on_summon", state);
 

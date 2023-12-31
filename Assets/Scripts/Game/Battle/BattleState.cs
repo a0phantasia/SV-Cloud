@@ -23,7 +23,10 @@ public class BattleState
     public BattleState(BattleDeck masterDeck, BattleDeck clientDeck, BattleSettings settings) {
         this.settings = settings;
         this.result = new BattleResult();
-        isMasterTurn = Random.Range(0, 2) == 0;
+
+        //! Debug mode always go first
+        isMasterTurn = GameManager.instance.debugMode ? true : (Random.Range(0, 2) == 0);
+
         masterUnit = new BattleUnit(0, settings.masterName , masterDeck, isMasterTurn);
         clientUnit = new BattleUnit(1, settings.clientName , clientDeck, !isMasterTurn);
     }
@@ -52,6 +55,20 @@ public class BattleState
         isMasterTurn = newTurn;
         masterUnit.isMyTurn = isMasterTurn;
         clientUnit.isMyTurn = !isMasterTurn;
+    }
+
+    public virtual BattleUnit GetInvokeUnit(BattleCard card) {
+        if (myUnit.hand.cards.Contains(card) || myUnit.field.cards.Contains(card) ||
+            myUnit.deck.cards.Contains(card) || myUnit.grave.usedCards.Contains(card.CurrentCard) ||
+            (myUnit.leader.leaderCard == card) || (myUnit.territory == card))
+                return myUnit;
+
+        if (opUnit.hand.cards.Contains(card) || opUnit.field.cards.Contains(card) ||
+            opUnit.deck.cards.Contains(card) || opUnit.grave.usedCards.Contains(card.CurrentCard) ||
+            (opUnit.leader.leaderCard == card) || (opUnit.territory == card))
+                return opUnit;
+
+        return null;
     }
 
 }

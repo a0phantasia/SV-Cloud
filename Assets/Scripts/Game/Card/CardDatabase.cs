@@ -65,6 +65,20 @@ public static class CardDatabase
         { CardKeyword.None,     "-"      },
         { CardKeyword.Storm,    "疾馳"   },
         { CardKeyword.Ward,     "守護"   },
+        { CardKeyword.Bane,     "必殺"   },
+        { CardKeyword.Rush,     "突進"   },
+        { CardKeyword.Ambush,   "潛行"   },
+        { CardKeyword.Drain,    "吸血"   },
+    };
+
+    public static Dictionary<CardKeyword, string> keywordEnglishNameDict = new Dictionary<CardKeyword, string>() {
+        { CardKeyword.None,     "-"      },
+        { CardKeyword.Storm,    "storm"  },
+        { CardKeyword.Ward,     "ward"   },
+        { CardKeyword.Bane,     "bane"   },
+        { CardKeyword.Rush,     "rush"   },
+        { CardKeyword.Ambush,   "ambush" },
+        { CardKeyword.Drain,    "drain"  },
     };
 
     public static string GetPackName(this CardPack pack) => packNameDict.Get(pack, "-");
@@ -76,6 +90,7 @@ public static class CardDatabase
     public static string GetRarityName(this CardRarity rarity) => rarityNameDict.Get(rarity, "傳說");
     public static string GetTraitName(this CardTrait trait) => traitNameDict.Get(trait, "-");
     public static string GetKeywordName(this CardKeyword keyword) => keywordNameDict.Get(keyword, "-");
+    public static string GetKeywordEnglishName(this CardKeyword keyword) => keywordEnglishNameDict.Get(keyword, "-");
 
     public static int GetMaxCardCountInDeck(this GameFormat format) => format switch {
         GameFormat.TwoPick => 30,
@@ -287,5 +302,5 @@ public enum CardTrait
 
 public enum CardKeyword 
 {
-    None = 0,   Storm = 1,  Ward = 2,
+    None = 0,   Storm = 1,  Ward = 2, Bane = 3, Rush = 4, Ambush = 5, Drain = 6,
 }

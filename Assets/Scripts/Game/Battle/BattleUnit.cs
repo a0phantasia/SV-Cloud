@@ -76,7 +76,7 @@ public class BattleUnit : IIdentifyHandler
         }
 
         hand.cards.AddRange(inHand);
-        grave.cards.AddRange(inGrave.Select(x => x.card));
+        grave.usedCards.AddRange(inGrave.Select(x => x.card));
         deck.cards.RemoveRange(0, result.Count);
 
         grave.Count += inGrave.Count;

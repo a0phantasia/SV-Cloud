@@ -8,7 +8,7 @@ public class BattleCardAmuletView : IMonoBehaviour
     [SerializeField] private List<Image> countdownImages;
     [SerializeField] private IButton cardFrameButton;
     [SerializeField] private RawImage artworkRawImage;
-    [SerializeField] private Image flagImage;
+    [SerializeField] private Image flagImage, outlineImage;
 
     public async void SetBattleCard(BattleCard battleCard) {
         if (battleCard == null)
@@ -22,6 +22,7 @@ public class BattleCardAmuletView : IMonoBehaviour
         SetArtwork(await card.Artwork);
 
         //TODO FLAG
+        outlineImage?.gameObject.SetActive(false);
     }
 
     private void SetCountdown(int num) {

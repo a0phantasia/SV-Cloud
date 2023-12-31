@@ -25,10 +25,14 @@ public static class EffectDatabase {
         {"evolve", EffectAbility.Evolve},
         {"fusion", EffectAbility.Fusion},
         {"act", EffectAbility.Act},
-        
-        {"ward", EffectAbility.Ward},
 
         {"draw", EffectAbility.Draw},
+        {"summon", EffectAbility.Summon},
+        {"set_keyword", EffectAbility.SetKeyword},
+    };
+
+    private static Dictionary<EffectTarget, string> targetNameDict = new Dictionary<EffectTarget, string>() {
+        {EffectTarget.Self, "自己"},
     };
 
     public static EffectTarget ToEffectTarget(this string target) {
@@ -41,6 +45,10 @@ public static class EffectDatabase {
 
     public static EffectAbility ToEffectAbility(this string ability) {
         return abilityConvDict.Get(ability, EffectAbility.None);
+    }
+
+    public static string GetEffectTargetName(this EffectTarget target) {
+        return targetNameDict.Get(target, string.Empty);
     }
 }
 
@@ -66,8 +74,7 @@ public enum EffectAbility {
     Fusion = 9,
     Act = 10,
 
-    Ward = 92,
-
     Draw = 101,
     Summon = 102,
+    SetKeyword = 103,
 }

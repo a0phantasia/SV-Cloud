@@ -4,7 +4,14 @@ using UnityEngine;
 
 public class BattleCardActionController
 {
-    public bool IsWard => GetIdentifier("ward") > 0;
+    public int StayFieldTurn {
+        get => (int)GetIdentifier("stayFieldTurn");
+        set => SetIdentifier("stayFieldTurn", value);
+    }
+
+    public bool IsLeaderAttackable => (StayFieldTurn > 0) || IsKeywordAvailable(CardKeyword.Storm);
+    public bool IsFollowerAttackable => (StayFieldTurn > 0) || IsKeywordAvailable(CardKeyword.Storm) || IsKeywordAvailable(CardKeyword.Rush);
+
     public Dictionary<string, float> options = new Dictionary<string, float>();
 
     public BattleCardActionController() {}
@@ -16,7 +23,7 @@ public class BattleCardActionController
     public float GetIdentifier(string id) 
     {
         return id switch {
-            "isWard" => IsWard ? 1 : 0,
+            "isWard" => IsKeywordAvailable(CardKeyword.Ward) ? 1 : 0,
             _ => options.Get(id, 0),
         };
     }
@@ -27,5 +34,13 @@ public class BattleCardActionController
                 options.Set(id, num);
                 return;
         }
+    }
+
+    public void AddIdentifier(string id, float num) {
+        SetIdentifier(id, GetIdentifier(id) + num);
+    }
+
+    public bool IsKeywordAvailable(CardKeyword keyword) {
+        return GetIdentifier(keyword.GetKeywordEnglishName()) > 0;
     }
 }

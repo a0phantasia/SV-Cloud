@@ -1,9 +1,13 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class Leader
 {
+    public static string[] infoKeys => new string[] { "rally" };
+    public static string[] infoValues => new string[] { "協作數" };
+
     public int CraftId => leaderCard.CurrentCard.CraftId;
     public CardCraft Craft => leaderCard.CurrentCard.Craft;
     public BattleCard leaderCard;
@@ -42,6 +46,17 @@ public class Leader
         isEpUsed = rhs.isEpUsed;
     }
 
+    public void ClearTurnIdentifier() {
+        SetIdentifier("combo", 0);
+
+        foreach (var entry in options) {
+            if (!entry.Key.StartsWith("turn"))
+                continue;
+
+            SetIdentifier(entry.Key, 0);
+        }
+    }
+
     public float GetIdentifier(string id) 
     {
         return id switch {
@@ -78,5 +93,9 @@ public class Leader
                 isEpUsed = num != 0;
                 return;
         }
+    }
+
+    public void AddIdentifier(string id, float num) {
+        SetIdentifier(id, GetIdentifier(id) + num);
     }
 }

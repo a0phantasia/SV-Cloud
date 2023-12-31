@@ -190,8 +190,12 @@ public static class ColorHelper {
     public static Color red => Color.red;
     public static Color green => new Color32(119, 226, 12, 255);
     public static Color blue => new Color32(82, 229, 249, 255);
-    public static Color secretSkill => new Color32(252, 237, 105, 255); 
-    public static Color normalSkill => new Color32(82, 229, 249, 255);
+
+    // public static Color secretSkill => new Color32(252, 237, 105, 255); 
+    // public static Color normalSkill => new Color32(82, 229, 249, 255);
+
+    public static Color storm => new Color32(119, 226, 12, 192);
+    public static Color rush => new Color32(255, 235, 4, 192);
 
     public static void SetColor(this Image image, Color color) {
         if (image == null)

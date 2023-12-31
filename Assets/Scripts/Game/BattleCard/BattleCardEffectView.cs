@@ -8,9 +8,10 @@ public class BattleCardEffectView : IMonoBehaviour
 
     public void SetBattleCard(BattleCard card) {
         if (card == null) {
-            effectObjects.ForEach(x => x.SetActive(false));
+            effectObjects.ForEach(x => x?.SetActive(false));
             return;
         }
-        effectObjects[0].SetActive(card.actionController.IsWard);
+        effectObjects[0]?.SetActive(card.actionController.IsKeywordAvailable(CardKeyword.Ward));
+        effectObjects[1]?.SetActive(card.actionController.IsKeywordAvailable(CardKeyword.Ambush));
     }
 }

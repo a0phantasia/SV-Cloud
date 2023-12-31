@@ -90,4 +90,14 @@ public class BattleCard : IIdentifyHandler
 
         return IsCostEnough() && (!IsFieldFull());
     }
+
+    public void SetKeyword(CardKeyword keyword, ModifyOption option) {
+        if (option == ModifyOption.Add) {
+            card.keywords.Add(keyword);
+            evolveCard.keywords.Add(keyword);
+        } else if (option == ModifyOption.Remove) {
+            card.keywords = card.keywords.Where(x => x != keyword).ToList();
+            evolveCard.keywords = evolveCard.keywords.Where(x => x != keyword).ToList();
+        }
+    }
 }

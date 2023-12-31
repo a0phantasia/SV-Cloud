@@ -9,7 +9,7 @@ public class BattleCardFollowerView : IMonoBehaviour
     [SerializeField] private Outline atkOutline, hpOutline;
     [SerializeField] private IButton cardFrameButton;
     [SerializeField] private RawImage artworkRawImage;
-    [SerializeField] private Image flagImage;
+    [SerializeField] private Image flagImage, outlineImage;
 
     public async void SetBattleCard(BattleCard battleCard) {
         if (battleCard == null)
@@ -29,6 +29,12 @@ public class BattleCardFollowerView : IMonoBehaviour
 
         //TODO FLAG
         flagImage?.gameObject.SetActive(false);
+        outlineImage?.gameObject.SetActive(battleCard.actionController.IsLeaderAttackable || battleCard.actionController.IsFollowerAttackable);
+        if (battleCard.actionController.IsLeaderAttackable) {
+            outlineImage?.SetColor(ColorHelper.storm);
+        } else if (battleCard.actionController.IsFollowerAttackable) {
+            outlineImage?.SetColor(ColorHelper.rush);
+        }
     }
 
     private void SetArtwork(Texture2D artwork, CardType type) {

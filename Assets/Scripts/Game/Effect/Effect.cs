@@ -130,7 +130,7 @@ public class Effect : IIdentifyHandler
             EffectAbility.TurnEnd   => EffectAbilityHandler.OnTurnEnd,
             EffectAbility.Use       => EffectAbilityHandler.Use,
 
-            EffectAbility.Ward      => EffectAbilityHandler.Ward,
+            EffectAbility.SetKeyword      => EffectAbilityHandler.SetKeyword,
 
             EffectAbility.Draw      => EffectAbilityHandler.Draw,
             EffectAbility.Summon    => EffectAbilityHandler.Summon,

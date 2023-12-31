@@ -10,11 +10,15 @@ public class BattleLogView : BattleBaseView
     [SerializeField] private OptionSelectModel selectModel;
     [SerializeField] private Text titleText;
     [SerializeField] private BattleLogMainView mainView;
+    [SerializeField] private BattleLogUseView useView;
+    [SerializeField] private BattleLogInfoView infoView;
 
     public void SetActive(bool active) {
         gameObject.SetActive(active);
         if (!active)
             return;
+
+        useView.SetWho(true);
 
         selectModel.Select(0);
         OnLogSetPage();
@@ -22,6 +26,8 @@ public class BattleLogView : BattleBaseView
 
     public void SetState(BattleState state) {
         mainView?.Log(state);
+        useView?.Log(state);
+        infoView?.Log(state);
     }
 
     private void OnLogSetPage() {
