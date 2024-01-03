@@ -104,6 +104,8 @@ public class Effect : IIdentifyHandler
             EffectAbility.SetResult => EffectParseHandler.SetResult,
             EffectAbility.KeepCard  => EffectParseHandler.KeepCard,
             EffectAbility.Use       => EffectParseHandler.Use,
+            EffectAbility.Evolve    => EffectParseHandler.Evolve,
+
             EffectAbility.Draw      => EffectParseHandler.Draw,
             EffectAbility.Summon    => EffectParseHandler.Summon,
             _ => ((data) => new Dictionary<string, string>()),
@@ -129,11 +131,11 @@ public class Effect : IIdentifyHandler
             EffectAbility.TurnStart => EffectAbilityHandler.OnTurnStart,
             EffectAbility.TurnEnd   => EffectAbilityHandler.OnTurnEnd,
             EffectAbility.Use       => EffectAbilityHandler.Use,
-
-            EffectAbility.SetKeyword      => EffectAbilityHandler.SetKeyword,
+            EffectAbility.Evolve    => EffectAbilityHandler.Evolve,
 
             EffectAbility.Draw      => EffectAbilityHandler.Draw,
             EffectAbility.Summon    => EffectAbilityHandler.Summon,
+            EffectAbility.SetKeyword=> EffectAbilityHandler.SetKeyword,
             _ => (e, s) => true,
         };
         return AbilityFunc.Invoke(this, state);

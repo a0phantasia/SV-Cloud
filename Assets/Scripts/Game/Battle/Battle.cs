@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Photon.Pun;
 using Hashtable = ExitGames.Client.Photon.Hashtable;
 using UnityEngine;
+using System.Linq;
 
 public class Battle
 {
@@ -60,7 +61,7 @@ public class Battle
     /// </summary>
     public void PlayerAction(int[] data, bool isMe) {
         if (isMe) {
-            Hud.EnemyPlayerAction(data);
+            Hud.EnemyPlayerAction(data.Select(x => (short)x).ToArray());
         }
 
         var leader = (isMe ? currentState.myUnit : currentState.opUnit).leader.leaderCard;

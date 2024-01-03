@@ -18,7 +18,8 @@ public class BattleLogView : BattleBaseView
         if (!active)
             return;
 
-        useView.SetWho(true);
+        useView?.SetWho(true);
+        infoView?.SetWho(true);
 
         selectModel.Select(0);
         OnLogSetPage();

@@ -5,8 +5,8 @@ using UnityEngine;
 public static class EffectDatabase {
 
     private static Dictionary<string, EffectTarget> targetConvDict = new Dictionary<string, EffectTarget>() {
-        {"none", EffectTarget.None},
-        {"self", EffectTarget.Self},
+        {"none",    EffectTarget.None},
+        {"self",    EffectTarget.Self},
     };
 
     private static Dictionary<string, EffectCondition> condConvDict = new Dictionary<string, EffectCondition>() {

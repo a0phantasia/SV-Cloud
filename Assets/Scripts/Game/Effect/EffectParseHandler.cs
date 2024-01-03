@@ -37,6 +37,12 @@ public static class EffectParseHandler
         return dict;
     }
 
+    public static Dictionary<string, string> Evolve(int[] data) {
+        var dict = new Dictionary<string, string>();
+        dict.Set("index", data[0].ToString());
+        return dict;
+    }
+
     public static Dictionary<string, string> Draw(int[] data) {
         var dict = new Dictionary<string, string>();
         dict.Set("count", data[0].ToString());

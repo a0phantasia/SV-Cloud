@@ -5,6 +5,7 @@ using UnityEngine.UI;
 
 public class BattleLeaderView : BattleBaseView
 {
+    [SerializeField] private int id;
     [SerializeField] private Image backgroundImage;
     [SerializeField] private Image leaderImage;
     [SerializeField] private Text hpText;
@@ -22,6 +23,12 @@ public class BattleLeaderView : BattleBaseView
     }
 
     public void ShowLeaderInfo() {
+        Hud.CurrentCardPlaceInfo = new BattleCardPlaceInfo() { 
+            unitId = id,
+            place = BattlePlace.Hand,
+            index = 0,
+        };
+
         cardInfoView?.SetCard(currentLeader.leaderCard.CurrentCard);        
     }
 

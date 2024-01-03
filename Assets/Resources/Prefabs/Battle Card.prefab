@@ -1101,6 +1101,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2791072829581609409}
   - component: {fileID: 1394898025331432637}
+  - component: {fileID: 1116456083460694030}
   m_Layer: 5
   m_Name: Battle Card
   m_TagString: Untagged
@@ -1147,6 +1148,28 @@ MonoBehaviour:
   evolveView: {fileID: 7440001820014390124}
   amuletView: {fileID: 2961110153448753147}
   effectView: {fileID: 2107960193084436720}
+--- !u!114 &1116456083460694030
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2791072829581609414}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 89b491c59d105984ebf686b90e77989a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  isMovable: 0
+  onBeginDragEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  onDragEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  onEndDragEvent:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!1 &2801293796924284890
 GameObject:
   m_ObjectHideFlags: 0
@@ -1599,7 +1622,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &6782214943734614119
 RectTransform:
   m_ObjectHideFlags: 0
@@ -1660,7 +1683,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &6667083524428660220
 RectTransform:
   m_ObjectHideFlags: 0

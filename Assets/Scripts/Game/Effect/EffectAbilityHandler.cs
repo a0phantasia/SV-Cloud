@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using UnityEngine;
 
 public static class EffectAbilityHandler 
@@ -174,11 +175,17 @@ public static class EffectAbilityHandler
         
         //! For debug test.
         if (GameManager.instance.debugMode && (unit.id != state.myUnit.id)) {
+            Effect use = new Effect(new int[] { (int)EffectAbility.Use, 0 })
+            {
+                source = unit.leader.leaderCard,
+                invokeUnit = unit
+            };
             Effect turnEnd = new Effect(new int[] { (int)EffectAbility.TurnEnd })
             {
                 source = unit.leader.leaderCard,
                 invokeUnit = unit
             };
+            Battle.EnqueueEffect(use);
             Battle.EnqueueEffect(turnEnd);
         }
         return true;
@@ -266,6 +273,42 @@ public static class EffectAbilityHandler
         return true;
     }
 
+    public static bool Evolve(this Effect effect, BattleState state) {
+        var unit = effect.invokeUnit;
+        bool isMyUnit = state.myUnit.id == unit.id;
+
+        // Index and card is used when players use EP to evolve follower
+        int index = int.Parse(effect.abilityOptionDict.Get("index", "-1"));
+        var card = index.IsInRange(0, unit.field.Count) ? unit.field.cards[index] : null;
+
+        effect.invokeTarget = (card == null) ? (effect.target switch {
+            EffectTarget.Self => new List<BattleCard>() { effect.source },
+            _ => effect.invokeTarget,
+        }) : new List<BattleCard>() { card };
+
+        if ((card != null) && (card.IsEvolvable(unit))) {
+            unit.leader.EP -= card.GetEvolveCost();
+            unit.leader.isEpUsed = true;
+        }
+
+        effect.invokeTarget.ForEach(x => x.Evolve());
+
+        var log = string.Empty;
+        effect.invokeTarget.ForEach(x => log += x.CurrentCard.name + "進化\n");
+        effect.hudOptionDict.Set("log", log);
+        Hud.SetState(state);
+
+        if (card != null) {
+            EnqueueEffect("on_be_evolve_with_ep", effect.invokeTarget, state);
+            OnPhaseChange("on_evolve_with_ep", state);
+        }
+
+        EnqueueEffect("on_be_evolve", effect.invokeTarget, state);
+        OnPhaseChange("on_evolve", state);
+
+        return true;
+    }
+
     public static bool SetKeyword(this Effect effect, BattleState state) {
         var unit = effect.invokeUnit;
 
@@ -283,7 +326,7 @@ public static class EffectAbilityHandler
 
         for (int i = 0; i < effect.invokeTarget.Count; i++) {
             var actionController = effect.invokeTarget[i].actionController;
-            var setNum = (modifyOption == ModifyOption.Add) ? actionController.GetIdentifier(keywordEnglishName + 1) : 0; 
+            var setNum = (modifyOption == ModifyOption.Add) ? (actionController.GetIdentifier(keywordEnglishName) + 1) : 0; 
             effect.invokeTarget[i].actionController.SetIdentifier(keywordEnglishName, setNum);
             effect.invokeTarget[i].SetKeyword(keyword, modifyOption);
         }
@@ -307,12 +350,12 @@ public static class EffectAbilityHandler
         var filterOptions = effect.abilityOptionDict.Get("filter", "none");
         var inGraveCards = new List<BattleCard>();
 
-
         if (filterOptions == "none") {
             var total = unit.Draw(drawCount, out effect.invokeTarget, out inGraveCards);
 
             string logSource = effect.source.CurrentCard.name + "的效果";
             string logTarget = (isMyUnit ? "我方" : "對方") + "抽取 " + drawCount + " 張卡片";
+
             effect.hudOptionDict.Set("log", logSource + "\n" + logTarget);
             Hud.SetState(state);
 
@@ -367,15 +410,15 @@ public static class EffectAbilityHandler
                     summonUnit.hand.cards.RemoveRange(effect.invokeTarget);
                     break;
             }
-            
-            fieldUnit.field.cards.Add(effect.invokeTarget[0]);
 
-            effect.hudOptionDict.Set("log", effect.invokeTarget[0].CurrentCard.name + "進入戰場");
-            Hud.SetState(state);
+            fieldUnit.field.cards.Add(effect.invokeTarget[0]);
             
             EnqueueEffect("on_be_summon", effect.invokeTarget , state);
 
             fieldUnit.leader.AddIdentifier("rally", 1);
+
+            effect.hudOptionDict.Set("log", effect.invokeTarget[0].CurrentCard.name + "進入戰場");
+            Hud.SetState(state);
         }
         OnPhaseChange("on_summon", state);
 

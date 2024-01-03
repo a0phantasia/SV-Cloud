@@ -158,7 +158,9 @@ public class ResourceManager : Singleton<ResourceManager>
         Dictionary<int, string[]> descDict = new Dictionary<int, string[]>();
         for (int i = 1; i < dataRow; i++) {
             int cur = dataCol * i;
-            int id = int.Parse(data[cur]);
+            if(!int.TryParse(data[cur], out int id))
+                continue;
+        
             descDict.Add(id, data.SubArray(cur + 1, dataCol - 1));
         }
         return descDict;
@@ -169,6 +171,9 @@ public class ResourceManager : Singleton<ResourceManager>
         int dataRow = data.Length / dataCol;
         for (int i = 1; i < dataRow; i++) {
             int cur = dataCol * i;
+            if (!int.TryParse(data[cur], out _))
+                continue;
+
             T info = constructor.Invoke(data, cur);
             infoDict.Set(info.Id, info);
         }

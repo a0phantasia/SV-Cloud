@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using Photon.Pun;
 using Photon.Realtime;
 using UnityEngine;
@@ -13,10 +14,13 @@ public class BattleManager : Manager<BattleManager>
     [SerializeField] private BattleSystemView systemView;
     [SerializeField] private BattleUnitView myView, opView;
     [SerializeField] private PhotonView masterPhotonView, clientPhotonView;
-
     public PhotonView myPhotonView => PhotonNetwork.IsMasterClient ? masterPhotonView : clientPhotonView;
-    public bool IsDone => systemView.IsDone && myView.IsDone && opView.IsDone;
+
     private Queue<BattleState> hudQueue = new Queue<BattleState>();
+    public BattleCardPlaceInfo CurrentCardPlaceInfo = null;
+    public BattleState CurrentState { get; protected set; } = null;
+    public bool IsDone => systemView.IsDone && myView.IsDone && opView.IsDone;
+    public bool IsLocked { get; protected set; } = false;
 
     protected override void Awake()
     {
@@ -48,7 +52,7 @@ public class BattleManager : Manager<BattleManager>
         NetworkManager.instance.onOtherPlayerLeftRoomEvent -= OnOtherPlayerDisconnect;
     }
 
-    public void EnemyPlayerAction(int[] data) {
+    public void EnemyPlayerAction(short[] data) {
         if (Battle.settings.isLocal)
             return;
 
@@ -57,11 +61,15 @@ public class BattleManager : Manager<BattleManager>
     }
 
     [PunRPC]
-    private void RPCPlayerAction(int[] data) {
-        Battle.PlayerAction(data, false);
+    private void RPCPlayerAction(short[] data) {
+        Battle.PlayerAction(data.Select(x => (int)x).ToArray(), false);
     }
 
     public void SetLock(bool locked) {
+        if (locked == IsLocked)
+            return;
+
+        IsLocked = locked;
         lockObject?.SetActive(locked);
     }
 
@@ -76,13 +84,17 @@ public class BattleManager : Manager<BattleManager>
     }
     
     public void ProcessQueue() {
-        if (hudQueue.Count == 0)
+        if (hudQueue.Count == 0) {
+            SetLock(false);
             return;
+        }
 
-        var hudState = hudQueue.Dequeue();
-        systemView.SetState(hudState);
-        myView.SetState(hudState);
-        opView.SetState(hudState);
+        SetLock(true);
+
+        CurrentState = hudQueue.Dequeue();
+        systemView.SetState(CurrentState);
+        myView.SetState(CurrentState);
+        opView.SetState(CurrentState);
 
         StartCoroutine(WaitForCondition(() => IsDone, ProcessQueue));
     }

@@ -5,6 +5,7 @@ using UnityEngine;
 
 public class BattleFieldView : BattleBaseView
 {
+    [SerializeField] private int id;
     [SerializeField] private List<BattleCardView> cardViews;
     private List<BattleCard> fieldCards = new List<BattleCard>();
     private int fieldCount => fieldCards.Count;
@@ -17,6 +18,29 @@ public class BattleFieldView : BattleBaseView
     } 
 
     public void ShowFieldInfo(int index) {
-        cardInfoView?.SetBattleCard((index < fieldCount) ? fieldCards[index] : null);
+        var unit = Hud.CurrentState.myUnit;
+        var card = (index < fieldCount) ? fieldCards[index] : null;
+
+        Hud.CurrentCardPlaceInfo = new BattleCardPlaceInfo() { 
+            unitId = id,
+            place = BattlePlace.Field,
+            index = index,
+        };
+
+        cardInfoView?.SetBattleCard(card);
+
+        if (id != 0)
+            return;
+
+        cardInfoView?.buttonView?.SetEvolvable(card?.IsEvolvable(unit) ?? false);
+        cardInfoView?.SetBackgroundSizeAuto();
+    }
+
+    public void Evolve() {
+        var info = Hud.CurrentCardPlaceInfo;
+        if ((info.unitId != 0) || (info.place != BattlePlace.Field))
+            return;
+        
+        Battle.PlayerAction(new int[2] { (int)EffectAbility.Evolve, info.index }, true);
     }
 }

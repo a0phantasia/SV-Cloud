@@ -23,25 +23,29 @@ public class BattleUnitView : BattleBaseView
 
     public void SetState(BattleState state) {
         var effect = state.currentEffect;
-        var unit = (id == 0) ? state.myUnit : state.opUnit;
         var invokeUnit = effect.invokeUnit;
 
         IsDone = false;
 
-        if (invokeUnit.id == unit.id)
-            SetMyState(state, invokeUnit);
-        else 
-            SetOpState(state, unit);
+        if (id == 0) 
+            SetMyState(state);
+        else
+            SetOpState(state);
     }
 
-    private void SetMyState(BattleState state, BattleUnit unit) {
+    private void SetMyState(BattleState state) {
         var effect = state.currentEffect;
+        var invokeUnit = effect.invokeUnit;
+        var unit = state.myUnit;
 
         switch (effect.ability) {
             default:
                 SetUnit(unit);
                 break;
             case EffectAbility.Use:
+                if (invokeUnit.id != unit.id)
+                    goto default;
+
                 StartCoroutine(WaitForSeconds(0.5f, () => {
                     handView?.SetHandMode(true);
                     SetUnit(unit);
@@ -50,15 +54,22 @@ public class BattleUnitView : BattleBaseView
         };
     }
 
-    private void SetOpState(BattleState state, BattleUnit unit) {
+    private void SetOpState(BattleState state) {
         var effect = state.currentEffect;
+        var invokeUnit = effect.invokeUnit;
+        var unit = state.opUnit;
 
         switch (effect.ability) {
             default:
                 SetUnit(unit);
                 break;
             case EffectAbility.Use:
-                SetUnit(unit);
+                if (invokeUnit.id != unit.id)
+                    goto default;
+
+                StartCoroutine(handView?.ShowOpUseCard(effect.invokeTarget[0].CurrentCard, () => {
+                    SetUnit(unit);
+                }));
                 break;
         };
     }

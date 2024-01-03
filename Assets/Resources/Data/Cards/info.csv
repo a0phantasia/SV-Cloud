@@ -1,10 +1,21 @@
 id,status,trait,keyword,option,effect,token,author
+---------,------,----,----,----,-,----,-------(Leaders)
 100000000,0/0/20,none,none,none,0,none,Cygames
+100001000,0/0/20,none,none,none,0,none,Cygames
+100002000,0/0/20,none,none,none,0,none,Cygames
+100003000,0/0/20,none,none,none,0,none,Cygames
+100004000,0/0/20,none,none,none,0,none,Cygames
+100005000,0/0/20,none,none,none,0,none,Cygames
+100006000,0/0/20,none,none,none,0,none,Cygames
+100007000,0/0/20,none,none,none,0,none,Cygames
+100008000,0/0/20,none,none,none,0,none,Cygames
+---------,------,----,----,----,-,----,-------(Pack 0 / Normal)
 100000111,1/1/2,none,none,none,0,none,Cygames
 100000112,2/2/2,none,none,none,0,none,Cygames
 100000113,3/3/2,none,none,none,0,none,Cygames
 100000114,4/3/4,none,none,none,0,none,Cygames
-100000115,5/2/6,none,2,none,2,none,Cygames
+100000115,1/2/6,none,2,none,2,none,Cygames
+---------,------,----,----,----,-,----,-------(Pack 0 / Evolved)
 100000911,1/3/4,none,none,none,0,none,Cygames
 100000912,2/4/4,none,none,none,0,none,Cygames
 100000913,3/5/4,none,none,none,0,none,Cygames

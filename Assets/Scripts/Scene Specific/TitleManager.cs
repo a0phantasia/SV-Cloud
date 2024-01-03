@@ -21,6 +21,12 @@ public class TitleManager : Manager<TitleManager>
             return;
         }
 
+        if (!DatabaseManager.instance.VerifyData(out string error)) {
+            //TODO Uncomment these when finished.
+            // RequestManager.OnRequestFail(error);
+            // return;
+        }
+
         if (Player.gameData.IsEmpty()) {
             OpenNicknamePanel();
             return;

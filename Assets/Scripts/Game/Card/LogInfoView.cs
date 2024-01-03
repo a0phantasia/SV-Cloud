@@ -9,7 +9,7 @@ public class LogInfoView : IMonoBehaviour
     [SerializeField] private GameObject buttonObject, splitLineObject;
     [SerializeField] private IButton infoButton;
     [SerializeField] private Outline buttonOutline;
-    [SerializeField] private Text infoText, turnText;
+    [SerializeField] private Text infoText, countText, turnText;
 
     public RectTransform rectTransform { get; private set; }
 
@@ -19,10 +19,10 @@ public class LogInfoView : IMonoBehaviour
         rectTransform = gameObject.GetComponent<RectTransform>();
     }
 
-    public void LogEffect(string log, BattleState state, Action onClickCallback = null) {
+    public void SetEffect(string log, BattleState state, Action onClickCallback = null) {
         var effect = state.currentEffect;
-        bool isMyUnit = state.myUnit.id == effect.invokeUnit.id;
         bool buttonMode = effect.ability != EffectAbility.TurnStart;
+        bool isMyUnit = state.myUnit.id == effect.invokeUnit.id;
         Color color = isMyUnit ? Color.cyan : Color.red;
 
         buttonObject?.SetActive(buttonMode);
@@ -34,6 +34,19 @@ public class LogInfoView : IMonoBehaviour
         infoText?.SetText(log);
         turnText?.SetText(log);
         infoButton?.onPointerClickEvent?.SetListener(onClickCallback);
+    }
+
+    public void SetLog(string log, Color outlineColor) {
+        buttonObject?.SetActive(true);
+        splitLineObject?.SetActive(false);
+        buttonOutline?.SetColor(outlineColor);
+        turnText?.SetColor(outlineColor);
+        infoText?.SetText(log);
+        turnText?.SetText(log);
+    }
+
+    public void SetCount(string count) {
+        countText?.SetText(count);
     }
     
 }

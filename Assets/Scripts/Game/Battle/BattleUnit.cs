@@ -19,6 +19,8 @@ public class BattleUnit : IIdentifyHandler
     public bool isDone = false;
     public bool isMyTurn = false;
     public bool isFirst;
+    public bool isEvolveEnabled => (turn - (isFirst ? 1 : 0)) >= 4;
+
     public string IsFirstText => isFirst ? "先手" : "後手";
     public bool IsMasterUnit => id == 0;
 
@@ -103,4 +105,9 @@ public class BattleUnit : IIdentifyHandler
     {
         throw new NotImplementedException();
     }
+    
+}
+
+public enum BattlePlace {
+    Deck, Hand, Leader, Territory, Field, Grave
 }

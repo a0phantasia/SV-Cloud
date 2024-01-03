@@ -6,37 +6,43 @@ using UnityEngine.UI;
 
 public class BattleLogInfoView : BattleBaseView
 {
-    private bool isMe = true;
+    private bool isMe = false;
     [SerializeField] private ScrollRect scrollRect;
     [SerializeField] private IButton myButton, opButton;
     private List<LogInfoView> myBattleLogs = new List<LogInfoView>();
     private List<LogInfoView> opBattleLogs = new List<LogInfoView>();
 
     public void Log(BattleState state) {
-        int index = 0;
         int myCount = 0;
         int opCount = 0;
-        foreach (var key in Leader.infoKeys) {
-            var value = state.myUnit.GetIdentifier(key);
-            if (value != 0) {
-                if (myBattleLogs.Count < myCount) {
+        for (int index = 0; index < Leader.infoKeys.Length; index++) {
+            var key = Leader.infoKeys[index];
+            var value = Leader.infoValues[index];
+            var info = state.myUnit.leader.GetIdentifier(key);
+            
+            if (info > 0) {
+                if (myBattleLogs.Count <= myCount) {
                     var obj = Instantiate(SpriteResources.Log, scrollRect.content);
                     var logPrefab = obj.GetComponent<LogInfoView>();
                     myBattleLogs.Add(logPrefab);
                     obj.SetActive(isMe);
                 }
-                myBattleLogs[myCount++].LogEffect(Leader.infoValues[index] + "\t\t " + value, state, null);
+                myBattleLogs[myCount].SetLog(value, Color.cyan);
+                myBattleLogs[myCount].SetCount(info.ToString());
+                myCount++;
             }
 
-            value = state.opUnit.GetIdentifier(key);
-            if (value != 0) {
-                if (opBattleLogs.Count < opCount) {
+            info = state.opUnit.leader.GetIdentifier(key);
+            if (info > 0) {
+                if (opBattleLogs.Count <= opCount) {
                     var obj = Instantiate(SpriteResources.Log, scrollRect.content);
                     var logPrefab = obj.GetComponent<LogInfoView>();
                     opBattleLogs.Add(logPrefab);
                     obj.SetActive(!isMe);
                 }
-                opBattleLogs[opCount++].LogEffect(Leader.infoValues[index] + "\t\t " + value, state, null);
+                opBattleLogs[opCount].SetLog(value, Color.red);
+                opBattleLogs[opCount].SetCount(info.ToString());
+                opCount++;
             }
             index++;
         }
@@ -45,6 +51,7 @@ public class BattleLogInfoView : BattleBaseView
     public void SetWho(bool isMe) {
         if (this.isMe == isMe)
             return;
+
         this.isMe = isMe;
         myButton.SetColor(isMe ? ColorHelper.chosen : Color.black);
         opButton.SetColor(isMe ? Color.black : ColorHelper.chosen);

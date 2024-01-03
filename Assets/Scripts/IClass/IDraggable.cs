@@ -11,6 +11,7 @@ public class IDraggable : IMonoBehaviour, IPointerDownHandler, IBeginDragHandler
     protected CanvasGroup canvasGroup;
     protected RectTransform rectTransform;
 
+    [SerializeField] protected bool isMovable = true;
     [SerializeField] public UnityEvent<RectTransform> onBeginDragEvent = new UnityEvent<RectTransform>();
     [SerializeField] public UnityEvent<RectTransform> onDragEvent = new UnityEvent<RectTransform>();
     [SerializeField] public UnityEvent<RectTransform> onEndDragEvent = new UnityEvent<RectTransform>();
@@ -32,17 +33,23 @@ public class IDraggable : IMonoBehaviour, IPointerDownHandler, IBeginDragHandler
     }
 
     public virtual void OnBeginDrag(PointerEventData eventData) {
-        canvasGroup.blocksRaycasts = false;
+        if (isMovable)
+            canvasGroup.blocksRaycasts = false;
+
         onBeginDragEvent?.Invoke(rectTransform);
     }
 
     public virtual void OnDrag(PointerEventData eventData) {
-        rectTransform.anchoredPosition += eventData.delta / (canvas.scaleFactor * transform.parent.localScale);
+        if (isMovable)
+            rectTransform.anchoredPosition += eventData.delta / (canvas.scaleFactor * transform.parent.localScale);
+
         onDragEvent?.Invoke(rectTransform);
     }
 
     public virtual void OnEndDrag(PointerEventData eventData) {
-        canvasGroup.blocksRaycasts = true;
+        if (isMovable)
+            canvasGroup.blocksRaycasts = true;
+            
         onEndDragEvent?.Invoke(rectTransform);
     }
 

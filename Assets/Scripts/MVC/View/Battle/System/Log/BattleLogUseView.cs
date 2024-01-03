@@ -6,7 +6,7 @@ using UnityEngine.UI;
 
 public class BattleLogUseView : BattleBaseView
 {
-    private bool isMe = true;
+    private bool isMe = false;
     [SerializeField] private ScrollRect scrollRect;
     [SerializeField] private IButton myButton, opButton;
 
@@ -34,7 +34,8 @@ public class BattleLogUseView : BattleBaseView
         for (int i = 0; i < battleLogs.Count; i++) {
             int copy = i;
             var count = usedCards.Count(x => x.id == distinctCards[i].id);
-            battleLogs[i].LogEffect(distinctCards[i].name + "\t\t x " + count, state, () => cardInfoView?.SetCard(distinctCards[copy]));
+            battleLogs[i].SetEffect(distinctCards[i].name, state, () => cardInfoView?.SetCard(distinctCards[copy]));
+            battleLogs[i].SetCount("x " + count);
         }
     }
 

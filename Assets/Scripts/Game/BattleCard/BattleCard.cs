@@ -84,11 +84,25 @@ public class BattleCard : IIdentifyHandler
         return CurrentCard.cost;
     }
 
-    public bool IsUsable(BattleUnit unit) {
-        bool IsCostEnough() => unit.leader.PP >= GetUseCost(unit.leader);
-        bool IsFieldFull()  => (CurrentCard.Type == CardType.Follower) && (unit.field.IsFull);
+    public int GetEvolveCost() {
+        return 1;
+    }
 
-        return IsCostEnough() && (!IsFieldFull());
+    public bool IsUsable(BattleUnit unit) {
+        bool isCostEnough = unit.leader.PP >= GetUseCost(unit.leader);
+        bool isFieldFull = (CurrentCard.Type == CardType.Follower) && (unit.field.IsFull);
+        return isCostEnough && (!isFieldFull);
+    }
+
+    public bool IsEvolvable(BattleUnit unit) {
+        bool isUnevolvedFollower = CurrentCard.Type == CardType.Follower;
+        bool isEpUnused = (unit.isEvolveEnabled) && (!unit.leader.isEpUsed) && (unit.leader.EP >= GetEvolveCost());
+        return isUnevolvedFollower && isEpUnused;
+    }
+
+    // Evolve this follower. You should check IsEvolvable() before calling this if you use EP evolve.
+    public void Evolve() {
+        IsEvolved = true;
     }
 
     public void SetKeyword(CardKeyword keyword, ModifyOption option) {

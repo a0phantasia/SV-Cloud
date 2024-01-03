@@ -47,6 +47,8 @@ public class Leader
     }
 
     public void ClearTurnIdentifier() {
+        isEpUsed = false;
+        
         SetIdentifier("combo", 0);
 
         foreach (var entry in options) {
