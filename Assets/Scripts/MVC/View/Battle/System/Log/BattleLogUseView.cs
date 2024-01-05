@@ -13,7 +13,7 @@ public class BattleLogUseView : BattleBaseView
     private List<LogInfoView> myBattleLogs = new List<LogInfoView>();
     private List<LogInfoView> opBattleLogs = new List<LogInfoView>();
 
-    public void Log(BattleState state) {
+    public void LogUse(BattleState state) {
         if (state.currentEffect.ability != EffectAbility.Use)
             return;
 

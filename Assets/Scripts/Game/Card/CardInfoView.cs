@@ -27,7 +27,8 @@ public class CardInfoView : IMonoBehaviour
 
     private void Update() {
         if (Input.GetMouseButton(0) && (backgroundRect != null)) {
-            RectTransformUtility.ScreenPointToLocalPointInRectangle(backgroundRect, Input.mousePosition, null, out var point);
+            var camera = (SceneLoader.CurrentSceneId == SceneId.Battle) ? Camera.main : null;
+            RectTransformUtility.ScreenPointToLocalPointInRectangle(backgroundRect, Input.mousePosition, camera, out var point);
             SetActive(backgroundRect.rect.Contains(point));
         }
             

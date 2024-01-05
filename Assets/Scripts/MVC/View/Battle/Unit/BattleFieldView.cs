@@ -1,14 +1,17 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class BattleFieldView : BattleBaseView
 {
     [SerializeField] private int id;
     [SerializeField] private List<BattleCardView> cardViews;
-    private List<BattleCard> fieldCards = new List<BattleCard>();
-    private int fieldCount => fieldCards.Count;
+
+    public List<BattleCard> fieldCards = new List<BattleCard>();
+    public int fieldCount => fieldCards.Count;
 
     public void SetField(BattleField field) {
         fieldCards = field.cards.Select(x => x).ToList();
@@ -43,4 +46,5 @@ public class BattleFieldView : BattleBaseView
         
         Battle.PlayerAction(new int[2] { (int)EffectAbility.Evolve, info.index }, true);
     }
+
 }

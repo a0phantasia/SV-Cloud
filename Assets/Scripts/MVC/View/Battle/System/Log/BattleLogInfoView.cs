@@ -12,7 +12,7 @@ public class BattleLogInfoView : BattleBaseView
     private List<LogInfoView> myBattleLogs = new List<LogInfoView>();
     private List<LogInfoView> opBattleLogs = new List<LogInfoView>();
 
-    public void Log(BattleState state) {
+    public void LogInfo(BattleState state) {
         int myCount = 0;
         int opCount = 0;
         for (int index = 0; index < Leader.infoKeys.Length; index++) {

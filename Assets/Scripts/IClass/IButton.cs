@@ -169,6 +169,13 @@ public class IButton : IMonoBehaviour, IPointerEnterHandler, IPointerExitHandler
         }
     }
 
+    public virtual void SetRotation(Vector3 rotation) {
+        if (image == null)
+            return;
+
+        image.rectTransform.localRotation = Quaternion.Euler(rotation);
+    }
+
     public virtual void SetSize(Vector2 size) {
         rect.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, size.x);
         rect.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, size.y);

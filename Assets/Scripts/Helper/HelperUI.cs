@@ -185,6 +185,8 @@ public static class TextHelper {
 }
 
 public static class ColorHelper {
+    public static Color black192 => new Color32(0, 0, 0, 192);
+    public static Color gray192 => new Color32(192, 192, 192, 255);
     public static Color chosen => new Color32(3, 109, 159, 255);
     public static Color gold => new Color32(255, 187, 0, 255);
     public static Color red => Color.red;
@@ -193,8 +195,9 @@ public static class ColorHelper {
 
     // public static Color secretSkill => new Color32(252, 237, 105, 255); 
     // public static Color normalSkill => new Color32(82, 229, 249, 255);
+    // public static Color storm => new Color32(119, 226, 12, 192);
 
-    public static Color storm => new Color32(119, 226, 12, 192);
+    public static Color storm => new Color32(63, 255, 127, 192);
     public static Color rush => new Color32(255, 235, 4, 192);
 
     public static void SetColor(this Image image, Color color) {

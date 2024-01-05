@@ -42,14 +42,36 @@ public class BattleUnitView : BattleBaseView
             default:
                 SetUnit(unit);
                 break;
+
             case EffectAbility.Use:
                 if (invokeUnit.id != unit.id)
                     goto default;
 
-                StartCoroutine(WaitForSeconds(0.5f, () => {
+                Anim.UseAnim(0, effect.invokeTarget[0], () => {
                     handView?.SetHandMode(true);
                     SetUnit(unit);
-                }));
+                });
+                break;
+
+            case EffectAbility.Evolve:
+                if (invokeUnit.id != unit.id)
+                    goto default;
+
+                var index = int.Parse(effect.abilityOptionDict.Get("index", "-1"));
+                if (index >= 0) {
+                    // Evolve with EP.
+                    Anim.EvolveAnim(new BattleCardPlaceInfo() {
+                        unitId = 0,
+                        place = BattlePlace.Field,
+                        index = index,
+                    }, unit.field.cards[index], fieldView.fieldCards, () => {
+                        SetUnit(unit);
+                    });
+                } else {
+                    // Auto evolve.
+                    SetUnit(unit);
+                }
+
                 break;
         };
     }
@@ -63,13 +85,33 @@ public class BattleUnitView : BattleBaseView
             default:
                 SetUnit(unit);
                 break;
+
             case EffectAbility.Use:
                 if (invokeUnit.id != unit.id)
                     goto default;
 
-                StartCoroutine(handView?.ShowOpUseCard(effect.invokeTarget[0].CurrentCard, () => {
+                Anim.UseAnim(1, effect.invokeTarget[0], () => SetUnit(unit));
+                break;
+
+            case EffectAbility.Evolve:
+                if (invokeUnit.id != unit.id)
+                    goto default;
+
+                var index = int.Parse(effect.abilityOptionDict.Get("index", "-1"));
+                if (index >= 0) {
+                    // Evolve with EP.
+                    Anim.EvolveAnim(new BattleCardPlaceInfo() {
+                        unitId = 1,
+                        place = BattlePlace.Field,
+                        index = index,
+                    }, unit.field.cards[index], fieldView.fieldCards, () => {
+                        SetUnit(unit);
+                    });
+                } else {
+                    // Auto evolve.
                     SetUnit(unit);
-                }));
+                }
+
                 break;
         };
     }

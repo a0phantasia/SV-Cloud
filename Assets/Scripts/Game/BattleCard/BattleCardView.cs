@@ -8,7 +8,10 @@ public class BattleCardView : IMonoBehaviour
     [SerializeField] private BattleCardAmuletView amuletView;
     [SerializeField] private BattleCardEffectView effectView;
 
+    private BattleCard currentCard;
+
     public void SetBattleCard(BattleCard card) {
+        currentCard = card;
         gameObject.SetActive(card != null);
         effectView?.SetBattleCard(card);
         if (card == null)
@@ -21,5 +24,17 @@ public class BattleCardView : IMonoBehaviour
         normalView?.SetBattleCard(card);
         evolveView?.SetBattleCard(card);
         amuletView?.SetBattleCard(card);
+    }
+
+    public void SetTransparent(bool transparent) {
+        if (!transparent) {
+            SetBattleCard(currentCard);
+            return;
+        }
+        
+        normalView?.gameObject.SetActive(!transparent);
+        evolveView?.gameObject.SetActive(!transparent);
+        amuletView?.gameObject.SetActive(!transparent);
+        effectView?.SetBattleCard(null);
     }
 }

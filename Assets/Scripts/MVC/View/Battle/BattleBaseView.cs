@@ -6,7 +6,10 @@ using UnityEngine;
 public class BattleBaseView : IMonoBehaviour
 {
     public Battle Battle => Player.currentBattle;
+    public BattleLogManager Log => BattleLogManager.instance;
     public BattleManager Hud => BattleManager.instance;
+    public BattleAnimManager Anim => BattleAnimManager.instance;
+
     [SerializeField] protected CardInfoView cardInfoView;
 
 }

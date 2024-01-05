@@ -24,8 +24,8 @@ public class BattleState
         this.settings = settings;
         this.result = new BattleResult();
 
-        //! Debug mode always go first
-        isMasterTurn = GameManager.instance.debugMode ? true : (Random.Range(0, 2) == 0);
+        //! Debug mode always go first/last
+        isMasterTurn = GameManager.instance.debugMode ? false : (Random.Range(0, 2) == 0);
 
         masterUnit = new BattleUnit(0, settings.masterName , masterDeck, isMasterTurn);
         clientUnit = new BattleUnit(1, settings.clientName , clientDeck, !isMasterTurn);

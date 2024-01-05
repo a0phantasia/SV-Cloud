@@ -26,6 +26,7 @@ public class CreateRoomController : IMonoBehaviour
             return;
 
         BattleSettings settings = new BattleSettings(CardZone.Engineering, GameFormat.Rotation, true) {
+            evolveStart = 1,
             masterName = Player.Nickname,
             clientName = "電腦",
         };

@@ -12,7 +12,7 @@ public class BattleLogMainView : BattleBaseView
 
     private List<LogInfoView> battleLogs = new List<LogInfoView>();
 
-    public void Log(BattleState state) {
+    public void LogState(BattleState state) {
         var effect = state.currentEffect;
         string log = effect.hudOptionDict.Get("log", string.Empty).TrimEnd("\n");
         var logCard = (effect.ability == EffectAbility.Summon) ? effect.invokeTarget[0] : effect.source;

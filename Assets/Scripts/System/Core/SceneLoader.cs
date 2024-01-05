@@ -14,6 +14,8 @@ public class SceneLoader : Singleton<SceneLoader>
     public Text loadingText;
     public GameObject CornerLoadingObject;
 
+    public static SceneId CurrentSceneId { get; private set; } = SceneId.Title;
+
     public void StartCornerLoading() {
         loadingScreen.SetActive(true);
         Color c = loadingPanel.color;
@@ -61,7 +63,7 @@ public class SceneLoader : Singleton<SceneLoader>
 
             yield return null;
         }
-
+        CurrentSceneId = index;
         loadingScreen.SetActive(false);
     }
 
@@ -73,7 +75,7 @@ public class SceneLoader : Singleton<SceneLoader>
             loadingText.text = (Mathf.CeilToInt(progress * 10000) / 100).ToString() + "%";
             yield return null;
         }
-
+        CurrentSceneId = index;
         loadingScreen.SetActive(false);
     }
 }

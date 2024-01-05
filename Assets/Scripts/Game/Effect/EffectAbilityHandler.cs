@@ -136,7 +136,7 @@ public static class EffectAbilityHandler
         
         // If specific turn comes, give player EP.
         var first = unit.isFirst ? 1 : 0;
-        if (unit.turn - first == 4) {
+        if (unit.turn - first == state.settings.evolveStart) {
             unit.leader.EpMax = unit.isFirst ? 2 : 3;
             unit.leader.EP = unit.leader.EpMax;
             effect.hudOptionDict.Set("ep", "true");
@@ -354,7 +354,10 @@ public static class EffectAbilityHandler
             var total = unit.Draw(drawCount, out effect.invokeTarget, out inGraveCards);
 
             string logSource = effect.source.CurrentCard.name + "的效果";
-            string logTarget = (isMyUnit ? "我方" : "對方") + "抽取 " + drawCount + " 張卡片";
+            string logTarget = (isMyUnit ? "我方" : "對方") + "抽取 " + drawCount + " 張卡片\n";
+            
+            if (isMyUnit)
+                inGraveCards.ForEach(x => logTarget += x.CurrentCard.name + " 爆牌進入墓地\n");
 
             effect.hudOptionDict.Set("log", logSource + "\n" + logTarget);
             Hud.SetState(state);

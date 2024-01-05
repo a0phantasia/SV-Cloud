@@ -10,7 +10,6 @@ public class BattleHandView : BattleBaseView
 {
     [SerializeField] private int id = 0;
     [SerializeField] private float useThresholdY;
-    [SerializeField] private float useExhibitPosY;
     [SerializeField] private RectTransform rectTransform;
     [SerializeField] private HorizontalLayoutGroup layoutGroup;
     [SerializeField] private IButton handGroupButton;
@@ -59,59 +58,36 @@ public class BattleHandView : BattleBaseView
     }
 
     public void SetHandMode(bool active) {
+        SetHandMode(active, 0);
+    }   
+
+    public void SetHandMode(bool active, int padding) {
+        var count = handCount + padding;
         mode = active;
         handGroupButton.gameObject.SetActive(!active);
         rectTransform.localScale = (active ? 2 : 1) * Vector3.one;
-        rectTransform.anchoredPosition = active ? new Vector2(GetLayoutGroupPosition(), -36) : new Vector2(520, -18);
-        layoutGroup.spacing = active ? GetLayoutGroupSpacing() : 0;
+        rectTransform.anchoredPosition = active ? new Vector2(GetLayoutGroupPosition(count), -36) : new Vector2(520, -18);
+        layoutGroup.spacing = active ? GetLayoutGroupSpacing(count) : 0;
     }
 
-    public IEnumerator ShowOpUseCard(Card card, Action callback) {
-        float currentTime = 0, finishTime = 0.5f;
-        var lastSleeve = sleeves.FindLast(x => x.gameObject.activeSelf);
-        var x = lastSleeve.rectTransform.anchoredPosition.x - 120;
-        
-        opUseCardView.rectTransform.localScale = 0.25f * Vector3.one;
-        opUseCardView.rectTransform.anchoredPosition = new Vector2(x, -30);
-        opUseCardView.SetCard(card);
-        opUseCardView.gameObject.SetActive(true);
-        lastSleeve.gameObject.SetActive(false);
+    private float GetLayoutGroupPosition(int count) {
+        if (count < 4)
+            return 425 - count * 50;
 
-        while (currentTime < finishTime) {
-            var percent = currentTime / finishTime;
-            opUseCardView.rectTransform.localScale = (0.25f + percent * 0.25f) * Vector3.one;
-            opUseCardView.rectTransform.anchoredPosition = new Vector2(x + percent * (390 - x), -30 + percent * (useExhibitPosY + 30));
-            currentTime += ((percent < 0.8f) ? 2.5f : 1) * Time.deltaTime;
-            yield return null;
-        }
-
-        opUseCardView.rectTransform.localScale = 0.5f * Vector3.one;
-        opUseCardView.rectTransform.anchoredPosition = new Vector2(390, useExhibitPosY);
-
-        yield return new WaitForSeconds(1f);
-
-        opUseCardView.gameObject.SetActive(false);
-        callback?.Invoke();
-    }
-
-    private float GetLayoutGroupPosition() {
-        if (handCount < 4)
-            return 425 - handCount * 50;
-
-        if (handCount == 4)
+        if (count == 4)
             return 235;
 
-        if (handCount == 5)
+        if (count == 5)
             return 210;
 
         return 190;
     }
 
-    private float GetLayoutGroupSpacing() {
-        if (handCount < 5)
+    private float GetLayoutGroupSpacing(int count) {
+        if (count < 5)
             return 25;
 
-        return handCount switch {
+        return count switch {
             5 => 20,
             6 => 12.5f,
             7 => 6.25f,
@@ -139,8 +115,7 @@ public class BattleHandView : BattleBaseView
             return;
 
         if (cardViews[index].rectTransform.anchoredPosition.y > useThresholdY) {
-            float x = 197.5f - GetLayoutGroupPosition() / 2;
-            cardViews[index].rectTransform.anchoredPosition = new Vector2(x, useExhibitPosY);
+            cardViews[index].SetCard(null);
             Battle.PlayerAction(new int[2] { (int)EffectAbility.Use, index }, true);
             return;
         }

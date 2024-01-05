@@ -55,14 +55,19 @@ public class CardView : IMonoBehaviour
     }
 
     public void SetFrame(int type, int rarity) {
-        cardFrameButton?.SetSprite(SpriteResources.GetCardFrameSprite(type, rarity));   
-        SetActiveAll(atkImages, type == (int)CardType.Follower);
-        SetActiveAll(hpImages, type == (int)CardType.Follower);
+        cardFrameButton?.SetSprite(SpriteResources.GetCardFrameSprite(type, rarity));
+
+        SetActiveAll(atkImages, CurrentCard.IsFollower());
+        SetActiveAll(hpImages, CurrentCard.IsFollower());
+    }
+
+    public void SetFrameRotation(Vector3 euler) {
+        cardFrameButton?.SetRotation(euler);
     }
 
     public void SetArtwork(Texture2D artwork, CardType type = CardType.Follower) {
-        var euler = new Vector3(0, type == CardType.Evolved ? 180 : 0, 0);
-        artworkRawImage.rectTransform.rotation = Quaternion.Euler(euler);
+        // var euler = new Vector3(0, type == CardType.Evolved ? 180 : 0, 0);
+        // artworkRawImage.rectTransform.rotation = Quaternion.Euler(euler);
         artworkRawImage.SetTexture(artwork ?? SpriteResources.DefaultSleeve?.texture);
     }
 
@@ -108,7 +113,7 @@ public class CardView : IMonoBehaviour
     }
 
     public void SetTag(Card card) {
-        bool active = (card != null) && (card.Type == CardType.Follower);
+        bool active = (card != null) && (card.IsFollower());
         tagObject?.SetActive(active);
         if (!active)
             return;
