@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class BattleUnitView : BattleBaseView
@@ -47,10 +48,8 @@ public class BattleUnitView : BattleBaseView
                 if (invokeUnit.id != unit.id)
                     goto default;
 
-                Anim.UseAnim(0, effect.invokeTarget[0], () => {
-                    handView?.SetHandMode(true);
-                    SetUnit(unit);
-                });
+                SetUnit(unit, false);
+                Anim.UseAnim(0, effect.invokeTarget[0], () => SetUnit(unit));
                 break;
 
             case EffectAbility.Evolve:
@@ -64,14 +63,22 @@ public class BattleUnitView : BattleBaseView
                         unitId = 0,
                         place = BattlePlace.Field,
                         index = index,
-                    }, unit.field.cards[index], fieldView.fieldCards, () => {
-                        SetUnit(unit);
-                    });
+                    }, unit.field.cards[index], fieldView.fieldCards, () => SetUnit(unit));
                 } else {
                     // Auto evolve.
                     SetUnit(unit);
                 }
 
+                break;
+
+            case EffectAbility.Draw:
+                if (invokeUnit.id != unit.id)
+                    goto default;
+
+                var count = int.Parse(effect.abilityOptionDict.Get("count"));
+                var inHand = effect.invokeTarget.Select(x => x.CurrentCard).ToList();
+                var inGrave = unit.grave.graveCards.TakeLast(count - effect.invokeTarget.Count).ToList();
+                Anim.DrawAnim(0, handView.Mode, inHand, inGrave, () => SetUnit(unit));
                 break;
         };
     }
@@ -90,6 +97,7 @@ public class BattleUnitView : BattleBaseView
                 if (invokeUnit.id != unit.id)
                     goto default;
 
+                SetUnit(unit, false);
                 Anim.UseAnim(1, effect.invokeTarget[0], () => SetUnit(unit));
                 break;
 
@@ -104,19 +112,27 @@ public class BattleUnitView : BattleBaseView
                         unitId = 1,
                         place = BattlePlace.Field,
                         index = index,
-                    }, unit.field.cards[index], fieldView.fieldCards, () => {
-                        SetUnit(unit);
-                    });
+                    }, unit.field.cards[index], fieldView.fieldCards, () => SetUnit(unit));
                 } else {
                     // Auto evolve.
                     SetUnit(unit);
                 }
 
                 break;
+
+            case EffectAbility.Draw:
+                if (invokeUnit.id != unit.id)
+                    goto default;
+                
+                var count = int.Parse(effect.abilityOptionDict.Get("count"));
+                var inHand = effect.invokeTarget.Select(x => x.CurrentCard).ToList();
+                var inGrave = unit.grave.graveCards.TakeLast(count - effect.invokeTarget.Count).ToList();
+                Anim.DrawAnim(1, false, inHand, inGrave, () => SetUnit(unit));
+                break;
         };
     }
 
-    private void SetUnit(BattleUnit unit) {
+    private void SetUnit(BattleUnit unit, bool setDone = true) {
         leaderView?.SetLeader(unit?.leader);
         ppView.SetLeader(unit?.leader);
         ppView?.SetTurnEndButtonActive((unit == null) ? false : unit.isMyTurn && (!unit.isDone));
@@ -126,6 +142,6 @@ public class BattleUnitView : BattleBaseView
         deckView?.SetDeck(unit?.deck);
         cornerView.SetUnit(unit);
 
-        IsDone = true;
+        IsDone = setDone;
     }
 }

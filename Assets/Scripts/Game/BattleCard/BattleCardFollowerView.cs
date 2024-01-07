@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class BattleCardFollowerView : IMonoBehaviour
+public class BattleCardFollowerView : BattleBaseView
 {
     [SerializeField] private Text atkText, hpText;
     [SerializeField] private Outline atkOutline, hpOutline;
@@ -29,17 +29,31 @@ public class BattleCardFollowerView : IMonoBehaviour
 
         //TODO FLAG
         flagImage?.gameObject.SetActive(false);
-        outlineImage?.gameObject.SetActive(battleCard.actionController.IsLeaderAttackable || battleCard.actionController.IsFollowerAttackable);
-        if (battleCard.actionController.IsLeaderAttackable) {
-            outlineImage?.SetColor(ColorHelper.storm);
-        } else if (battleCard.actionController.IsFollowerAttackable) {
-            outlineImage?.SetColor(ColorHelper.rush);
-        }
+
+        SetOutline(battleCard);
     }
 
     private void SetArtwork(Texture2D artwork, CardType type) {
         var euler = new Vector3(0, type == CardType.Evolved ? 180 : 0, 0);
         artworkRawImage.rectTransform.rotation = Quaternion.Euler(euler);
         artworkRawImage.SetTexture(artwork ?? SpriteResources.DefaultSleeve?.texture);
+    }
+
+    public void SetOutline(BattleCard battleCard) {
+        var unit = Hud.CurrentState.GetBelongUnit(battleCard);
+        var isLeaderAttackable = battleCard.IsLeaderAttackable(unit);
+        var isFollowerAttackable = battleCard.IsFollowerAttackable(unit);
+        
+        if (isLeaderAttackable) {
+            SetOutlineColor(ColorHelper.storm);
+        } else if (isFollowerAttackable) {
+            SetOutlineColor(ColorHelper.rush);
+        } else {
+            SetOutlineColor(Color.clear);
+        }
+    }
+
+    public void SetOutlineColor(Color color) {
+        outlineImage?.SetColor(color);
     }
 }

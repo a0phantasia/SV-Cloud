@@ -6,6 +6,7 @@ using UnityEngine;
 public class BattleGrave
 {
     public int Count = 0;
+    public List<Card> graveCards = new List<Card>();
     public List<Card> usedCards = new List<Card>();
     public List<Card> destroyedCards = new List<Card>();
 
@@ -14,6 +15,7 @@ public class BattleGrave
     public BattleGrave() {}
     public BattleGrave(BattleGrave rhs) {
         Count = rhs.Count;
+        graveCards = rhs.graveCards.Select(x => (x == null) ? null : new Card(x)).ToList();
         usedCards = rhs.usedCards.Select(x => (x == null) ? null : new Card(x)).ToList();
         destroyedCards = rhs.usedCards.Select(x => (x == null) ? null : new Card(x)).ToList();
     }

@@ -129,23 +129,8 @@ public static class List {
         }
     }
 
-    /// <summary>
-    /// Max exclusive.
-    /// </summary>
-    public static IList<T> MoveRangeTo<T>(this IList<T> list, int start, int stop, int targetStart) {
-        int count = stop - start;
-        int targetStop = Mathf.Min(list.Count, targetStart + count);
-        IList<T> range = list.GetRange(start, stop);
-        for (int i = targetStart; i < targetStop; i++) {
-            list[i] = range[i - targetStart];
-        }
-        return list;
-    }
-
-    public static void MoveRangeToOtherList<T>(this IList<T> lhs, List<T> rhs, int start, int stop) {
-        List<T> list = lhs.GetRange(start, stop);
-        lhs.RemoveRange(list);
-        rhs.AddRange(list);
+    public static IEnumerable<T> TakeLast<T>(this IEnumerable<T> source, int n) {
+        return source.Skip(Math.Max(0, source.Count() - n));
     }
 
     public static void GetModifiedList<T>(this IList<T> current, IList<T> target, ModifyOption option = ModifyOption.Set) {

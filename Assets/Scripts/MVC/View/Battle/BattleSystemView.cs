@@ -30,8 +30,10 @@ public class BattleSystemView : BattleBaseView
                     BattleResultState.Lose => state.myUnit.IsMasterUnit ? "LOSE" : "WIN",
                     _ => "DRAW",
                 };
-                string reason = int.Parse(effect.abilityOptionDict.Get("reason", "0")) switch {
-                    1 => (result == "LOSE" ? "你" : "對手") + "已放棄對戰",
+                string reason = (BattleLoseReason)int.Parse(effect.abilityOptionDict.Get("reason", "0")) switch {
+                    BattleLoseReason.Retire     => (result == "LOSE" ? "你" : "對手") + "已放棄對戰",
+                    BattleLoseReason.LeaderDie  => (result == "LOSE" ? "你" : "對手") + "的主戰者陣亡",
+                    BattleLoseReason.Deckout    => (result == "LOSE" ? "你" : "對手") + "的牌庫已抽乾",
                     _ => string.Empty,
                 };
                 Anim.ResultAnim("YOU " + result, reason, () => {

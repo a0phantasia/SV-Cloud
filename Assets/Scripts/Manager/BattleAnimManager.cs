@@ -5,17 +5,20 @@ using UnityEngine;
 
 public class BattleAnimManager : Manager<BattleAnimManager>
 {
-    [SerializeField] private BattleOrderView orderView;
+    [SerializeField] private BattleStartView startView;
     [SerializeField] private BattleKeepCardView keepView;
     [SerializeField] private BattleTurnView turnView;
 
     [SerializeField] private BattleUseAnimView useView;
     [SerializeField] private BattleEvolveAnimView evolveView;
+    [SerializeField] private BattleAttackAnimView attackView;
+
+    [SerializeField] private BattleDrawAnimView drawView;
 
     public override void Init()
     {
         base.Init();
-        orderView.ShowOrderInfo(keepView.ShowKeepInfo);
+        startView.ShowOrderInfo(keepView.ShowKeepInfo);
     }
 
     public void ResultAnim(string whosTurn, string description, Action callback) {
@@ -44,6 +47,26 @@ public class BattleAnimManager : Manager<BattleAnimManager>
 
     public void EvolveAnim(BattleCardPlaceInfo info, BattleCard evolveCard, List<BattleCard> fieldCards, Action callback) {
         evolveView?.EvolveWithEP(info, evolveCard, fieldCards, callback);
+    }
+    
+    public void AttackBeginDragAnim(int index) {
+
+    }
+
+    public void AttackDragAnim(int index) {
+
+    }
+
+    public void AttackEndDragAnim(int index) {
+
+    }
+    
+
+    public void DrawAnim(int unitId, bool currentHandMode, List<Card> inHand, List<Card> inGrave, Action callback) {
+        if (unitId == 0)
+            drawView?.MyDrawFromDeck(currentHandMode, inHand, inGrave, callback);
+        else
+            drawView?.OpDrawFromDeck(callback);
     }
 
 }

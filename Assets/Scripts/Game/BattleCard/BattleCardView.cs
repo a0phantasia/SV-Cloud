@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class BattleCardView : IMonoBehaviour
 {
+    [SerializeField] public RectTransform rectTransform;
     [SerializeField] private BattleCardFollowerView normalView, evolveView;
     [SerializeField] private BattleCardAmuletView amuletView;
     [SerializeField] private BattleCardEffectView effectView;
@@ -36,5 +37,11 @@ public class BattleCardView : IMonoBehaviour
         evolveView?.gameObject.SetActive(!transparent);
         amuletView?.gameObject.SetActive(!transparent);
         effectView?.SetBattleCard(null);
+    }
+
+    public void SetOutlineColor(Color color) {
+        normalView?.SetOutlineColor(color);
+        evolveView?.SetOutlineColor(color);
+        amuletView?.SetOutlineColor(color);
     }
 }

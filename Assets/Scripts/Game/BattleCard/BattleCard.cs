@@ -100,6 +100,26 @@ public class BattleCard : IIdentifyHandler
         return isUnevolvedFollower && isEpUnused;
     }
 
+    public bool IsAttackable(BattleUnit unit) {
+        return IsLeaderAttackable(unit) || IsFollowerAttackable(unit);
+    }
+
+    public bool IsLeaderAttackable(BattleUnit unit) {
+        var isAttackChanceLegal = actionController.CurrentAttackChance > 0;
+        var isStayTurnLegal = actionController.StayFieldTurn > 0;
+        var isKeywordLegal = actionController.IsKeywordAvailable(CardKeyword.Storm);
+
+        return unit.isMyTurn && isAttackChanceLegal && (isStayTurnLegal || isKeywordLegal);
+    }
+
+    public bool IsFollowerAttackable(BattleUnit unit) {
+        var isAttackChanceLegal = actionController.CurrentAttackChance > 0;
+        var isStayTurnLegal = actionController.StayFieldTurn > 0;
+        var isKeywordLegal = actionController.IsKeywordAvailable(CardKeyword.Storm) || actionController.IsKeywordAvailable(CardKeyword.Rush);
+        
+        return unit.isMyTurn && isAttackChanceLegal && (IsEvolved || isStayTurnLegal || isKeywordLegal);
+    }
+
     // Evolve this follower. You should check IsEvolvable() before calling this if you use EP evolve.
     public void Evolve() {
         IsEvolved = true;

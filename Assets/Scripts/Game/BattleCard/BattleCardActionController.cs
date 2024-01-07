@@ -9,8 +9,15 @@ public class BattleCardActionController
         set => SetIdentifier("stayFieldTurn", value);
     }
 
-    public bool IsLeaderAttackable => (StayFieldTurn > 0) || IsKeywordAvailable(CardKeyword.Storm);
-    public bool IsFollowerAttackable => (StayFieldTurn > 0) || IsKeywordAvailable(CardKeyword.Storm) || IsKeywordAvailable(CardKeyword.Rush);
+    public int MaxAttackChance {
+        get => (int)GetIdentifier("maxAttackChance");
+        set => SetIdentifier("maxAttackChance", value); 
+    }
+
+    public int CurrentAttackChance {
+        get => Mathf.Clamp((int)GetIdentifier("attackChance"), 0, MaxAttackChance);
+        set => SetIdentifier("attackChance", Mathf.Clamp(value, 0, MaxAttackChance));
+    }
 
     public Dictionary<string, float> options = new Dictionary<string, float>();
 
@@ -38,6 +45,11 @@ public class BattleCardActionController
 
     public void AddIdentifier(string id, float num) {
         SetIdentifier(id, GetIdentifier(id) + num);
+    }
+
+    public void OnTurnStartInField() {
+        StayFieldTurn += 1;
+        CurrentAttackChance = MaxAttackChance;
     }
 
     public bool IsKeywordAvailable(CardKeyword keyword) {

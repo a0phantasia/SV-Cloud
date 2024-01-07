@@ -53,6 +53,15 @@ public static class String {
 
         return desc.Replace("[-]", "</u></color>").Replace("[", "<color=#").Replace("]", "><u>");
     }
+
+    public static string ConcatToString(this IEnumerable<string> data, string lineEnd = "\n") {
+        string result = string.Empty;
+        foreach (var str in data)
+            result += str + lineEnd;
+        
+        return result;
+    }
+
     /// <summary>
     /// Count length without rich-text tags.
     /// </summary>

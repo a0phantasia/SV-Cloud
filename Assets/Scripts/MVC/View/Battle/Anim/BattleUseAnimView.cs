@@ -8,6 +8,7 @@ public class BattleUseAnimView : BattleBaseView
 {
     [SerializeField] private float useSeconds = 0.25f;
     [SerializeField] private float exhibitSeconds = 0.5f;
+    [SerializeField] private float exhibitScale = 0.6f;
     [SerializeField] private Vector2 exhibitPos;
     [SerializeField] private List<Image> opSleeves;
     [SerializeField] private CardView cardView;
@@ -22,7 +23,7 @@ public class BattleUseAnimView : BattleBaseView
 
     private IEnumerator ShowMyUsedCard(BattleCard card, Action callback) {
         cardView.rectTransform.anchoredPosition = exhibitPos;
-        cardView.rectTransform.localScale = 0.5f * Vector3.one;
+        cardView.rectTransform.localScale = exhibitScale * Vector3.one;
         cardView.SetCard(card.CurrentCard);
         
         yield return new WaitForSeconds(exhibitSeconds);
@@ -44,7 +45,7 @@ public class BattleUseAnimView : BattleBaseView
 
         while (currentTime < finishTime) {
             percent = currentTime / finishTime;
-            cardView.rectTransform.localScale = Vector3.one * Mathf.Lerp(0.3f, 0.5f, percent);
+            cardView.rectTransform.localScale = Vector3.one * Mathf.Lerp(0.3f, exhibitScale, percent);
             cardView.rectTransform.anchoredPosition = Vector2.Lerp(initPos, exhibitPos, percent);
             currentTime += Time.deltaTime;
             yield return null;

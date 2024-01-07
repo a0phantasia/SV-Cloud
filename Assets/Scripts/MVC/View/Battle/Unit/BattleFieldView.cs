@@ -39,6 +39,42 @@ public class BattleFieldView : BattleBaseView
         cardInfoView?.SetBackgroundSizeAuto();
     }
 
+    public void OnBeginDrag(int index) {
+        if (!index.IsInRange(0, fieldCount))
+            return;
+
+        var unit = (id == 0) ? Hud.CurrentState.myUnit : Hud.CurrentState.opUnit;
+
+        if (!fieldCards[index].IsAttackable(unit))
+            return;
+
+        Hud.CurrentCardPlaceInfo = new BattleCardPlaceInfo() { 
+            unitId = id,
+            place = BattlePlace.Field,
+            index = index,
+        };
+
+        cardInfoView?.SetBattleCard(null);
+
+        var pos = cardViews[index].rectTransform.anchoredPosition3D;
+        cardViews[index].rectTransform.anchoredPosition3D = new Vector3(pos.x, pos.y, -50);
+        cardViews[index].SetOutlineColor(ColorHelper.target);
+
+        Anim.AttackBeginDragAnim(index);
+    }
+
+    public void OnDrag(int index) {
+        Anim.AttackDragAnim(index);
+    }
+
+    public void OnEndDrag(int index) {
+        var pos = cardViews[index].rectTransform.anchoredPosition3D;
+        cardViews[index].rectTransform.anchoredPosition3D = new Vector3(pos.x, pos.y, 0);
+        cardViews[index].SetBattleCard(fieldCards[index]);
+
+        Anim.AttackEndDragAnim(index);
+    }
+
     public void Evolve() {
         var info = Hud.CurrentCardPlaceInfo;
         if ((info.unitId != 0) || (info.place != BattlePlace.Field))

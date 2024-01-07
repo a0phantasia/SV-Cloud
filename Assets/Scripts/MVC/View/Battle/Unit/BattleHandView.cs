@@ -10,6 +10,7 @@ public class BattleHandView : BattleBaseView
 {
     [SerializeField] private int id = 0;
     [SerializeField] private float useThresholdY;
+    [SerializeField] private Vector2 inactivePos = new Vector2(520, -18);
     [SerializeField] private RectTransform rectTransform;
     [SerializeField] private HorizontalLayoutGroup layoutGroup;
     [SerializeField] private IButton handGroupButton;
@@ -18,7 +19,7 @@ public class BattleHandView : BattleBaseView
 
     [SerializeField] private CardView opUseCardView;
 
-    private bool mode = false;
+    public bool Mode { get; private set; } = false;
     private List<Vector2> initPos = Enumerable.Repeat(default(Vector2), 9).ToList();
     private List<BattleCard> handCards = new List<BattleCard>();
     private int handCount => handCards.Count;
@@ -41,7 +42,7 @@ public class BattleHandView : BattleBaseView
             cardViews[i].draggable.SetEnable((i < hand.Count) ? hand.cards[i].IsUsable(unit) : false);
         }
 
-        SetHandMode(mode);
+        SetHandMode(Mode);
     }
 
     public void ShowHandInfo(int index) {
@@ -58,29 +59,28 @@ public class BattleHandView : BattleBaseView
     }
 
     public void SetHandMode(bool active) {
-        SetHandMode(active, 0);
+        SetHandMode(active, 425);
     }   
 
-    public void SetHandMode(bool active, int padding) {
-        var count = handCount + padding;
-        mode = active;
+    public void SetHandMode(bool active, int emptyPos) {
+        Mode = active;
         handGroupButton.gameObject.SetActive(!active);
         rectTransform.localScale = (active ? 2 : 1) * Vector3.one;
-        rectTransform.anchoredPosition = active ? new Vector2(GetLayoutGroupPosition(count), -36) : new Vector2(520, -18);
-        layoutGroup.spacing = active ? GetLayoutGroupSpacing(count) : 0;
+        rectTransform.anchoredPosition = active ? new Vector2(GetLayoutGroupPosition(emptyPos, handCount), -36) : inactivePos;
+        layoutGroup.spacing = active ? GetLayoutGroupSpacing(handCount) : 0;
     }
 
-    private float GetLayoutGroupPosition(int count) {
+    private float GetLayoutGroupPosition(float emptyPos, int count) {
         if (count < 4)
-            return 425 - count * 50;
+            return emptyPos - count * 50;
 
         if (count == 4)
-            return 235;
+            return emptyPos - 190;
 
         if (count == 5)
-            return 210;
+            return emptyPos - 215;
 
-        return 190;
+        return emptyPos - 235;
     }
 
     private float GetLayoutGroupSpacing(int count) {
@@ -115,7 +115,7 @@ public class BattleHandView : BattleBaseView
             return;
 
         if (cardViews[index].rectTransform.anchoredPosition.y > useThresholdY) {
-            cardViews[index].SetCard(null);
+            cardViews[index].SetCard(null);  
             Battle.PlayerAction(new int[2] { (int)EffectAbility.Use, index }, true);
             return;
         }

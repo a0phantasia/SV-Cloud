@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class BattleCardAmuletView : IMonoBehaviour
+public class BattleCardAmuletView : BattleBaseView
 {
     [SerializeField] private List<Image> countdownImages;
     [SerializeField] private IButton cardFrameButton;
@@ -22,7 +22,7 @@ public class BattleCardAmuletView : IMonoBehaviour
         SetArtwork(await card.Artwork);
 
         //TODO FLAG
-        outlineImage?.gameObject.SetActive(false);
+        SetOutlineColor(Color.clear);
     }
 
     private void SetCountdown(int num) {
@@ -39,5 +39,9 @@ public class BattleCardAmuletView : IMonoBehaviour
 
     private void SetArtwork(Texture2D artwork) {
         artworkRawImage.SetTexture(artwork ?? SpriteResources.DefaultSleeve?.texture);
+    }
+
+    public void SetOutlineColor(Color color) {
+        outlineImage?.SetColor(color);
     }
 }

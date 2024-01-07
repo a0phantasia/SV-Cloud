@@ -199,6 +199,7 @@ public static class ColorHelper {
 
     public static Color storm => new Color32(63, 255, 127, 192);
     public static Color rush => new Color32(255, 235, 4, 192);
+    public static Color target => new Color32(255, 127, 0, 192);
 
     public static void SetColor(this Image image, Color color) {
         if (image == null)

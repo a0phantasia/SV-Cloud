@@ -10,7 +10,7 @@ public class BattleDeckView : BattleBaseView
     public void SetDeck(BattleDeck deck) {
         deckImages[0]?.SetSprite(SpriteResources.DeathCard);
         for (int i = 1; i < deckImages.Count; i++) {
-            deckImages[i].gameObject.SetActive((i - 1) < deck.Count / 8);
+            deckImages[i].gameObject.SetActive((i - 1) < deck.Count / (deck.MaxCount / 5));
         }
     }
 }

@@ -17,3 +17,9 @@ public enum BattleResultState {
     Lose = 2,
     Draw = 3,
 }
+
+public enum BattleLoseReason {
+    Retire = 0,
+    LeaderDie = 1,
+    Deckout = 2,
+}

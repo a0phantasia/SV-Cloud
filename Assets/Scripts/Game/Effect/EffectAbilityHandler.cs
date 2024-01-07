@@ -2,7 +2,6 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net;
 using UnityEngine;
 
 public static class EffectAbilityHandler 
@@ -15,7 +14,7 @@ public static class EffectAbilityHandler
     /// Enqueue these effects with corresponding invoke unit.
     /// </summary>
     private static void EnqueueEffect(string timing, List<BattleCard> battleCards, BattleState state) {
-        var units = battleCards.Select(x => state.GetInvokeUnit(x)).ToList();
+        var units = battleCards.Select(x => state.GetBelongUnit(x)).ToList();
         var cards = battleCards.Select(x => x.CurrentCard).ToList();
         for (int i = 0; i < cards.Count; i++) {
             if (cards[i] == null)
@@ -142,8 +141,8 @@ public static class EffectAbilityHandler
             effect.hudOptionDict.Set("ep", "true");
         }
 
-        // Stay field turn +1.
-        unit.field.cards.ForEach(x => x.actionController.StayFieldTurn += 1);
+        // On Turn Start In Field.
+        unit.field.cards.ForEach(x => x.actionController.OnTurnStartInField());
 
         // Set UI
         string log = (isMyUnit ? "YOUR" : "ENEMY") + " TURN (" + unit.turn + ")";
@@ -239,35 +238,36 @@ public static class EffectAbilityHandler
 
         var cost = card.GetUseCost(unit.leader);
         unit.leader.PP -= cost;
+        unit.hand.cards.Remove(card);
+        card.buffController.costBuff = 0;
 
         // Record used card.
         unit.leader.AddIdentifier("combo", 1);
         unit.grave.usedCards.Add(card.CurrentCard);
 
-        effect.hudOptionDict.Set("log", "使用" + card.CurrentCard.name);
-        Hud.SetState(state);
-
         // Follower and Amulet goes to field.
         if (card.CurrentCard.IsFollower() || (card.CurrentCard.Type == CardType.Amulet)) {
-            var abilityOptionDict = new Dictionary<string, string>() 
-            { 
-                { "where", "hand" },
-                { "index", index.ToString() },
-            };
+            var abilityOptionDict = new Dictionary<string, string>() { { "where", "hand" } };
             Effect summon = new Effect("none", EffectTarget.None, EffectCondition.None, null, EffectAbility.Summon, abilityOptionDict) 
             {
                 source = unit.leader.leaderCard,
-                invokeUnit = unit
+                invokeUnit = unit,
+                invokeTarget = new List<BattleCard>() { card },
             };
             Battle.EnqueueEffect(summon);
         }
-        
+
         // Use effect.
         EnqueueEffect("on_be_use", effect.invokeTarget, state);
 
         // Spell goes to grave immediately.
-        if (card.CurrentCard.Type == CardType.Spell)
+        if (card.CurrentCard.Type == CardType.Spell) {
             unit.grave.Count += 1;
+            unit.grave.graveCards.Add(card.CurrentCard);
+        }
+
+        effect.hudOptionDict.Set("log", "使用" + card.CurrentCard.name);
+        Hud.SetState(state);
 
         OnPhaseChange("on_use", state);
         return true;
@@ -293,9 +293,7 @@ public static class EffectAbilityHandler
 
         effect.invokeTarget.ForEach(x => x.Evolve());
 
-        var log = string.Empty;
-        effect.invokeTarget.ForEach(x => log += x.CurrentCard.name + "進化\n");
-        effect.hudOptionDict.Set("log", log);
+        effect.hudOptionDict.Set("log", effect.invokeTarget.Select(x => x.CurrentCard.name + "進化").ConcatToString());
         Hud.SetState(state);
 
         if (card != null) {
@@ -353,24 +351,25 @@ public static class EffectAbilityHandler
         if (filterOptions == "none") {
             var total = unit.Draw(drawCount, out effect.invokeTarget, out inGraveCards);
 
-            string logSource = effect.source.CurrentCard.name + "的效果";
-            string logTarget = (isMyUnit ? "我方" : "對方") + "抽取 " + drawCount + " 張卡片\n";
+            string log = (isMyUnit ? "我方" : "對方") + "抽取 " + drawCount + " 張卡片\n";
             
             if (isMyUnit)
-                inGraveCards.ForEach(x => logTarget += x.CurrentCard.name + " 爆牌進入墓地\n");
+                inGraveCards.ForEach(x => log += x.CurrentCard.name + " 爆牌進入墓地\n");
+            else
+                log += inGraveCards.Count + " 張卡片爆牌進入墓地\n";
 
-            effect.hudOptionDict.Set("log", logSource + "\n" + logTarget);
+            effect.hudOptionDict.Set("log", log);
             Hud.SetState(state);
 
             if (total.Count < drawCount) {
                 int result = (int)unit.leader.GetIdentifier("deckOutResult");            
                 var resultState = (result == 0) ? BattleResultState.Lose : BattleResultState.Win;
-                Effect resultEffect = new Effect(new int[] { (int)EffectAbility.SetResult, (int)resultState })
+                Effect resultEffect = new Effect(new int[] { (int)EffectAbility.SetResult, (int)resultState, (int)BattleLoseReason.Deckout })
                 {
                     source = unit.leader.leaderCard,
                     invokeUnit = unit
                 };
-                resultEffect.Apply();
+                resultEffect.Apply(state);
                 return true;
             }
         } else {
@@ -400,29 +399,32 @@ public static class EffectAbilityHandler
         var field = effect.abilityOptionDict.Get("field", "me");
         var fieldUnit = (field == "me") ? unit : state.GetRhsUnitById(unit.id);
         var where = effect.abilityOptionDict.Get("where", "hand");
-        var index = effect.abilityOptionDict.Get("index", "0");
         var data = effect.abilityOptionDict.Get("data", "none");
         var card = effect.source;
 
-        if (fieldUnit.field.Count < fieldUnit.field.MaxCount) {
+        var availableCount = fieldUnit.field.MaxCount - fieldUnit.field.Count;
+
+        if (availableCount > 0) {
+            effect.invokeTarget = effect.invokeTarget.Take(availableCount).ToList();
+
             switch (where) {
                 default:
                     break;
                 case "hand":
-                    effect.invokeTarget = new List<BattleCard>() { summonUnit.hand.cards[int.Parse(index)] };
                     summonUnit.hand.cards.RemoveRange(effect.invokeTarget);
                     break;
             }
 
-            fieldUnit.field.cards.Add(effect.invokeTarget[0]);
+            fieldUnit.field.cards.AddRange(effect.invokeTarget);
             
             EnqueueEffect("on_be_summon", effect.invokeTarget , state);
 
-            fieldUnit.leader.AddIdentifier("rally", 1);
+            fieldUnit.leader.AddIdentifier("rally", effect.invokeTarget.Count);
 
-            effect.hudOptionDict.Set("log", effect.invokeTarget[0].CurrentCard.name + "進入戰場");
+            effect.hudOptionDict.Set("log", effect.invokeTarget.Select(x => x.CurrentCard.name + "進入戰場").ConcatToString());
             Hud.SetState(state);
         }
+
         OnPhaseChange("on_summon", state);
 
         return true;

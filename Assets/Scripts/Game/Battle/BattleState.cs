@@ -57,7 +57,7 @@ public class BattleState
         clientUnit.isMyTurn = !isMasterTurn;
     }
 
-    public virtual BattleUnit GetInvokeUnit(BattleCard card) {
+    public virtual BattleUnit GetBelongUnit(BattleCard card) {
         if (myUnit.hand.cards.Contains(card) || myUnit.field.cards.Contains(card) ||
             myUnit.deck.cards.Contains(card) || myUnit.grave.usedCards.Contains(card.CurrentCard) ||
             (myUnit.leader.leaderCard == card) || (myUnit.territory == card))

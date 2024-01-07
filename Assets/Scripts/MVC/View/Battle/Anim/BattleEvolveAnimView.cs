@@ -129,7 +129,7 @@ public class BattleEvolveAnimView : BattleBaseView
     private Vector3 GetStartPoint(BattleCardPlaceInfo info, int fieldCount) {
         int q = (fieldCount - 1) / 2;
         int r = (fieldCount - 1) % 2;
-        float y = (info.unitId == 0) ? -40 : 70;
+        float y = (info.unitId == 0) ? -45 : 70;
         float x = (-10) + (-50 * r) + (100 * (info.index - q));
         return new Vector3(x, y);
     }

@@ -58,7 +58,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 0.91764706, b: 0.015686275, a: 0.7529412}
+  m_Color: {r: 1, g: 0.5019608, b: 0, a: 0.7529412}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -1144,6 +1144,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1451946a44c99f0449e53c5bec46d519, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  rectTransform: {fileID: 2791072829581609409}
   normalView: {fileID: 371023100322481983}
   evolveView: {fileID: 7440001820014390124}
   amuletView: {fileID: 2961110153448753147}
@@ -1659,6 +1660,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4d746fe237566f7479bdca45106fa3f1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  cardInfoView: {fileID: 0}
   countdownImages:
   - {fileID: 7899692344830189664}
   - {fileID: 8810689257110925475}
@@ -1721,6 +1723,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 71de49cbc48cbbf46b8ca7271e6cf141, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  cardInfoView: {fileID: 0}
   atkText: {fileID: 2791072829284257995}
   hpText: {fileID: 2791072829009145416}
   atkOutline: {fileID: 2791072829284257992}
@@ -2378,6 +2381,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 71de49cbc48cbbf46b8ca7271e6cf141, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  cardInfoView: {fileID: 0}
   atkText: {fileID: 268838046292539268}
   hpText: {fileID: 7449420127014050250}
   atkOutline: {fileID: 5624533916014888735}

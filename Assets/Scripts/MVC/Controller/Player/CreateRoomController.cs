@@ -30,8 +30,8 @@ public class CreateRoomController : IMonoBehaviour
             masterName = Player.Nickname,
             clientName = "電腦",
         };
-        BattleDeck myDeck = new BattleDeck(1, 1, 1, (new List<int>() { 100000113, 100000114, 100000115 })
-            .Concat(Enumerable.Repeat(100000111 , 37)).ToArray());
+        BattleDeck myDeck = new BattleDeck(1, 1, 1, (new List<int>() { 100000113, 100000114, 100000115, 100000112 })
+            .Concat(Enumerable.Repeat(100000111 , 36)).ToArray());
         BattleDeck opDeck = new BattleDeck(1, 1, 2, Enumerable.Repeat(100000111, 40).ToArray());
         Battle battle = new Battle(myDeck, opDeck, settings);
         SceneLoader.instance.ChangeScene(SceneId.Battle);
