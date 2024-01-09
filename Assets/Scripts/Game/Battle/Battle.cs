@@ -8,9 +8,9 @@ using System.Linq;
 public class Battle
 {
     public BattleManager Hud => BattleManager.instance;
-    public BattleSettings settings => currentState?.settings;
-    public BattleResult result => currentState?.result;
-    public BattleState currentState;
+    public BattleSettings Settings => CurrentState?.settings;
+    public BattleResult Result => CurrentState?.result;
+    public BattleState CurrentState;
 
     public Queue<Effect> effectQueue = new Queue<Effect>();
 
@@ -47,7 +47,7 @@ public class Battle
     }
 
     private void Init(BattleDeck masterDeck, BattleDeck clientDeck, BattleSettings settings) {
-        this.currentState = new BattleState(masterDeck, clientDeck, settings);
+        this.CurrentState = new BattleState(masterDeck, clientDeck, settings);
         Player.currentBattle = this;
     }
 
@@ -64,10 +64,10 @@ public class Battle
             Hud.EnemyPlayerAction(data.Select(x => (short)x).ToArray());
         }
 
-        var leader = (isMe ? currentState.myUnit : currentState.opUnit).leader.leaderCard;
+        var leader = (isMe ? CurrentState.myUnit : CurrentState.opUnit).leader.leaderCard;
         Effect effect = new Effect(data);
         effect.source = leader;
-        effect.invokeUnit = isMe ? currentState.myUnit : currentState.opUnit;
+        effect.invokeUnit = isMe ? CurrentState.myUnit : CurrentState.opUnit;
         EnqueueEffect(effect);
 
         if (effectQueue.Count == 1)
@@ -76,11 +76,11 @@ public class Battle
 
     public void ProcessQueue() {
         while (effectQueue.Count > 0) {
-            if (currentState.result.masterState != BattleResultState.None)
+            if (CurrentState.result.masterState != BattleResultState.None)
                 break;
 
             var e = effectQueue.Peek();
-            e.Apply(currentState);
+            e.Apply(CurrentState);
             effectQueue.Dequeue();
         }
         Hud.ProcessQueue();

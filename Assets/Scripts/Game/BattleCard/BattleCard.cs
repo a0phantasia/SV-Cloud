@@ -88,41 +88,45 @@ public class BattleCard : IIdentifyHandler
         return 1;
     }
 
-    public bool IsUsable(BattleUnit unit) {
-        bool isCostEnough = unit.leader.PP >= GetUseCost(unit.leader);
-        bool isFieldFull = (CurrentCard.Type == CardType.Follower) && (unit.field.IsFull);
+    public bool IsUsable(BattleUnit sourceUnit) {
+        bool isCostEnough = sourceUnit.leader.PP >= GetUseCost(sourceUnit.leader);
+        bool isFieldFull = (CurrentCard.Type == CardType.Follower) && (sourceUnit.field.IsFull);
         return isCostEnough && (!isFieldFull);
     }
 
-    public bool IsEvolvable(BattleUnit unit) {
+    public bool IsEvolvable(BattleUnit sourceUnit) {
         bool isUnevolvedFollower = CurrentCard.Type == CardType.Follower;
-        bool isEpUnused = (unit.isEvolveEnabled) && (!unit.leader.isEpUsed) && (unit.leader.EP >= GetEvolveCost());
+        bool isEpUnused = (sourceUnit.isEvolveEnabled) && (!sourceUnit.leader.isEpUsed) && (sourceUnit.leader.EP >= GetEvolveCost());
         return isUnevolvedFollower && isEpUnused;
     }
 
-    public bool IsAttackable(BattleUnit unit) {
-        return IsLeaderAttackable(unit) || IsFollowerAttackable(unit);
+    public bool IsAttackable(BattleUnit sourceUnit) {
+        return IsLeaderAttackable(sourceUnit) || IsFollowerAttackable(sourceUnit);
     }
 
-    public bool IsLeaderAttackable(BattleUnit unit) {
+    public bool IsLeaderAttackable(BattleUnit sourceUnit) {
         var isAttackChanceLegal = actionController.CurrentAttackChance > 0;
         var isStayTurnLegal = actionController.StayFieldTurn > 0;
         var isKeywordLegal = actionController.IsKeywordAvailable(CardKeyword.Storm);
 
-        return unit.isMyTurn && isAttackChanceLegal && (isStayTurnLegal || isKeywordLegal);
+        return sourceUnit.isMyTurn && isAttackChanceLegal && (isStayTurnLegal || isKeywordLegal);
     }
 
-    public bool IsFollowerAttackable(BattleUnit unit) {
+    public bool IsFollowerAttackable(BattleUnit sourceUnit) {
         var isAttackChanceLegal = actionController.CurrentAttackChance > 0;
         var isStayTurnLegal = actionController.StayFieldTurn > 0;
         var isKeywordLegal = actionController.IsKeywordAvailable(CardKeyword.Storm) || actionController.IsKeywordAvailable(CardKeyword.Rush);
-        
-        return unit.isMyTurn && isAttackChanceLegal && (IsEvolved || isStayTurnLegal || isKeywordLegal);
+
+        return sourceUnit.isMyTurn && isAttackChanceLegal && (IsEvolved || isStayTurnLegal || isKeywordLegal);
     }
 
     // Evolve this follower. You should check IsEvolvable() before calling this if you use EP evolve.
     public void Evolve() {
         IsEvolved = true;
+    }
+
+    public void TakeDamage(int damage) {
+        buffController.damage += damage;
     }
 
     public void SetKeyword(CardKeyword keyword, ModifyOption option) {

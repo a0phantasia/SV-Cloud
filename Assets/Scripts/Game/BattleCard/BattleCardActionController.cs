@@ -21,7 +21,10 @@ public class BattleCardActionController
 
     public Dictionary<string, float> options = new Dictionary<string, float>();
 
-    public BattleCardActionController() {}
+    public BattleCardActionController() {
+        MaxAttackChance = 1;
+        CurrentAttackChance = 1;
+    }
 
     public BattleCardActionController(BattleCardActionController rhs) {
         options = new Dictionary<string, float>(rhs.options);

@@ -19,7 +19,7 @@ public class BattleUnit : IIdentifyHandler
     public bool isDone = false;
     public bool isMyTurn = false;
     public bool isFirst;
-    public bool isEvolveEnabled => (turn - (isFirst ? 1 : 0)) >= Player.currentBattle.settings.evolveStart;
+    public bool isEvolveEnabled => (turn - (isFirst ? 1 : 0)) >= Player.currentBattle.Settings.evolveStart;
 
     public string IsFirstText => isFirst ? "先手" : "後手";
     public bool IsMasterUnit => id == 0;

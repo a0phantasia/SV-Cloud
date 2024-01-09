@@ -44,4 +44,12 @@ public class BattleCardView : IMonoBehaviour
         evolveView?.SetOutlineColor(color);
         amuletView?.SetOutlineColor(color);
     }
+
+    public void SetTargeting(bool isTargeting) {
+        effectView?.SetTargeting(isTargeting);
+    }
+
+    public void SetDamage(int damage, Color color) {
+        effectView?.SetDamage(damage, color);
+    }
 }

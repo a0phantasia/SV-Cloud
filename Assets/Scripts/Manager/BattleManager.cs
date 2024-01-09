@@ -25,7 +25,7 @@ public class BattleManager : Manager<BattleManager>
     protected override void Awake()
     {
         base.Awake();
-        if (Battle.settings.isLocal)
+        if (Battle.Settings.isLocal)
             return;
             
         NetworkManager.instance.onDisconnectEvent += OnLocalPlayerDisconnect;
@@ -53,7 +53,7 @@ public class BattleManager : Manager<BattleManager>
     }
 
     public void EnemyPlayerAction(short[] data) {
-        if (Battle.settings.isLocal)
+        if (Battle.Settings.isLocal)
             return;
 
         var photonView = masterPhotonView.IsMine ? masterPhotonView : clientPhotonView;
@@ -74,7 +74,7 @@ public class BattleManager : Manager<BattleManager>
     }
 
     public void OnConfirmBattleResult() {
-        var scene = Battle.settings.isLocal ? SceneId.Main : SceneId.Room;
+        var scene = Battle.Settings.isLocal ? SceneId.Main : SceneId.Room;
         SceneLoader.instance.ChangeScene(scene);
     }
 

@@ -68,6 +68,19 @@ public static class Vector {
         return closest.RoundToInt();
     }
 
+    /// <summary>
+    /// Get Point on Bezier Curve.
+    /// </summary>
+    /// <param name="start">Start point</param>
+    /// <param name="middle">Middle point</param>
+    /// <param name="end">End point</param>
+    /// <param name="t">Interpolate value</param>
+    /// <returns>Interpolated point on Bezier curve</returns>
+    public static Vector3 BezierCurveQuadratic(Vector3 start, Vector3 middle, Vector3 end, float t) {
+        t = Mathf.Clamp(t, 0, 1);
+        return (1 - t) * (1 - t) * start + 2 * t * (1 - t) * middle + t * t * end;
+    }
+
 }
 
 }

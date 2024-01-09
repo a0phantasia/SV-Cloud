@@ -16,7 +16,7 @@ public class BattleOrderView : BattleBaseView
     [SerializeField] private Text description;
     
     public void ShowOrderInfo(Action callback) {
-        var unit = (id == 0) ? Battle.currentState.myUnit : Battle.currentState.opUnit;
+        var unit = (id == 0) ? Battle.CurrentState.myUnit : Battle.CurrentState.opUnit;
         gameObject.SetActive(true);
         StartCoroutine(FlipCoin(unit, callback));
     }

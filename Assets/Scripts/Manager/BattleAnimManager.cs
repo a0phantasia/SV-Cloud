@@ -50,15 +50,15 @@ public class BattleAnimManager : Manager<BattleAnimManager>
     }
     
     public void AttackBeginDragAnim(int index) {
-
+        attackView?.OnBeginDrag(index);
     }
 
     public void AttackDragAnim(int index) {
-
+        attackView?.OnDrag(index);
     }
 
     public void AttackEndDragAnim(int index) {
-
+        attackView?.OnEndDrag(index);
     }
     
 

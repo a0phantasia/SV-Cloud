@@ -104,6 +104,7 @@ public class Effect : IIdentifyHandler
             EffectAbility.SetResult => EffectParseHandler.SetResult,
             EffectAbility.KeepCard  => EffectParseHandler.KeepCard,
             EffectAbility.Use       => EffectParseHandler.Use,
+            EffectAbility.Attack    => EffectParseHandler.Attack,
             EffectAbility.Evolve    => EffectParseHandler.Evolve,
 
             EffectAbility.Draw      => EffectParseHandler.Draw,
@@ -131,6 +132,7 @@ public class Effect : IIdentifyHandler
             EffectAbility.TurnStart => EffectAbilityHandler.OnTurnStart,
             EffectAbility.TurnEnd   => EffectAbilityHandler.OnTurnEnd,
             EffectAbility.Use       => EffectAbilityHandler.Use,
+            EffectAbility.Attack    => EffectAbilityHandler.Attack,
             EffectAbility.Evolve    => EffectAbilityHandler.Evolve,
 
             EffectAbility.Draw      => EffectAbilityHandler.Draw,

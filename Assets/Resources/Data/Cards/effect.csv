@@ -1,2 +1,2 @@
 id,timing,target,condition,cond_option,ability,ability_option
-2,on_be_summon,self,none,none,set_keyword,keyword=2
+2,on_this_summon,self,none,none,set_keyword,keyword=2

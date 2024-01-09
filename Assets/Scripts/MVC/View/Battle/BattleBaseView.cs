@@ -10,7 +10,17 @@ public class BattleBaseView : IMonoBehaviour
     public BattleManager Hud => BattleManager.instance;
     public BattleAnimManager Anim => BattleAnimManager.instance;
 
+    protected Canvas canvas;
+    protected RectTransform canvasRect;
+
     [SerializeField] protected CardInfoView cardInfoView;
+
+    protected override void Awake()
+    {
+        base.Awake();
+        canvas = GameObject.Find("Canvas").GetComponent<Canvas>();
+        canvasRect = canvas.GetComponent<RectTransform>();
+    }
 
 }
 

@@ -15,8 +15,8 @@ public class BattleMenuView : BattleBaseView
     }
 
     public void InitPlayerInfo() {
-        var myUnit = Battle.currentState.myUnit;
-        var opUnit = Battle.currentState.opUnit;
+        var myUnit = Battle.CurrentState.myUnit;
+        var opUnit = Battle.CurrentState.opUnit;
         myName?.SetText(myUnit.name);
         opName?.SetText(opUnit.name);
         myLeader?.SetSprite(SpriteResources.GetLeaderProfileSprite(myUnit.leader.CraftId));

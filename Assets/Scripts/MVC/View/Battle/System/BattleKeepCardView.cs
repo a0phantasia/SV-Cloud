@@ -35,9 +35,9 @@ public class BattleKeepCardView : BattleBaseView
 
     public void ShowKeepInfo() {
         SetActive(true);
-        orderText?.SetText(Battle.currentState.myUnit.IsFirstText);
+        orderText?.SetText(Battle.CurrentState.myUnit.IsFirstText);
         for (int i = 0; i < cardViews.Count; i++) {
-            cardViews[i].SetCard(Battle.currentState.myUnit.hand.cards[i].CurrentCard, int.MinValue);
+            cardViews[i].SetCard(Battle.CurrentState.myUnit.hand.cards[i].CurrentCard, int.MinValue);
         }
         timer?.SetTimer(60);
         timer.onDoneEvent += OnConfirmKeep;

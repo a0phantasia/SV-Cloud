@@ -19,7 +19,7 @@ public class BattleUnitView : BattleBaseView
     public override void Init()
     {
         base.Init();
-        SetUnit((id == 0) ? Battle.currentState.myUnit : Battle.currentState.opUnit);
+        SetUnit((id == 0) ? Battle.CurrentState.myUnit : Battle.CurrentState.opUnit);
     }
 
     public void SetState(BattleState state) {

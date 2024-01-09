@@ -16,5 +16,18 @@ public class BattleField
         cards = rhs.cards.Select(x => (x == null) ? null : new BattleCard(x)).ToList();
     }
 
+    public List<int> GetAttackableTargetIndex(BattleCard attackSource, BattleUnit sourceUnit) {
+        var result = cards.Where(x => !x.actionController.IsKeywordAvailable(CardKeyword.Ambush));
+        var ward = result.Where(x => x.actionController.IsKeywordAvailable(CardKeyword.Ward));
+
+        result = ward.Any() ? ward : result;
+        var index = result.Select(x => cards.IndexOf(x)).ToList();
+
+        if ((attackSource.IsLeaderAttackable(sourceUnit)) && (!ward.Any()))
+            index.Add(-1);
+
+        return index;
+    }
+
 
 }

@@ -37,6 +37,13 @@ public static class EffectParseHandler
         return dict;
     }
 
+    public static Dictionary<string, string> Attack(int[] data) {
+        var dict = new Dictionary<string, string>();
+        dict.Set("source", data[0].ToString());
+        dict.Set("target", data[1].ToString());
+        return dict;
+    }
+
     public static Dictionary<string, string> Evolve(int[] data) {
         var dict = new Dictionary<string, string>();
         dict.Set("index", data[0].ToString());

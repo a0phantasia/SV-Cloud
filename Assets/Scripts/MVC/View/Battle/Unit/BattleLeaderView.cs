@@ -6,10 +6,12 @@ using UnityEngine.UI;
 public class BattleLeaderView : BattleBaseView
 {
     [SerializeField] private int id;
+    [SerializeField] public RectTransform rectTransform;
     [SerializeField] private Image backgroundImage;
     [SerializeField] private Image leaderImage;
     [SerializeField] private Text hpText;
     [SerializeField] private Outline hpOutline;
+    [SerializeField] private GameObject targetObject;
 
     private Leader currentLeader;
 
@@ -20,6 +22,10 @@ public class BattleLeaderView : BattleBaseView
         hpText?.SetText(leader.Hp.ToString());
         hpText?.SetColor(ColorHelper.GetAtkHpTextColor(leader.Hp, leader.HpMax, leader.HpInit));
         hpOutline?.SetColor(ColorHelper.GetAtkHpOutlineColor(leader.Hp, leader.HpMax, leader.HpInit));
+    }
+
+    public void SetTargeting(bool isTargeting) {
+        targetObject?.SetActive(isTargeting);
     }
 
     public void ShowLeaderInfo() {
