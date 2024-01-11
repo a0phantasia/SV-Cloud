@@ -6,6 +6,14 @@ using UnityEngine;
 using Random = UnityEngine.Random;
 
 public static class Identifier {
+
+    public static float GetIdentifier(string id, Effect effect, BattleState state) {
+        var lhsUnit = effect.invokeUnit;
+        var rhsUnit = state.GetRhsUnitById(lhsUnit.id);
+        
+        return GetNumIdentifier(id);
+    }
+
     public static float GetNumIdentifier(string id) {
         string trimId;
         float num = 0;

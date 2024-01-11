@@ -5,8 +5,8 @@ using UnityEngine;
 
 public class Leader
 {
-    public static string[] infoKeys => new string[] { "rally" };
-    public static string[] infoValues => new string[] { "協作數" };
+    public static string[] infoKeys => new string[] { "rally", "destroyedFollowerCount", "destroyedAmuletCount" };
+    public static string[] infoValues => new string[] { "協作數", "已被破壞的從者數", "已被破壞的護符數" };
 
     public int CraftId => leaderCard.CurrentCard.CraftId;
     public CardCraft Craft => leaderCard.CurrentCard.Craft;

@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using ExitGames.Client.Photon.StructWrapping;
 using UnityEngine;
 
 public static class EffectAbilityHandler 
@@ -161,7 +162,7 @@ public static class EffectAbilityHandler
                 source = unit.leader.leaderCard,
                 invokeUnit = unit
             };
-            lose.Apply();
+            lose.Apply(state);
             return true;
         }
 
@@ -253,7 +254,7 @@ public static class EffectAbilityHandler
         // Follower and Amulet goes to field.
         if (card.CurrentCard.IsFollower() || (card.CurrentCard.Type == CardType.Amulet)) {
             var abilityOptionDict = new Dictionary<string, string>() { { "where", "hand" } };
-            Effect summon = new Effect("none", EffectTarget.None, EffectCondition.None, null, EffectAbility.Summon, abilityOptionDict) 
+            Effect summon = new Effect("none", "none", EffectCondition.None, null, EffectAbility.Summon, abilityOptionDict) 
             {
                 source = unit.leader.leaderCard,
                 invokeUnit = unit,
@@ -295,7 +296,12 @@ public static class EffectAbilityHandler
 
         effect.invokeTarget = new List<BattleCard>() { targetCard };
 
+        // Consume attack chance.
+        sourceCard.actionController.CurrentAttackChance -= 1;
+
         effect.hudOptionDict.Set("log", sourceCard.CurrentCard.name + " 攻擊 " + targetCard.CurrentCard.name);
+        effect.hudOptionDict.Set("source", source.ToString());
+        effect.hudOptionDict.Set("target", target.ToString());
         Hud.SetState(state);
 
         // OnAttack and OnDefense
@@ -315,8 +321,32 @@ public static class EffectAbilityHandler
             return false;
 
         // Give damage.
-        targetCard.TakeDamage(sourceCard.CurrentCard.atk);
-        sourceCard.TakeDamage(targetCard.CurrentCard.atk);
+        Effect attackEffect = new Effect("none", "none", EffectCondition.None, null,
+            EffectAbility.Damage, new Dictionary<string, string>() { 
+                { "situation", "attack" },
+                { "damage", sourceCard.CurrentCard.atk.ToString() },
+            }) 
+        {
+            source = sourceCard,
+            invokeUnit = unit,
+            invokeTarget = new List<BattleCard>(){ targetCard },
+        };
+        
+        Effect defenseEffect = new Effect("none", "none", EffectCondition.None, null,
+            EffectAbility.Damage, new Dictionary<string, string>() { 
+                { "situation", "defense" },
+                { "damage", targetCard.CurrentCard.atk.ToString() },
+            }) 
+        {
+            source = targetCard,
+            invokeUnit = targetUnit,
+            invokeTarget = new List<BattleCard>(){ sourceCard },
+        };
+
+        attackEffect.Apply(state);
+
+        if ((!isTargetLeader) || (targetCard.CurrentCard.atk > 0))
+            defenseEffect.Apply(state);
 
         return true;
     }
@@ -330,7 +360,7 @@ public static class EffectAbilityHandler
         var card = index.IsInRange(0, unit.field.Count) ? unit.field.cards[index] : null;
 
         effect.invokeTarget = (card == null) ? (effect.target switch {
-            EffectTarget.Self => new List<BattleCard>() { effect.source },
+            "self" => new List<BattleCard>() { effect.source },
             _ => effect.invokeTarget,
         }) : new List<BattleCard>() { card };
 
@@ -342,6 +372,7 @@ public static class EffectAbilityHandler
         effect.invokeTarget.ForEach(x => x.Evolve());
 
         effect.hudOptionDict.Set("log", effect.invokeTarget.Select(x => x.CurrentCard.name + "進化").ConcatToString());
+        effect.hudOptionDict.Set("index", index.ToString());
         Hud.SetState(state);
 
         if (card != null) {
@@ -359,7 +390,7 @@ public static class EffectAbilityHandler
         var unit = effect.invokeUnit;
 
         effect.invokeTarget = effect.target switch {
-            EffectTarget.Self => new List<BattleCard>() { effect.source },
+            "self" => new List<BattleCard>() { effect.source },
             _ => new List<BattleCard>() { effect.source },
         };
 
@@ -392,15 +423,14 @@ public static class EffectAbilityHandler
         var unit = effect.invokeUnit;
         bool isMyUnit = state.myUnit.id == unit.id;
 
-        int drawCount = int.Parse(effect.abilityOptionDict.Get("count", "1"));
+        var drawCount = Parser.ParseEffectExpression(effect.abilityOptionDict.Get("count", "1"), effect, state);
         var filterOptions = effect.abilityOptionDict.Get("filter", "none");
         var inGraveCards = new List<BattleCard>();
 
         if (filterOptions == "none") {
             var total = unit.Draw(drawCount, out effect.invokeTarget, out inGraveCards);
 
-            string log = (isMyUnit ? "我方" : "對方") + "抽取 " + drawCount + " 張卡片\n";
-            
+            string log = (isMyUnit ? "我方" : "對方") + "抽取 " + drawCount + " 張卡片\n";       
             if (inGraveCards.Count > 0) {
                 if (isMyUnit)
                     inGraveCards.ForEach(x => log += x.CurrentCard.name + " 爆牌進入墓地\n");
@@ -409,6 +439,7 @@ public static class EffectAbilityHandler
             }
 
             effect.hudOptionDict.Set("log", log);
+            effect.hudOptionDict.Set("count", drawCount.ToString());
             Hud.SetState(state);
 
             if (total.Count < drawCount) {
@@ -467,7 +498,7 @@ public static class EffectAbilityHandler
 
             fieldUnit.field.cards.AddRange(effect.invokeTarget);
             
-            EnqueueEffect("on_this_summon", effect.invokeTarget , state);
+            EnqueueEffect("on_this_summon", effect.invokeTarget, state);
 
             fieldUnit.leader.AddIdentifier("rally", effect.invokeTarget.Count);
 
@@ -476,6 +507,127 @@ public static class EffectAbilityHandler
         }
 
         OnPhaseChange("on_summon", state);
+
+        return true;
+    }
+
+    public static bool Damage(this Effect effect, BattleState state) {
+        var unit = effect.invokeUnit;
+        var rhsUnit = state.GetRhsUnitById(unit.id);
+        bool isMyUnit = state.myUnit.id == unit.id;
+
+        effect.invokeTarget = effect.target switch {
+            "self" => new List<BattleCard>() { effect.source },
+            _ => effect.invokeTarget,
+        };
+
+        // Take damage.
+        var situation = effect.abilityOptionDict.Get("situation", "none");
+        var damage = Parser.ParseEffectExpression(effect.abilityOptionDict.Get("damage", "0"), effect, state);
+
+        // Set UI.
+        List<int> damageAllList = effect.invokeTarget.Select(x => x.TakeDamage(damage)).ToList();
+        List<int> myIndexList = new List<int>();
+        List<int> myDamageList = new List<int>();
+        List<int> opIndexList = new List<int>();
+        List<int> opDamageList = new List<int>();
+
+        for (int i = 0; i < effect.invokeTarget.Count; i++) {
+            var belongUnit = state.GetBelongUnit(effect.invokeTarget[i]);
+            var indexList = (belongUnit.id == state.myUnit.id) ? myIndexList : opIndexList;
+            var damageList = (belongUnit.id == state.myUnit.id) ? myDamageList : opDamageList;
+            var index = (effect.invokeTarget[i].CurrentCard.Type == CardType.Leader) ? -1 :
+                belongUnit.field.cards.IndexOf(effect.invokeTarget[i]);
+
+            indexList.Add(index);
+            damageList.Add(damageAllList[i]);
+        }
+    
+        effect.hudOptionDict.Set("log", effect.invokeTarget.Select((x, i) => effect.source.CurrentCard.name + "給予" + x.CurrentCard.name + " " + damageAllList[i] + " 點傷害").ConcatToString());
+        effect.hudOptionDict.Set("situation", situation);
+        effect.hudOptionDict.Set("myIndex", myIndexList.Select(x => x.ToString()).ConcatToString("/"));
+        effect.hudOptionDict.Set("myDamage", myDamageList.Select(x => x.ToString()).ConcatToString("/"));
+        effect.hudOptionDict.Set("opIndex", opIndexList.Select(x => x.ToString()).ConcatToString("/"));
+        effect.hudOptionDict.Set("opDamage", opDamageList.Select(x => x.ToString()).ConcatToString("/"));
+        Hud.SetState(state);
+
+        // If hp <= 0, destroy.
+        for (int i = 0; i < effect.invokeTarget.Count; i++) {
+            if (effect.invokeTarget[i].CurrentCard.hp <= 0) {
+                Effect destroyEffect = new Effect("none", "self", EffectCondition.None, null,
+                    EffectAbility.Destroy, null)
+                {
+                    source = effect.invokeTarget[i],
+                    invokeUnit = state.GetBelongUnit(effect.invokeTarget[i]),
+                };
+                Battle.EnqueueEffect(destroyEffect);
+            }
+        }
+
+        EnqueueEffect("on_this_damage", effect.invokeTarget, state);
+        OnPhaseChange("on_damage", state);
+
+        return true;
+    }
+
+    public static bool Destroy(this Effect effect, BattleState state) {
+        var unit = effect.invokeUnit;
+        bool isMyUnit = state.myUnit.id == unit.id;
+
+        effect.invokeTarget = effect.target switch {
+            "self" => new List<BattleCard>() { effect.source },
+            _ => effect.invokeTarget,
+        };
+
+        string log = string.Empty;
+
+        for (int i = 0; i < effect.invokeTarget.Count; i++) {
+            var belongUnit = state.GetBelongUnit(effect.invokeTarget[i]);
+            var card = effect.invokeTarget[i].CurrentCard;
+
+            // Leader hp <= 0, lose.
+            if (card.Type == CardType.Leader) {
+                Effect resultEffect = new Effect(new int[] { (int)EffectAbility.SetResult, (int)BattleResultState.Lose, (int)BattleLoseReason.LeaderDie })
+                {
+                    source = belongUnit.leader.leaderCard,
+                    invokeUnit = belongUnit,
+                };
+                resultEffect.Apply(state);
+                return true;                
+            }
+
+            // Check if still in field.
+            if (!belongUnit.field.cards.Contains(effect.invokeTarget[i]))
+                continue;
+
+            // Remove and record in grave.
+            belongUnit.field.cards.Remove(effect.invokeTarget[i]);
+            belongUnit.grave.destroyedCards.Add(card);
+
+            // Leader info.
+            switch (card.Type) {
+                default:
+                    break;
+                case CardType.Follower:
+                case CardType.Evolved:
+                    belongUnit.leader.AddIdentifier("destroyedFollowerCount", 1);
+                    break;
+                case CardType.Amulet:
+                    belongUnit.leader.AddIdentifier("destroyedAmuletCount", 1);
+                    break;
+            }
+
+            log += card.name + "被破壞\n";
+        }
+
+        effect.hudOptionDict.Set("log", log);
+        Hud.SetState(state);
+
+        EnqueueEffect("on_this_leave_field", effect.invokeTarget, state);
+        OnPhaseChange("on_leave_field", state);
+
+        EnqueueEffect("on_this_destroy", effect.invokeTarget, state);
+        OnPhaseChange("on_destroy", state);
 
         return true;
     }

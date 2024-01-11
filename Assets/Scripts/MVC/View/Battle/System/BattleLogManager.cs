@@ -12,6 +12,7 @@ public class BattleLogManager : Manager<BattleLogManager>
     [SerializeField] private Text titleText;
     [SerializeField] private BattleLogMainView mainView;
     [SerializeField] private BattleLogUseView useView;
+    [SerializeField] private BattleLogDestroyView destroyView;
     [SerializeField] private BattleLogInfoView infoView;
 
 
@@ -21,6 +22,7 @@ public class BattleLogManager : Manager<BattleLogManager>
             return;
 
         useView?.SetWho(true);
+        destroyView?.SetWho(true);
         infoView?.SetWho(true);
 
         selectModel.Select(0);
@@ -30,6 +32,7 @@ public class BattleLogManager : Manager<BattleLogManager>
     public void Log(BattleState state) {
         mainView?.LogState(state);
         useView?.LogUse(state);
+        destroyView?.LogDestroy(state);
         infoView?.LogInfo(state);
     }
 

@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -11,7 +12,8 @@ public class BattleLeaderView : BattleBaseView
     [SerializeField] private Image leaderImage;
     [SerializeField] private Text hpText;
     [SerializeField] private Outline hpOutline;
-    [SerializeField] private GameObject targetObject;
+
+    [SerializeField] private BattleCardEffectView effectView;
 
     private Leader currentLeader;
 
@@ -24,10 +26,6 @@ public class BattleLeaderView : BattleBaseView
         hpOutline?.SetColor(ColorHelper.GetAtkHpOutlineColor(leader.Hp, leader.HpMax, leader.HpInit));
     }
 
-    public void SetTargeting(bool isTargeting) {
-        targetObject?.SetActive(isTargeting);
-    }
-
     public void ShowLeaderInfo() {
         Hud.CurrentCardPlaceInfo = new BattleCardPlaceInfo() { 
             unitId = id,
@@ -36,6 +34,14 @@ public class BattleLeaderView : BattleBaseView
         };
 
         cardInfoView?.SetCard(currentLeader.leaderCard.CurrentCard);        
+    }
+
+    public void SetTargeting(bool isTargeting) {
+        effectView?.SetTargeting(isTargeting);
+    }
+
+    public void SetDamage(int damage, Color color, Action callback) {
+        effectView?.SetDamage(damage, color, callback);
     }
 
 }

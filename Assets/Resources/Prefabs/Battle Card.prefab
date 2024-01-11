@@ -807,7 +807,7 @@ MonoBehaviour:
   m_FontData:
     m_Font: {fileID: 12800000, guid: 1cbade281207b1646a056ac3acf0d067, type: 3}
     m_FontSize: 24
-    m_FontStyle: 0
+    m_FontStyle: 1
     m_BestFit: 0
     m_MinSize: 0
     m_MaxSize: 40
@@ -902,7 +902,7 @@ MonoBehaviour:
   m_FontData:
     m_Font: {fileID: 12800000, guid: 1cbade281207b1646a056ac3acf0d067, type: 3}
     m_FontSize: 24
-    m_FontStyle: 0
+    m_FontStyle: 1
     m_BestFit: 0
     m_MinSize: 0
     m_MaxSize: 40
@@ -1581,7 +1581,7 @@ MonoBehaviour:
   m_FontData:
     m_Font: {fileID: 12800000, guid: 1cbade281207b1646a056ac3acf0d067, type: 3}
     m_FontSize: 24
-    m_FontStyle: 0
+    m_FontStyle: 1
     m_BestFit: 0
     m_MinSize: 0
     m_MaxSize: 40
@@ -2158,6 +2158,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f201c5ba482ead14baca3c6e018365e4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  damageSeconds: 0.5
+  damagePosDeltaY: 10
   targetObject: {fileID: 5303540772597705315}
   damageText: {fileID: 6911609746106123153}
   effectObjects:
@@ -2288,7 +2290,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 2, y: 10}
+  m_AnchoredPosition: {x: 2, y: 5}
   m_SizeDelta: {x: 160, y: 120}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &8006637725142656434
@@ -2556,7 +2558,7 @@ MonoBehaviour:
   m_FontData:
     m_Font: {fileID: 12800000, guid: 1cbade281207b1646a056ac3acf0d067, type: 3}
     m_FontSize: 24
-    m_FontStyle: 0
+    m_FontStyle: 1
     m_BestFit: 0
     m_MinSize: 0
     m_MaxSize: 40

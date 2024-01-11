@@ -125,8 +125,9 @@ public class BattleCard : IIdentifyHandler
         IsEvolved = true;
     }
 
-    public void TakeDamage(int damage) {
+    public int TakeDamage(int damage) {
         buffController.damage += damage;
+        return damage;
     }
 
     public void SetKeyword(CardKeyword keyword, ModifyOption option) {

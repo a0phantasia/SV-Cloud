@@ -73,13 +73,16 @@ public static class String {
         string[] split = str.Trim().Split('\n');
         int lineSizeX = -1;
         int line = split.Length;
+
         for (int i = 0; i < split.Length; i++) {
             int length = split[i].GetPlainLength();
             line += (length - 1) / maxCharX;
             lineSizeX = Mathf.Min(Mathf.Max(lineSizeX, length), maxCharX);
         }
+        
         int sizeX = padX + (fontSize) * lineSizeX;
         int sizeY = padY + (fontSize + 5) * line;
+
         return new Vector2(sizeX, sizeY);
     }
     /// <summary>
@@ -87,11 +90,16 @@ public static class String {
     /// We expect input to be "xxx,yyy,zzz....."
     /// </summary>
     public static List<float> ToFloatList(this string str, char delimeter = ',') {
+        str = str.TrimEnd(delimeter);
+
         if (string.IsNullOrEmpty(str))
             return new List<float>();
+
         float tmp = 0;
         var split = str.Split(delimeter);
+
         List<float> list = new List<float>();
+
         for (int i = 0; i < split.Length; i++) {
             if (float.TryParse(split[i], out tmp)) {
                 list.Add(tmp);

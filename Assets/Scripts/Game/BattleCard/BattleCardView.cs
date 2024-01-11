@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -49,7 +50,7 @@ public class BattleCardView : IMonoBehaviour
         effectView?.SetTargeting(isTargeting);
     }
 
-    public void SetDamage(int damage, Color color) {
-        effectView?.SetDamage(damage, color);
+    public void SetDamage(int damage, Color color, Action callback) {
+        effectView?.SetDamage(damage, color, callback);
     }
 }

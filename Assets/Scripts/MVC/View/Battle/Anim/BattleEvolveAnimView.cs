@@ -130,7 +130,8 @@ public class BattleEvolveAnimView : BattleBaseView
         int q = (fieldCount - 1) / 2;
         int r = (fieldCount - 1) % 2;
         float y = (info.unitId == 0) ? -45 : 70;
-        float x = (-10) + (-50 * r) + (100 * (info.index - q));
+        float x = (-10) + ((-50 * r) + (100 * (info.index - q))) * ((info.unitId == 0) ? 1 : -1);
+
         return new Vector3(x, y);
     }
 }

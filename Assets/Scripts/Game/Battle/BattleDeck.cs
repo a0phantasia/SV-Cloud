@@ -14,6 +14,11 @@ public class BattleDeck
         zone = zoneId;
         format = formatId;
         craft = craftId;
+
+        if (!GameManager.instance.debugMode) {
+            cardIds.Shuffle();
+        }
+
         cards = cardIds.Select(x => BattleCard.Get(Card.Get(x))).ToList();
         MaxCount = cards.Count;
     }

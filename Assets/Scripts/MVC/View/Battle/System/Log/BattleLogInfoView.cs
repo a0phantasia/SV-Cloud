@@ -44,7 +44,6 @@ public class BattleLogInfoView : BattleBaseView
                 opBattleLogs[opCount].SetCount(info.ToString());
                 opCount++;
             }
-            index++;
         }
     }
 

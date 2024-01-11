@@ -14,6 +14,7 @@ public class BattleAnimManager : Manager<BattleAnimManager>
     [SerializeField] private BattleAttackAnimView attackView;
 
     [SerializeField] private BattleDrawAnimView drawView;
+    [SerializeField] private BattleDamageAnimView damageView;
 
     public override void Init()
     {
@@ -60,13 +61,37 @@ public class BattleAnimManager : Manager<BattleAnimManager>
     public void AttackEndDragAnim(int index) {
         attackView?.OnEndDrag(index);
     }
-    
 
+    public void AttackAnim(int unitId, int index) {
+        if (index < 0)
+            return;
+            
+        attackView?.Attack(unitId, index);
+    }
+    
     public void DrawAnim(int unitId, bool currentHandMode, List<Card> inHand, List<Card> inGrave, Action callback) {
         if (unitId == 0)
             drawView?.MyDrawFromDeck(currentHandMode, inHand, inGrave, callback);
         else
             drawView?.OpDrawFromDeck(callback);
+    }
+
+    public void DamageAnim(int unitId, int index, int damage, Action callback) {
+        var info = new BattleCardPlaceInfo() {
+            unitId = unitId,
+            place = (index == -1) ? BattlePlace.Leader : BattlePlace.Field,
+            index = index,
+        };
+        damageView?.ShowDamage(info, damage, callback);
+    }
+
+    public void HealAnim(int unitId, int index, int heal, Action callback) {
+        var info = new BattleCardPlaceInfo() {
+            unitId = unitId,
+            place = (index == -1) ? BattlePlace.Leader : BattlePlace.Field,
+            index = index,
+        };
+        damageView?.ShowHeal(info, heal, callback);
     }
 
 }

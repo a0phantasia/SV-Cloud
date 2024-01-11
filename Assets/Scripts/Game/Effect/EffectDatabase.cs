@@ -4,11 +4,6 @@ using UnityEngine;
 
 public static class EffectDatabase {
 
-    private static Dictionary<string, EffectTarget> targetConvDict = new Dictionary<string, EffectTarget>() {
-        {"none",    EffectTarget.None},
-        {"self",    EffectTarget.Self},
-    };
-
     private static Dictionary<string, EffectCondition> condConvDict = new Dictionary<string, EffectCondition>() {
         {"none", EffectCondition.None},
     };
@@ -26,18 +21,11 @@ public static class EffectDatabase {
         {"fusion", EffectAbility.Fusion},
         {"act", EffectAbility.Act},
 
+        {"set_keyword", EffectAbility.SetKeyword},
         {"draw", EffectAbility.Draw},
         {"summon", EffectAbility.Summon},
-        {"set_keyword", EffectAbility.SetKeyword},
+        {"damage", EffectAbility.Damage},
     };
-
-    private static Dictionary<EffectTarget, string> targetNameDict = new Dictionary<EffectTarget, string>() {
-        {EffectTarget.Self, "自己"},
-    };
-
-    public static EffectTarget ToEffectTarget(this string target) {
-        return targetConvDict.Get(target, EffectTarget.None);
-    }
 
     public static EffectCondition ToEffectCondition(this string condition) {
         return condConvDict.Get(condition, EffectCondition.None);
@@ -47,14 +35,12 @@ public static class EffectDatabase {
         return abilityConvDict.Get(ability, EffectAbility.None);
     }
 
-    public static string GetEffectTargetName(this EffectTarget target) {
-        return targetNameDict.Get(target, string.Empty);
-    }
-}
+    public static string GetEffectTargetName(this string target) {
+        if (target == "self")
+            return "自己";
 
-public enum EffectTarget {
-    None,
-    Self,
+        return string.Empty;
+    }
 }
 
 public enum EffectCondition {
@@ -62,19 +48,14 @@ public enum EffectCondition {
 }
 
 public enum EffectAbility {
-    None = 0,
-    SetResult = 1,
-    KeepCard = 2,
-    TurnStart = 3,
-    TurnEnd = 4,
-    Use = 5,
-    Cover = 6,
-    Attack = 7,
-    Evolve = 8,
-    Fusion = 9,
-    Act = 10,
+    None = 0,   SetResult = 1,  KeepCard = 2,   TurnStart = 3,  TurnEnd = 4,
+    Use = 5,    Cover = 6,  Attack = 7, Evolve = 8, Fusion = 9, Act = 10,
 
-    Draw = 101,
-    Summon = 102,
-    SetKeyword = 103,
+    SetKeyword  = 101,   
+    Draw        = 102, 
+    Summon      = 103,   
+    Damage      = 104,   
+    Heal        = 105,
+    Destroy     = 106,
+    
 }

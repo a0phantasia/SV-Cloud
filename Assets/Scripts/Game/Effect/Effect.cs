@@ -19,7 +19,7 @@ public class Effect : IIdentifyHandler
     public int id;
     public int Id => id;
     public string timing { get; private set; }
-    public EffectTarget target { get; private set; }
+    public string target { get; private set; }
     public EffectCondition condition { get; private set; }
     public List<List<ICondition>> condOptionDictList { get; private set; } = new List<List<ICondition>>();
     public EffectAbility ability { get; private set; }
@@ -33,7 +33,7 @@ public class Effect : IIdentifyHandler
         source = null;
         id = int.Parse(_slicedData[0]);
         timing = _slicedData[1];
-        target = _slicedData[2].ToEffectTarget();
+        target = _slicedData[2];
         condition = _slicedData[3].ToEffectCondition();
         condOptionDictList.ParseMultipleCondition(_slicedData[4]);
         ability = _slicedData[5].ToEffectAbility();
@@ -41,7 +41,7 @@ public class Effect : IIdentifyHandler
         hudOptionDict = new Dictionary<string, string>();
     }
 
-    public Effect(string _timing, EffectTarget _target, 
+    public Effect(string _timing, string _target, 
         EffectCondition _condition, List<List<ICondition>> _condition_option,
         EffectAbility _ability, Dictionary<string, string> _ability_option) {
         source = null;
@@ -61,7 +61,7 @@ public class Effect : IIdentifyHandler
     public Effect(int[] data) {
         source = null;
         timing = "none";
-        target = EffectTarget.None;
+        target = "none";
         condition = EffectCondition.None;
         condOptionDictList.Add(new List<ICondition>());
         ability = (EffectAbility)data[0];
@@ -135,9 +135,11 @@ public class Effect : IIdentifyHandler
             EffectAbility.Attack    => EffectAbilityHandler.Attack,
             EffectAbility.Evolve    => EffectAbilityHandler.Evolve,
 
+            EffectAbility.SetKeyword=> EffectAbilityHandler.SetKeyword,
             EffectAbility.Draw      => EffectAbilityHandler.Draw,
             EffectAbility.Summon    => EffectAbilityHandler.Summon,
-            EffectAbility.SetKeyword=> EffectAbilityHandler.SetKeyword,
+            EffectAbility.Damage    => EffectAbilityHandler.Damage,
+            EffectAbility.Destroy   => EffectAbilityHandler.Destroy,
             _ => (e, s) => true,
         };
         return AbilityFunc.Invoke(this, state);

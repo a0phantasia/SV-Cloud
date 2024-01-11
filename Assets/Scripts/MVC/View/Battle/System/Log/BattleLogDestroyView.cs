@@ -4,7 +4,7 @@ using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class BattleLogUseView : BattleBaseView
+public class BattleLogDestroyView : BattleBaseView
 {
     private bool isMe = false;
     [SerializeField] private ScrollRect scrollRect;
@@ -13,14 +13,14 @@ public class BattleLogUseView : BattleBaseView
     private List<LogInfoView> myBattleLogs = new List<LogInfoView>();
     private List<LogInfoView> opBattleLogs = new List<LogInfoView>();
 
-    public void LogUse(BattleState state) {
-        if (state.currentEffect.ability != EffectAbility.Use)
+    public void LogDestroy(BattleState state) {
+        if (state.currentEffect.ability != EffectAbility.Destroy)
             return;
 
         var invokeUnit = state.currentEffect.invokeUnit;
         bool isMyLog = invokeUnit.id == state.myUnit.id;
-        var usedCards = invokeUnit.grave.usedCards;
-        var distinctCards = invokeUnit.grave.DistinctUsedCards;
+        var destroyedCards = invokeUnit.grave.destroyedCards;
+        var distinctCards = invokeUnit.grave.DistinctDestroyedCards;
         var battleLogs = isMyLog ? myBattleLogs : opBattleLogs;
 
         if (battleLogs.Count < distinctCards.Count) {
@@ -33,7 +33,7 @@ public class BattleLogUseView : BattleBaseView
         
         for (int i = 0; i < battleLogs.Count; i++) {
             int copy = i;
-            var count = usedCards.Count(x => x.id == distinctCards[i].id);
+            var count = destroyedCards.Count(x => x.id == distinctCards[i].id);
             battleLogs[i].SetEffect(distinctCards[i].name, state, () => cardInfoView?.SetCard(distinctCards[copy]));
             battleLogs[i].SetCount("x " + count);
         }

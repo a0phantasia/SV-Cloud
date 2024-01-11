@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -39,9 +40,11 @@ public class BattleUnitView : BattleBaseView
         var invokeUnit = effect.invokeUnit;
         var unit = state.myUnit;
 
+        Action SetMyUnit = (() => SetUnit(unit));
+
         switch (effect.ability) {
             default:
-                SetUnit(unit);
+                SetMyUnit();
                 break;
 
             case EffectAbility.Use:
@@ -49,24 +52,33 @@ public class BattleUnitView : BattleBaseView
                     goto default;
 
                 SetUnit(unit, false);
-                Anim.UseAnim(0, effect.invokeTarget[0], () => SetUnit(unit));
+                Anim.UseAnim(0, effect.invokeTarget[0], SetMyUnit);
+                break;
+
+            case EffectAbility.Attack:
+                if (invokeUnit.id != unit.id)
+                    goto default;
+
+                var sourceIndex = int.Parse(effect.hudOptionDict.Get("source", "-1"));
+                Anim.AttackAnim(0, sourceIndex);
+                SetMyUnit();
                 break;
 
             case EffectAbility.Evolve:
                 if (invokeUnit.id != unit.id)
                     goto default;
 
-                var index = int.Parse(effect.abilityOptionDict.Get("index", "-1"));
-                if (index >= 0) {
+                var evolveIndex = int.Parse(effect.hudOptionDict.Get("index", "-1"));
+                if (evolveIndex >= 0) {
                     // Evolve with EP.
                     Anim.EvolveAnim(new BattleCardPlaceInfo() {
                         unitId = 0,
                         place = BattlePlace.Field,
-                        index = index,
-                    }, unit.field.cards[index], fieldView.fieldCards, () => SetUnit(unit));
+                        index = evolveIndex,
+                    }, unit.field.cards[evolveIndex], fieldView.fieldCards, SetMyUnit);
                 } else {
                     // Auto evolve.
-                    SetUnit(unit);
+                    SetMyUnit();
                 }
 
                 break;
@@ -75,10 +87,38 @@ public class BattleUnitView : BattleBaseView
                 if (invokeUnit.id != unit.id)
                     goto default;
 
-                var count = int.Parse(effect.abilityOptionDict.Get("count"));
+                var drawCount = int.Parse(effect.hudOptionDict.Get("count"));
                 var inHand = effect.invokeTarget.Select(x => x.CurrentCard).ToList();
-                var inGrave = unit.grave.graveCards.TakeLast(count - effect.invokeTarget.Count).ToList();
-                Anim.DrawAnim(0, handView.Mode, inHand, inGrave, () => SetUnit(unit));
+                var inGrave = unit.grave.graveCards.TakeLast(drawCount - effect.invokeTarget.Count).ToList();
+
+                Anim.DrawAnim(0, handView.Mode, inHand, inGrave, SetMyUnit);
+                break;
+
+            case EffectAbility.Damage:
+                var damageIndexList = effect.hudOptionDict.Get("myIndex", string.Empty).ToIntList('/');
+                var damageValueList = effect.hudOptionDict.Get("myDamage", string.Empty).ToIntList('/');
+
+                if (List.IsNullOrEmpty(damageIndexList) || List.IsNullOrEmpty(damageValueList))
+                    goto default;
+
+                for (int i = 0; i < damageIndexList.Count; i++) {
+                    Anim.DamageAnim(0, damageIndexList[i], damageValueList[i],
+                        (i == damageIndexList.Count - 1) ? SetMyUnit : null);
+                }
+
+                break;
+
+            case EffectAbility.Heal:
+                var healIndexList = effect.hudOptionDict.Get("myIndex", string.Empty).ToIntList('/');
+                var healValueList = effect.hudOptionDict.Get("myHeal", string.Empty).ToIntList('/');
+
+                if (List.IsNullOrEmpty(healIndexList) || List.IsNullOrEmpty(healValueList))
+                    goto default;
+
+                for (int i = 0; i < healIndexList.Count; i++) {
+                    Anim.HealAnim(0, healIndexList[i], healValueList[i], 
+                        (i == healIndexList.Count - 1) ? SetMyUnit : null);
+                }
                 break;
         };
     }
@@ -88,9 +128,11 @@ public class BattleUnitView : BattleBaseView
         var invokeUnit = effect.invokeUnit;
         var unit = state.opUnit;
 
+        Action SetOpUnit = (() => SetUnit(unit));
+
         switch (effect.ability) {
             default:
-                SetUnit(unit);
+                SetOpUnit();
                 break;
 
             case EffectAbility.Use:
@@ -98,24 +140,33 @@ public class BattleUnitView : BattleBaseView
                     goto default;
 
                 SetUnit(unit, false);
-                Anim.UseAnim(1, effect.invokeTarget[0], () => SetUnit(unit));
+                Anim.UseAnim(1, effect.invokeTarget[0], SetOpUnit);
+                break;
+
+            case EffectAbility.Attack:
+                if (invokeUnit.id != unit.id)
+                    goto default;
+
+                var sourceIndex = int.Parse(effect.hudOptionDict.Get("source", "-1"));
+                Anim.AttackAnim(1, sourceIndex);
+                SetOpUnit();
                 break;
 
             case EffectAbility.Evolve:
                 if (invokeUnit.id != unit.id)
                     goto default;
 
-                var index = int.Parse(effect.abilityOptionDict.Get("index", "-1"));
+                var index = int.Parse(effect.hudOptionDict.Get("index", "-1"));
                 if (index >= 0) {
                     // Evolve with EP.
                     Anim.EvolveAnim(new BattleCardPlaceInfo() {
                         unitId = 1,
                         place = BattlePlace.Field,
                         index = index,
-                    }, unit.field.cards[index], fieldView.fieldCards, () => SetUnit(unit));
+                    }, unit.field.cards[index], fieldView.fieldCards, SetOpUnit);
                 } else {
                     // Auto evolve.
-                    SetUnit(unit);
+                    SetOpUnit();
                 }
 
                 break;
@@ -124,10 +175,38 @@ public class BattleUnitView : BattleBaseView
                 if (invokeUnit.id != unit.id)
                     goto default;
                 
-                var count = int.Parse(effect.abilityOptionDict.Get("count"));
+                var count = int.Parse(effect.hudOptionDict.Get("count"));
                 var inHand = effect.invokeTarget.Select(x => x.CurrentCard).ToList();
                 var inGrave = unit.grave.graveCards.TakeLast(count - effect.invokeTarget.Count).ToList();
-                Anim.DrawAnim(1, false, inHand, inGrave, () => SetUnit(unit));
+
+                Anim.DrawAnim(1, false, inHand, inGrave, SetOpUnit);
+                break;
+
+            case EffectAbility.Damage:
+                var damageSituation = effect.hudOptionDict.Get("situation", string.Empty);
+                var damageIndexList = effect.hudOptionDict.Get("opIndex", string.Empty).ToIntList('/');
+                var damageValueList = effect.hudOptionDict.Get("opDamage", string.Empty).ToIntList('/');
+
+                if (List.IsNullOrEmpty(damageIndexList) || List.IsNullOrEmpty(damageValueList))
+                    goto default;
+
+                for (int i = 0; i < damageIndexList.Count; i++) {
+                    Anim.DamageAnim(1, damageIndexList[i], damageValueList[i],
+                        (i == damageIndexList.Count - 1) ? SetOpUnit : null);
+                }   
+                break;
+
+            case EffectAbility.Heal:
+                var healIndexList = effect.hudOptionDict.Get("opIndex", string.Empty).ToIntList('/');
+                var healValueList = effect.hudOptionDict.Get("opHeal", string.Empty).ToIntList('/');
+        
+                if (List.IsNullOrEmpty(healIndexList) || List.IsNullOrEmpty(healValueList))
+                    goto default;
+
+                for (int i = 0; i < healIndexList.Count; i++) {
+                    Anim.HealAnim(1, healIndexList[i], healValueList[i], 
+                        (i == healIndexList.Count - 1) ? SetOpUnit : null);
+                }
                 break;
         };
     }

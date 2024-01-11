@@ -7,6 +7,8 @@ using WebSocketSharp;
 
 public class BattleAttackAnimView : BattleBaseView
 {
+    [SerializeField] private float attackSeconds = 0.5f;
+    [SerializeField] private float attackRotationY = 90;
     [SerializeField] private LineRenderer lineRenderer;
     [SerializeField] private BattleLeaderView opLeaderView;
     [SerializeField] private List<BattleCardView> myCardViews;
@@ -14,6 +16,26 @@ public class BattleAttackAnimView : BattleBaseView
 
     private Vector2 startPoint, endPoint;
     private List<int> targetIndexResult = new List<int>();
+
+    public void Attack(int unitId, int index) {
+        StartCoroutine(AttackCoroutine(unitId, index));
+    }
+
+    private IEnumerator AttackCoroutine(int unitId, int index) {
+        float currentTime = 0, finishTime = attackSeconds, percent = 0;
+        var fieldView = (unitId == 0) ? myCardViews : opCardViews;
+        var pos = fieldView[index].rectTransform.anchoredPosition3D;
+
+        while (currentTime < finishTime) {
+            percent = currentTime / finishTime;
+            var rotationY = (percent < 0.5f) ? Mathf.Lerp(0, attackRotationY, percent * 2) : Mathf.Lerp(attackRotationY, 0, 2 * percent - 1);
+            fieldView[index].rectTransform.localRotation = Quaternion.Euler(0, rotationY, 0);
+            currentTime += Time.deltaTime;
+            yield return null;
+        }
+
+        fieldView[index].rectTransform.anchoredPosition3D = new Vector3(pos.x, pos.y, 0);
+    }
 
     public void OnBeginDrag(int index) {
         var myUnit = Hud.CurrentState.myUnit;
@@ -75,10 +97,6 @@ public class BattleAttackAnimView : BattleBaseView
         lineRenderer.positionCount = 0;
         lineRenderer.SetPositions(new Vector3[] {});
 
-        var pos = myCardViews[index].rectTransform.anchoredPosition3D;
-        myCardViews[index].rectTransform.anchoredPosition3D = new Vector3(pos.x, pos.y, 0);
-        myCardViews[index].SetBattleCard(myField[index]);
-
         int target = int.MinValue;
         var isLeaderPointing = RectTransformUtility.RectangleContainsScreenPoint(opLeaderView.rectTransform, Input.mousePosition, Camera.main);
 
@@ -107,9 +125,14 @@ public class BattleAttackAnimView : BattleBaseView
 
         startPoint = endPoint = Vector3.zero;
 
-        if (target.IsInRange(-1, opField.Count))
-            Battle.PlayerAction(new int[] { (int)EffectAbility.Attack, index, target }, true);
-        
+        if (!target.IsInRange(-1, opField.Count)) {
+            var pos = myCardViews[index].rectTransform.anchoredPosition3D;
+            myCardViews[index].rectTransform.anchoredPosition3D = new Vector3(pos.x, pos.y, 0);
+            myCardViews[index].SetBattleCard(myField[index]);
+            return;
+        }
+
+        Battle.PlayerAction(new int[] { (int)EffectAbility.Attack, index, target }, true);
     }
 
     private Vector2 GetFollowerPoint(int index, int fieldCount, float y = -60) {
@@ -120,8 +143,5 @@ public class BattleAttackAnimView : BattleBaseView
         return new Vector2(x, y);
     }
 
-    private bool isPointing(int index, Vector2 screenPoint) {
 
-        return false;
-    }
 }

@@ -58,13 +58,13 @@ public class BattleState
     }
 
     public virtual BattleUnit GetBelongUnit(BattleCard card) {
-        if (myUnit.hand.cards.Contains(card) || myUnit.field.cards.Contains(card) ||
-            myUnit.deck.cards.Contains(card) || myUnit.grave.usedCards.Contains(card.CurrentCard) ||
+        if (myUnit.hand.cards.Contains(card) || myUnit.field.cards.Contains(card) || myUnit.deck.cards.Contains(card) ||
+            myUnit.grave.usedCards.Contains(card.CurrentCard) || myUnit.grave.destroyedCards.Contains(card.CurrentCard) ||
             (myUnit.leader.leaderCard == card) || (myUnit.territory == card))
                 return myUnit;
 
-        if (opUnit.hand.cards.Contains(card) || opUnit.field.cards.Contains(card) ||
-            opUnit.deck.cards.Contains(card) || opUnit.grave.usedCards.Contains(card.CurrentCard) ||
+        if (opUnit.hand.cards.Contains(card) || opUnit.field.cards.Contains(card) || opUnit.deck.cards.Contains(card) || 
+            opUnit.grave.usedCards.Contains(card.CurrentCard) || opUnit.grave.destroyedCards.Contains(card.CurrentCard) ||
             (opUnit.leader.leaderCard == card) || (opUnit.territory == card))
                 return opUnit;
 
