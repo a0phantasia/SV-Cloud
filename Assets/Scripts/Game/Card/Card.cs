@@ -18,7 +18,7 @@ public class Card : IIdentifyHandler
 
     public int id;
     public int Id => id;
-    public int EvolveId => (TypeId == (int)CardType.Evolved) ? 0 : (id - id % 1000 + 900 + id % 100);
+    public int EvolveId => (Type != CardType.Follower) ? 0 : (id - id % 1000 + 900 + id % 100);
     public int GroupId => id / (int)1e8;
     public int ZoneId => id % (int)1e8 / (int)1e7;
     public int PackId => id % (int)1e8 / (int)1e4;

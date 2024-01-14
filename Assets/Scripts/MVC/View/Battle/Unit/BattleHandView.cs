@@ -51,7 +51,7 @@ public class BattleHandView : BattleBaseView
 
         Hud.CurrentCardPlaceInfo = new BattleCardPlaceInfo() { 
             unitId = id,
-            place = BattlePlace.Hand,
+            place = BattlePlaceId.Hand,
             index = index,
         };
 

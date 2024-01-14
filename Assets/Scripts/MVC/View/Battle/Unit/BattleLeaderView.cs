@@ -29,7 +29,7 @@ public class BattleLeaderView : BattleBaseView
     public void ShowLeaderInfo() {
         Hud.CurrentCardPlaceInfo = new BattleCardPlaceInfo() { 
             unitId = id,
-            place = BattlePlace.Hand,
+            place = BattlePlaceId.Hand,
             index = 0,
         };
 

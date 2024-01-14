@@ -209,13 +209,19 @@ public static class ColorHelper {
     }
 
     public static Color GetAtkHpTextColor(int Hp, int HpMax, int HpInit) {
-        if (Hp == HpInit)
-            return (HpMax == HpInit) ? Color.white : ColorHelper.gold;
+        if (Hp < HpMax)
+            return Color.red;
 
-        return (Hp > HpInit) ? ColorHelper.green : Color.red;
+        if (Hp > HpInit)
+            return ColorHelper.green;
+
+        if (HpMax == HpInit)
+            return Color.white;
+
+        return ColorHelper.gold;
     }
     public static Color GetAtkHpOutlineColor(int Hp, int HpMax, int HpInit) {
-        return (GetAtkHpTextColor(Hp, HpMax, HpInit) == Color.red) ? Color.white : Color.black;
+        return (GetAtkHpTextColor(Hp, HpMax, HpInit) == Color.red) ? ColorHelper.gray192 : Color.black;
     }
 }
 

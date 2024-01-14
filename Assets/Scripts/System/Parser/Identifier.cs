@@ -8,9 +8,19 @@ using Random = UnityEngine.Random;
 public static class Identifier {
 
     public static float GetIdentifier(string id, Effect effect, BattleState state) {
+        var trimId = string.Empty;
         var lhsUnit = effect.invokeUnit;
         var rhsUnit = state.GetRhsUnitById(lhsUnit.id);
         
+        if (id.TryTrimStart("effect.", out trimId))
+            return effect.GetIdentifier(trimId);
+        
+        if (id.TryTrimStart("me.", out trimId))
+            return lhsUnit.GetIdentifier(trimId);
+
+        if (id.TryTrimStart("op.", out trimId))
+            return rhsUnit.GetIdentifier(trimId);
+
         return GetNumIdentifier(id);
     }
 

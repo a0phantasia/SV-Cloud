@@ -14,10 +14,10 @@ public class BattleDamageAnimView : BattleBaseView
         var fieldView = (info.unitId == 0) ? myCardViews : opCardViews;
 
         switch (info.place) {
-            case BattlePlace.Leader:
+            case BattlePlaceId.Leader:
                 leaderView.SetDamage(damage, Color.red, callback);
                 break;
-            case BattlePlace.Field:
+            case BattlePlaceId.Field:
                 if (!info.index.IsInRange(0, fieldView.Count))
                     break;
 
@@ -31,10 +31,10 @@ public class BattleDamageAnimView : BattleBaseView
         var fieldView = (info.unitId == 0) ? myCardViews : opCardViews;
 
         switch (info.place) {
-            case BattlePlace.Leader:
+            case BattlePlaceId.Leader:
                 leaderView.SetDamage(heal, ColorHelper.green, callback);
                 break;
-            case BattlePlace.Field:
+            case BattlePlaceId.Field:
                 if (!info.index.IsInRange(0, fieldView.Count))
                     break;
 

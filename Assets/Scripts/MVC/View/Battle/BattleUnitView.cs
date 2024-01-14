@@ -73,7 +73,7 @@ public class BattleUnitView : BattleBaseView
                     // Evolve with EP.
                     Anim.EvolveAnim(new BattleCardPlaceInfo() {
                         unitId = 0,
-                        place = BattlePlace.Field,
+                        place = BattlePlaceId.Field,
                         index = evolveIndex,
                     }, unit.field.cards[evolveIndex], fieldView.fieldCards, SetMyUnit);
                 } else {
@@ -89,7 +89,7 @@ public class BattleUnitView : BattleBaseView
 
                 var drawCount = int.Parse(effect.hudOptionDict.Get("count"));
                 var inHand = effect.invokeTarget.Select(x => x.CurrentCard).ToList();
-                var inGrave = unit.grave.graveCards.TakeLast(drawCount - effect.invokeTarget.Count).ToList();
+                var inGrave = unit.grave.cards.TakeLast(drawCount - effect.invokeTarget.Count).Select(x => x.CurrentCard).ToList();
 
                 Anim.DrawAnim(0, handView.Mode, inHand, inGrave, SetMyUnit);
                 break;
@@ -105,7 +105,6 @@ public class BattleUnitView : BattleBaseView
                     Anim.DamageAnim(0, damageIndexList[i], damageValueList[i],
                         (i == damageIndexList.Count - 1) ? SetMyUnit : null);
                 }
-
                 break;
 
             case EffectAbility.Heal:
@@ -161,7 +160,7 @@ public class BattleUnitView : BattleBaseView
                     // Evolve with EP.
                     Anim.EvolveAnim(new BattleCardPlaceInfo() {
                         unitId = 1,
-                        place = BattlePlace.Field,
+                        place = BattlePlaceId.Field,
                         index = index,
                     }, unit.field.cards[index], fieldView.fieldCards, SetOpUnit);
                 } else {
@@ -177,7 +176,7 @@ public class BattleUnitView : BattleBaseView
                 
                 var count = int.Parse(effect.hudOptionDict.Get("count"));
                 var inHand = effect.invokeTarget.Select(x => x.CurrentCard).ToList();
-                var inGrave = unit.grave.graveCards.TakeLast(count - effect.invokeTarget.Count).ToList();
+                var inGrave = unit.grave.cards.TakeLast(count - effect.invokeTarget.Count).Select(x => x.CurrentCard).ToList();
 
                 Anim.DrawAnim(1, false, inHand, inGrave, SetOpUnit);
                 break;

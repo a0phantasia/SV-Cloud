@@ -26,7 +26,7 @@ public class BattleFieldView : BattleBaseView
 
         Hud.CurrentCardPlaceInfo = new BattleCardPlaceInfo() { 
             unitId = id,
-            place = BattlePlace.Field,
+            place = BattlePlaceId.Field,
             index = index,
         };
 
@@ -50,7 +50,7 @@ public class BattleFieldView : BattleBaseView
 
         Hud.CurrentCardPlaceInfo = new BattleCardPlaceInfo() { 
             unitId = id,
-            place = BattlePlace.Field,
+            place = BattlePlaceId.Field,
             index = index,
         };
 
@@ -85,7 +85,7 @@ public class BattleFieldView : BattleBaseView
 
     public void Evolve() {
         var info = Hud.CurrentCardPlaceInfo;
-        if ((info.unitId != 0) || (info.place != BattlePlace.Field))
+        if ((info.unitId != 0) || (info.place != BattlePlaceId.Field))
             return;
         
         Battle.PlayerAction(new int[2] { (int)EffectAbility.Evolve, info.index }, true);

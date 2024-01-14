@@ -14,10 +14,15 @@ public class BattleTurnView : BattleBaseView
 
     public void ShowTurnInfo(string whosTurn, string description, Action callback = null) {
         gameObject.SetActive(true);
-        StartCoroutine(ShowTurnCoroutine(whosTurn, description, callback));
+        StartCoroutine(ShowTurnCoroutine(whosTurn, description, waitSeconds, callback));
     }
 
-    private IEnumerator ShowTurnCoroutine(string whosTurn, string description, Action callback) {
+    public void ShowBattleResult(string whosTurn, string description, Action callback = null) {
+        gameObject.SetActive(true);
+        StartCoroutine(ShowTurnCoroutine(whosTurn, description, waitSeconds + 1, callback));
+    }
+
+    private IEnumerator ShowTurnCoroutine(string whosTurn, string description, float waitTime, Action callback) {
         float currentTime = 0, finishTime = fadeSeconds, percent = 0;
 
         background?.SetColor(Color.clear);
@@ -35,7 +40,7 @@ public class BattleTurnView : BattleBaseView
         whosTurnText?.SetText(whosTurn);
         descriptionText?.SetText(description);
 
-        yield return new WaitForSeconds(waitSeconds);
+        yield return new WaitForSeconds(waitTime);
 
         whosTurnText?.SetText(string.Empty);
         descriptionText?.SetText(string.Empty);

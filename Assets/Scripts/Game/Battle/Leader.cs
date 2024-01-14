@@ -3,15 +3,14 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Leader
+public class Leader : BattlePlace
 {
     public static string[] infoKeys => new string[] { "rally", "destroyedFollowerCount", "destroyedAmuletCount" };
     public static string[] infoValues => new string[] { "協作數", "已被破壞的從者數", "已被破壞的護符數" };
 
     public int CraftId => leaderCard.CurrentCard.CraftId;
     public CardCraft Craft => leaderCard.CurrentCard.Craft;
-    public BattleCard leaderCard;
-    public Dictionary<string, float> options = new Dictionary<string, float>();
+    public BattleCard leaderCard => cards[0];
 
     public int HpInit => Card.GetLeaderCard(CraftId).hp;
     public int Hp => leaderCard.CurrentCard.hp;
@@ -29,21 +28,23 @@ public class Leader
     }
     public bool isEpUsed;
 
-    public Leader(bool isFirst, int craftId) {
-        leaderCard = BattleCard.Get(Card.GetLeaderCard(craftId));
+    public Leader(bool isFirst, int craftId) : base(new List<BattleCard>() { BattleCard.Get(Card.GetLeaderCard(craftId)) }) {
         ep = pp = PPMax = 0;
         EpMax = isFirst ? 2 : 3;
         isEpUsed = false;
     }
 
-    public Leader(Leader rhs) {
-        leaderCard = new BattleCard(rhs.leaderCard);
-        options = new Dictionary<string, float>(rhs.options);
+    public Leader(Leader rhs) : base(rhs) {
         pp = rhs.pp;
         PPMax = rhs.PPMax;
         ep = rhs.ep;
         EpMax = rhs.EpMax;
         isEpUsed = rhs.isEpUsed;
+    }
+
+    protected override BattlePlaceId GetPlaceId()
+    {
+        return BattlePlaceId.Leader;
     }
 
     public void ClearTurnIdentifier() {
@@ -59,7 +60,7 @@ public class Leader
         }
     }
 
-    public float GetIdentifier(string id) 
+    public override float GetIdentifier(string id) 
     {
         return id switch {
             "hp" => Hp,
@@ -70,14 +71,14 @@ public class Leader
             "ep" => ep,
             "epMax" => EpMax,
             "isEpUsed" => isEpUsed ? 1 : 0,
-            _ => options.Get(id, 0),
+            _ => base.GetIdentifier(id),
         };
     }
 
-    public void SetIdentifier(string id, float num) {
+    public override void SetIdentifier(string id, float num) {
         switch (id) {
             default:
-                options.Set(id, num);
+                base.SetIdentifier(id, num);
                 return;
             case "pp":
                 PP = (int)num;
@@ -97,7 +98,7 @@ public class Leader
         }
     }
 
-    public void AddIdentifier(string id, float num) {
+    public override void AddIdentifier(string id, float num) {
         SetIdentifier(id, GetIdentifier(id) + num);
     }
 }

@@ -19,11 +19,11 @@ public class BattleLogDestroyView : BattleBaseView
 
         var invokeUnit = state.currentEffect.invokeUnit;
         bool isMyLog = invokeUnit.id == state.myUnit.id;
-        var destroyedCards = invokeUnit.grave.destroyedCards;
-        var distinctCards = invokeUnit.grave.DistinctDestroyedCards;
+        var destroyedFollowers = invokeUnit.grave.destroyedFollowers;
+        var distinctFollowers = invokeUnit.grave.DistinctDestroyedFollowers;
         var battleLogs = isMyLog ? myBattleLogs : opBattleLogs;
 
-        if (battleLogs.Count < distinctCards.Count) {
+        if (battleLogs.Count < distinctFollowers.Count) {
             var obj = Instantiate(SpriteResources.Log, scrollRect.content);
             var logPrefab = obj.GetComponent<LogInfoView>();
             battleLogs.Add(logPrefab);
@@ -33,8 +33,8 @@ public class BattleLogDestroyView : BattleBaseView
         
         for (int i = 0; i < battleLogs.Count; i++) {
             int copy = i;
-            var count = destroyedCards.Count(x => x.id == distinctCards[i].id);
-            battleLogs[i].SetEffect(distinctCards[i].name, state, () => cardInfoView?.SetCard(distinctCards[copy]));
+            var count = destroyedFollowers.Count(x => x.id == distinctFollowers[i].id);
+            battleLogs[i].SetEffect(distinctFollowers[i].name, state, () => cardInfoView?.SetCard(distinctFollowers[copy]));
             battleLogs[i].SetCount("x " + count);
         }
     }

@@ -47,12 +47,30 @@ public static class CardDatabase
         { CardType.Evolved,     "進化後" },
     };
 
+    public static Dictionary<CardType, string> typeEnglishNameDict = new Dictionary<CardType, string>() {
+        { CardType.Leader,      "leader"    },
+        { CardType.Follower,    "follower"  },
+        { CardType.Spell,       "spell"     },
+        { CardType.Amulet,      "amulet"    },
+        { CardType.Territory,   "territory" },
+        { CardType.Evolved,     "evolved"   },
+    };
+
     public static Dictionary<CardRarity, string> rarityNameDict = new Dictionary<CardRarity, string>() {
         { CardRarity.Leader,    "主戰者" },
         { CardRarity.Bronze,    "青銅"   },
         { CardRarity.Silver,    "白銀"   },
         { CardRarity.Gold,      "黃金"   },
         { CardRarity.Legend,    "傳說"   },
+    };
+
+    public static Dictionary<BattlePlaceId, string> placeNameDict = new Dictionary<BattlePlaceId, string>() {
+        { BattlePlaceId.Deck,         "deck"      },
+        { BattlePlaceId.Hand,         "hand"      },
+        { BattlePlaceId.Leader,       "leader"    },
+        { BattlePlaceId.Territory,    "territory" },
+        { BattlePlaceId.Field,        "field"     },
+        { BattlePlaceId.Grave,        "grave"     },
     };
 
     public static Dictionary<CardTrait, string> traitNameDict = new Dictionary<CardTrait, string>() {
@@ -62,23 +80,27 @@ public static class CardDatabase
     };
 
     public static Dictionary<CardKeyword, string> keywordNameDict = new Dictionary<CardKeyword, string>() {
-        { CardKeyword.None,     "-"      },
-        { CardKeyword.Storm,    "疾馳"   },
-        { CardKeyword.Ward,     "守護"   },
-        { CardKeyword.Bane,     "必殺"   },
-        { CardKeyword.Rush,     "突進"   },
-        { CardKeyword.Ambush,   "潛行"   },
-        { CardKeyword.Drain,    "吸血"   },
+        { CardKeyword.None,     "-"         },
+        { CardKeyword.Storm,    "疾馳"      },
+        { CardKeyword.Ward,     "守護"      },
+        { CardKeyword.Bane,     "必殺"      },
+        { CardKeyword.Rush,     "突進"      },
+        { CardKeyword.Ambush,   "潛行"      },
+        { CardKeyword.Drain,    "吸血"      },
+        { CardKeyword.Fanfare,  "入場曲"    },
+        { CardKeyword.Lastword, "謝幕曲"    },
     };
 
     public static Dictionary<CardKeyword, string> keywordEnglishNameDict = new Dictionary<CardKeyword, string>() {
-        { CardKeyword.None,     "-"      },
-        { CardKeyword.Storm,    "storm"  },
-        { CardKeyword.Ward,     "ward"   },
-        { CardKeyword.Bane,     "bane"   },
-        { CardKeyword.Rush,     "rush"   },
-        { CardKeyword.Ambush,   "ambush" },
-        { CardKeyword.Drain,    "drain"  },
+        { CardKeyword.None,     "-"         },
+        { CardKeyword.Storm,    "storm"     },
+        { CardKeyword.Ward,     "ward"      },
+        { CardKeyword.Bane,     "bane"      },
+        { CardKeyword.Rush,     "rush"      },
+        { CardKeyword.Ambush,   "ambush"    },
+        { CardKeyword.Drain,    "drain"     },
+        { CardKeyword.Fanfare,  "fanfare"   },
+        { CardKeyword.Lastword, "lastword"  },
     };
 
     public static string GetPackName(this CardPack pack) => packNameDict.Get(pack, "-");
@@ -87,6 +109,7 @@ public static class CardDatabase
     public static string GetBestOfName(this BestOf bestOf) => bestOfNameDict.Get(bestOf, "無限制");
     public static string GetCraftName(this CardCraft craft) => craftNameDict.Get(craft, "中立");
     public static string GetTypeName(this CardType type) => typeNameDict.Get(type, "主戰者");
+    public static string GetTypeEnglishName(this CardType type) => typeEnglishNameDict.Get(type, "主戰者");
     public static string GetRarityName(this CardRarity rarity) => rarityNameDict.Get(rarity, "傳說");
     public static string GetTraitName(this CardTrait trait) => traitNameDict.Get(trait, "-");
     public static string GetKeywordName(this CardKeyword keyword) => keywordNameDict.Get(keyword, "-");
@@ -111,6 +134,14 @@ public static class CardDatabase
             name += "‧" + GetTraitName(traits[i]);
         }
         return name;
+    }
+
+    public static CardType ToCardTypeWithEnglish(this string type) {
+        return typeEnglishNameDict.FirstOrDefault(x => x.Value == type).Key;
+    }
+
+    public static BattlePlaceId ToBattlePlace(this string place) {
+        return placeNameDict.FirstOrDefault(x => x.Value == place).Key;
     }
 }
 
@@ -303,4 +334,11 @@ public enum CardTrait
 public enum CardKeyword 
 {
     None = 0,   Storm = 1,  Ward = 2, Bane = 3, Rush = 4, Ambush = 5, Drain = 6,
+    Fanfare = 7,    Lastword = 8,
+}
+
+public enum BattlePlaceId 
+{
+    None = 0,   Deck = 1,   Hand = 2,   Leader = 3, 
+    Territory = 4,  Field = 5,  Grave = 6,
 }

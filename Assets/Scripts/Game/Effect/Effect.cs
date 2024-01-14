@@ -86,17 +86,33 @@ public class Effect : IIdentifyHandler
 
     public bool TryGetIdenfier(string id, out float value)
     {
-        throw new NotImplementedException();
+        value = GetIdentifier(id);
+        return value != float.MinValue;
     }
 
     public float GetIdentifier(string id)
     {
-        throw new NotImplementedException();
+        var trimId = string.Empty;
+
+        if (id.TryTrimStart("source.", out trimId)) {
+            return trimId switch {
+                "where" => (float)(invokeUnit.GetBelongPlace(source)?.placeId ?? BattlePlaceId.None),
+                _ => source.GetIdentifier(trimId),
+            };
+        }
+
+        if (id.TryTrimStart("target.", out trimId)) {
+
+        }
+
+        return id switch {
+            _ => float.MinValue,
+        };
     }
 
     public void SetIdentifier(string id, float value)
     {
-        throw new NotImplementedException();
+        
     }
 
     public Dictionary<string, string> Parse(EffectAbility action, int[] data) {
@@ -115,11 +131,12 @@ public class Effect : IIdentifyHandler
     }
 
     public bool Condition(BattleState state) {
-        Func<List<ICondition>, bool> ConditionFunc = condition switch {
-            _ => ((x) => true)
-        };
-
-        return condOptionDictList.Select(x => ConditionFunc.Invoke(x)).Any(x => x);
+        return condOptionDictList.Select(each => each.All(
+            cond => Operator.Condition(cond.op, 
+                Parser.ParseEffectExpression(cond.lhs, this, state),
+                Parser.ParseEffectExpression(cond.rhs, this, state)
+            )
+        )).Any(x => x);
     }
     
     public bool Apply(BattleState state = null) {
@@ -140,6 +157,8 @@ public class Effect : IIdentifyHandler
             EffectAbility.Summon    => EffectAbilityHandler.Summon,
             EffectAbility.Damage    => EffectAbilityHandler.Damage,
             EffectAbility.Destroy   => EffectAbilityHandler.Destroy,
+            EffectAbility.Buff      => EffectAbilityHandler.Buff,
+            EffectAbility.GetToken  => EffectAbilityHandler.GetToken,
             _ => (e, s) => true,
         };
         return AbilityFunc.Invoke(this, state);

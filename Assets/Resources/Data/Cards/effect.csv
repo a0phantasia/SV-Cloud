@@ -1,2 +1,7 @@
 id,timing,target,condition,cond_option,ability,ability_option
 2,on_this_summon,self,none,none,set_keyword,keyword=2
+101,on_turn_start,me_field_follower+evolved_1_random,none,me.isMyTurn=1&effect.source.where=5,buff,add=1/1
+102,on_this_destroy,none,none,effect.source.where=6,get_token,id=900001111&count=1
+103,on_this_use,none,none,effect.source.where=6,get_token,id=900001111&count=2
+104,on_this_use,self,none,me.leader.combo>2,buff,add=1/1
+105,on_this_summon,self,none,me.leader.combo>2,set_keyword,keyword=2

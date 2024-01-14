@@ -15,6 +15,8 @@ public class BattleCard : IIdentifyHandler
     public List<Effect> newEffects = new List<Effect>();
     public BattleCardBuffController buffController;
     public BattleCardActionController actionController;
+
+    public Dictionary<string, float> options = new Dictionary<string, float>();
     
     public BattleCard(Card baseCard) {
         IsEvolved = false;
@@ -43,10 +45,16 @@ public class BattleCard : IIdentifyHandler
 
         buffController = new BattleCardBuffController(rhs.buffController);
         actionController = new BattleCardActionController(rhs.actionController);
+
+        options = new Dictionary<string, float>(rhs.options);
     }
 
     public static BattleCard Get(Card baseCard) {
         return (baseCard == null) ? null : new BattleCard(baseCard);
+    }
+
+    public static BattleCard Get(int id) {
+        return BattleCard.Get(Card.Get(id));
     }
 
     public bool TryGetIdenfier(string id, out float value)
@@ -60,13 +68,17 @@ public class BattleCard : IIdentifyHandler
         if (id.StartsWith("action."))
             return actionController.GetIdentifier(id.TrimStart("action."));
 
-
-        return float.MinValue;
+        return id switch {
+            _ => options.Get(id, 0),
+        };
     }
 
     public void SetIdentifier(string id, float value)
     {
-        return;
+        if (id.StartsWith("action."))
+            actionController.SetIdentifier(id.TrimStart("action."), value);
+        else 
+            options.Set(id, value);
     }
 
     public Card GetCurrentCard() {
@@ -138,5 +150,10 @@ public class BattleCard : IIdentifyHandler
             card.keywords = card.keywords.Where(x => x != keyword).ToList();
             evolveCard.keywords = evolveCard.keywords.Where(x => x != keyword).ToList();
         }
+    }
+
+    public void TakeBuff(int atk, int hp) {
+        buffController.atkBuff += atk;
+        buffController.hpBuff += hp;
     }
 }

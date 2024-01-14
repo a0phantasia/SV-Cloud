@@ -23,7 +23,7 @@ public class BattleAnimManager : Manager<BattleAnimManager>
     }
 
     public void ResultAnim(string whosTurn, string description, Action callback) {
-        turnView?.ShowTurnInfo(whosTurn, description, callback);
+        turnView?.ShowBattleResult(whosTurn, description, callback);
     }
 
     public void KeepCardAnim(List<BattleCard> handCards, bool isOpDone, Action callback) {
@@ -79,7 +79,7 @@ public class BattleAnimManager : Manager<BattleAnimManager>
     public void DamageAnim(int unitId, int index, int damage, Action callback) {
         var info = new BattleCardPlaceInfo() {
             unitId = unitId,
-            place = (index == -1) ? BattlePlace.Leader : BattlePlace.Field,
+            place = (index == -1) ? BattlePlaceId.Leader : BattlePlaceId.Field,
             index = index,
         };
         damageView?.ShowDamage(info, damage, callback);
@@ -88,7 +88,7 @@ public class BattleAnimManager : Manager<BattleAnimManager>
     public void HealAnim(int unitId, int index, int heal, Action callback) {
         var info = new BattleCardPlaceInfo() {
             unitId = unitId,
-            place = (index == -1) ? BattlePlace.Leader : BattlePlace.Field,
+            place = (index == -1) ? BattlePlaceId.Leader : BattlePlaceId.Field,
             index = index,
         };
         damageView?.ShowHeal(info, heal, callback);

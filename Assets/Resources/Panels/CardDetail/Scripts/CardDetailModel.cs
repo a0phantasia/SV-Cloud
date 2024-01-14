@@ -24,7 +24,7 @@ public class CardDetailModel : SelectModel<Card>
 
         TokenCards.Add(card);
         for (int i = 0; i < card.tokenIds.Count; i++) {
-            GetTokenCards(DM.instance.GetCardInfo(card.tokenIds[i]));   
+            GetTokenCards(Card.Get(card.tokenIds[i]));   
         }
     }
 }

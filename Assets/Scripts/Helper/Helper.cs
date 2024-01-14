@@ -51,7 +51,7 @@ public static class String {
         if (desc == "none")
             return defaultReturn;
 
-        return desc.Replace("[-]", "</u></color>").Replace("[", "<color=#").Replace("]", "><u>");
+        return desc.Replace("[-]", "</color>").Replace("[", "<color=#").Replace("]", ">");
     }
 
     public static string ConcatToString(this IEnumerable<string> data, string lineEnd = "\n") {
@@ -92,16 +92,15 @@ public static class String {
     public static List<float> ToFloatList(this string str, char delimeter = ',') {
         str = str.TrimEnd(delimeter);
 
-        if (string.IsNullOrEmpty(str))
+        if (string.IsNullOrEmpty(str) || (str == "none"))
             return new List<float>();
 
-        float tmp = 0;
         var split = str.Split(delimeter);
 
         List<float> list = new List<float>();
 
         for (int i = 0; i < split.Length; i++) {
-            if (float.TryParse(split[i], out tmp)) {
+            if (float.TryParse(split[i], out float tmp)) {
                 list.Add(tmp);
                 continue;
             }
@@ -110,10 +109,23 @@ public static class String {
         return list;
     }
     public static List<int> ToIntList(this string str, char delimeter = ',') {
+        str = str.TrimEnd(delimeter);
+
         if (string.IsNullOrEmpty(str) || (str == "none"))
             return new List<int>();
-            
-        return str.ToFloatList(delimeter)?.Select(x => (int)x).ToList();
+
+        var split = str.Split(delimeter);
+
+        List<int> list = new List<int>();
+
+        for (int i = 0; i < split.Length; i++) {
+            if (int.TryParse(split[i], out int tmp)) {
+                list.Add(tmp);
+                continue;
+            }
+            return null;
+        }
+        return list;
     }
     /// <summary>
     /// Parse the given string to Vector2. <br/>

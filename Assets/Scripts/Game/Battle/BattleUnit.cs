@@ -10,7 +10,6 @@ public class BattleUnit : IIdentifyHandler
     public string name;
     public int turn = 0;
     public Leader leader;
-    public BattleCard territory = null;
     public BattleDeck deck;
     public BattleField field;
     public BattleHand hand;
@@ -50,7 +49,6 @@ public class BattleUnit : IIdentifyHandler
         turn = rhs.turn;
 
         leader = new Leader(rhs.leader);
-        territory = (territory == null) ? null : new BattleCard(rhs.territory);
         deck = new BattleDeck(rhs.deck);
         field = new BattleField(rhs.field);
         hand = new BattleHand(rhs.hand);
@@ -77,11 +75,11 @@ public class BattleUnit : IIdentifyHandler
             inGrave = new List<BattleCard>();
         }
 
-        hand.cards.AddRange(inHand);
-        grave.graveCards.AddRange(inGrave.Select(x => x.CurrentCard));
-        deck.cards.RemoveRange(0, result.Count);
+        inGrave.ForEach(x => x.SetIdentifier("graveReason", (float)BattleCardGraveReason.DrawTooMuch));
 
-        grave.Count += inGrave.Count;
+        hand.cards.AddRange(inHand);
+        grave.cards.AddRange(inGrave);
+        deck.cards.RemoveRange(0, result.Count);
 
         return result;
     }
@@ -94,20 +92,46 @@ public class BattleUnit : IIdentifyHandler
 
     public float GetIdentifier(string id)
     {
+        var prefix = id.Split('.');
+        var place = GetPlace(prefix[0].ToBattlePlace());
+        if (place != null)
+            return place.GetIdentifier(id.TrimStart(prefix[0] + "."));
+
         return id switch {
-            "id" => Id,
-            "isFirst" => isFirst ? 1 : 0,
+            "id"        => Id,
+            "isFirst"   => isFirst ? 1 : 0,
+            "isMyTurn"  => isMyTurn ? 1 : 0,
             _ => float.MinValue,
         };
     }
 
     public void SetIdentifier(string id, float value)
     {
-        throw new NotImplementedException();
+        var prefix = id.Split('.');
+        var place = GetPlace(prefix[0].ToBattlePlace());
+        if (place != null)
+            place.SetIdentifier(id.TrimStart(prefix[0] + "."), value);
+    }
+
+    public BattlePlace GetPlace(BattlePlaceId id) {
+        return id switch {
+            BattlePlaceId.Deck      => deck,
+            BattlePlaceId.Hand      => hand,
+            BattlePlaceId.Leader    => leader,
+            // BattlePlaceId.Territory => territory,
+            BattlePlaceId.Field     => field,
+            BattlePlaceId.Grave     => grave,
+            _ => null,
+        };
+    }
+
+    public BattlePlace GetBelongPlace(BattleCard card) {
+        for (var placeId = BattlePlaceId.Deck; placeId <= BattlePlaceId.Grave; placeId++) {
+            var place = GetPlace(placeId);
+            if ((place != null) && (place.Contains(card)))
+                return place;
+        }
+        return null;
     }
     
-}
-
-public enum BattlePlace {
-    Deck, Hand, Leader, Territory, Field, Grave
 }

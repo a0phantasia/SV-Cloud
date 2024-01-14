@@ -3,24 +3,19 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-public class BattleField
+public class BattleField : BattlePlace
 {
-    public int MaxCount = 5;
-    public int Count => cards.Count;
-    public bool IsFull => Count >= MaxCount;
-    public List<BattleCard> cards = new List<BattleCard>();
-
-    public BattleField() {}
-    public BattleField(BattleField rhs) {
-        MaxCount = rhs.MaxCount;
-        cards = rhs.cards.Select(x => (x == null) ? null : new BattleCard(x)).ToList();
+    public BattleField() {
+        MaxCount = 5;
     }
+    public BattleField(BattleField rhs) : base(rhs) {}
 
     public List<int> GetAttackableTargetIndex(BattleCard attackSource, BattleUnit sourceUnit) {
-        var result = cards.Where(x => !x.actionController.IsKeywordAvailable(CardKeyword.Ambush));
-        var ward = result.Where(x => x.actionController.IsKeywordAvailable(CardKeyword.Ward));
+        var result = cards.Where(x => (x.CurrentCard.IsFollower()) || (x.CurrentCard.Type == CardType.Leader));
+        var ambush = result.Where(x => !x.actionController.IsKeywordAvailable(CardKeyword.Ambush));
+        var ward = ambush.Where(x => x.actionController.IsKeywordAvailable(CardKeyword.Ward));
 
-        result = ward.Any() ? ward : result;
+        result = ward.Any() ? ward : ambush;
         var index = result.Select(x => cards.IndexOf(x)).ToList();
 
         if ((attackSource.IsLeaderAttackable(sourceUnit)) && (!ward.Any()))
@@ -29,5 +24,8 @@ public class BattleField
         return index;
     }
 
-
+    protected override BattlePlaceId GetPlaceId()
+    {
+        return BattlePlaceId.Field;
+    }
 }

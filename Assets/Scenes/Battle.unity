@@ -4906,7 +4906,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cardInfoView: {fileID: 1409896985}
-  maxLogCount: 50
+  maxLogCount: 100
   scrollRect: {fileID: 1197197878}
 --- !u!1001 &409078889
 PrefabInstance:
@@ -17773,7 +17773,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cardInfoView: {fileID: 1266880235}
   id: 0
-  rectTransform: {fileID: 2059248183}
+  rectTransform: {fileID: 649432288}
   backgroundImage: {fileID: 649432289}
   leaderImage: {fileID: 2059248184}
   hpText: {fileID: 831932106}
@@ -25915,6 +25915,7 @@ MonoBehaviour:
   attackSeconds: 0.5
   attackRotationY: 75
   lineRenderer: {fileID: 1956705928}
+  myLeaderView: {fileID: 0}
   opLeaderView: {fileID: 1936934213}
   myCardViews:
   - {fileID: 1473866031}
@@ -30932,12 +30933,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cardInfoView: {fileID: 1266880235}
   id: 1
-  rectTransform: {fileID: 1135458195}
+  rectTransform: {fileID: 1065087896}
   backgroundImage: {fileID: 1065087901}
   leaderImage: {fileID: 1135458196}
   hpText: {fileID: 472442242}
   hpOutline: {fileID: 472442241}
-  effectView: {fileID: 0}
+  effectView: {fileID: 1265423073}
 --- !u!1001 &1942267779
 PrefabInstance:
   m_ObjectHideFlags: 0

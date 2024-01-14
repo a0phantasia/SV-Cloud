@@ -10,7 +10,7 @@ public class BattleAttackAnimView : BattleBaseView
     [SerializeField] private float attackSeconds = 0.5f;
     [SerializeField] private float attackRotationY = 90;
     [SerializeField] private LineRenderer lineRenderer;
-    [SerializeField] private BattleLeaderView opLeaderView;
+    [SerializeField] private BattleLeaderView myLeaderView, opLeaderView;
     [SerializeField] private List<BattleCardView> myCardViews;
     [SerializeField] private List<BattleCardView> opCardViews;
 
@@ -43,6 +43,9 @@ public class BattleAttackAnimView : BattleBaseView
 
         var fieldCount = myUnit.field.Count;
         var myCard = myUnit.field.cards[index];
+
+        if (!myCard.CurrentCard.IsFollower())
+            return;
         
         startPoint = GetFollowerPoint(index, fieldCount, -60);
 
@@ -61,6 +64,12 @@ public class BattleAttackAnimView : BattleBaseView
     }
 
     public void OnDrag(int index) {
+        var myUnit = Hud.CurrentState.myUnit;
+        var myCard = myUnit.field.cards[index];
+
+        if (!myCard.CurrentCard.IsFollower())
+            return;
+
         RectTransformUtility.ScreenPointToLocalPointInRectangle(canvasRect, Input.mousePosition, Camera.main, out endPoint);
 
         var distance = Vector3.Distance(startPoint, endPoint); 
@@ -74,7 +83,7 @@ public class BattleAttackAnimView : BattleBaseView
 
         for (int i = 0; i < targetIndexResult.Count; i++) {
             var targetIndex = targetIndexResult[i];
-
+            
             if (targetIndex < 0) {
                 opLeaderView.SetTargeting(isLeaderPointing);
                 continue;
@@ -93,6 +102,9 @@ public class BattleAttackAnimView : BattleBaseView
     public void OnEndDrag(int index) {
         var myField = Hud.CurrentState.myUnit.field.cards;
         var opField = Hud.CurrentState.opUnit.field.cards;
+
+        if (!myField[index].CurrentCard.IsFollower())
+            return;
         
         lineRenderer.positionCount = 0;
         lineRenderer.SetPositions(new Vector3[] {});

@@ -654,7 +654,19 @@ MonoBehaviour:
   sound: {fileID: 0}
   onPointerClickEvent:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 7091020116588998302}
+        m_TargetAssemblyTypeName: CardDetailController, Assembly-CSharp
+        m_MethodName: OnCardNextPage
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   onPointerOverEvent:
     m_PersistentCalls:
       m_Calls: []
@@ -1936,7 +1948,19 @@ MonoBehaviour:
   sound: {fileID: 0}
   onPointerClickEvent:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 7091020116588998302}
+        m_TargetAssemblyTypeName: CardDetailController, Assembly-CSharp
+        m_MethodName: OnCardPrevPage
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   onPointerOverEvent:
     m_PersistentCalls:
       m_Calls: []

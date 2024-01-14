@@ -31,13 +31,19 @@ public static class List {
     }
 
     public static T Random<T>(this List<T> values) {
+        if (values.Count == 0)
+            return default(T);
+
         int index = UnityEngine.Random.Range(0, values.Count);
         return values[index];
     }
 
     public static List<T> Random<T>(this List<T> values, int count, bool repeat = true) {
         List<T> result = new List<T>();
-        while (result.Count != count) {
+        if (values.Count < count)
+            return values.ToList();
+
+        while (result.Count < count) {
             T rng = values.Random();
             if (!repeat && result.Contains(rng))
                 continue;
