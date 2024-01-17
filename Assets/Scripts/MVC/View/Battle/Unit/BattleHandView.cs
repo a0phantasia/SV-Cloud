@@ -17,8 +17,6 @@ public class BattleHandView : BattleBaseView
     [SerializeField] private List<Image> sleeves;
     [SerializeField] private List<CardView> cardViews;
 
-    [SerializeField] private CardView opUseCardView;
-
     public bool Mode { get; private set; } = false;
     private List<Vector2> initPos = Enumerable.Repeat(default(Vector2), 9).ToList();
     private List<BattleCard> handCards = new List<BattleCard>();

@@ -3,6 +3,7 @@ using System.Linq;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEditorInternal;
 
 public class Effect : IIdentifyHandler
 {
@@ -92,6 +93,7 @@ public class Effect : IIdentifyHandler
 
     public float GetIdentifier(string id)
     {
+        var state = Player.currentBattle.CurrentState;
         var trimId = string.Empty;
 
         if (id.TryTrimStart("source.", out trimId)) {
@@ -101,13 +103,41 @@ public class Effect : IIdentifyHandler
             };
         }
 
-        if (id.TryTrimStart("target.", out trimId)) {
-
-        }
-
         return id switch {
             _ => float.MinValue,
         };
+    }
+
+    public float GetLastEffectIdentifier(string id, BattleState state) {
+        var effect = state.currentEffect;
+        var trimId = string.Empty;
+
+        if (id.TryTrimStart("target", out trimId)) {
+            var all = effect.invokeTarget;
+            var me = all.Where(x => state.GetBelongUnit(x).id == invokeUnit.id).ToList();
+            var op = all.Where(x => state.GetBelongUnit(x).id == state.GetRhsUnitById(invokeUnit.id).id).ToList();
+
+            if (trimId.TryTrimStart("[all].", out trimId)) {
+                return trimId switch {
+                    "count" => all.Count,
+                    "isMe"  => (all.Count == me.Count) ? 1 : 0,
+                    "isOp"  => (all.Count == op.Count) ? 1 : 0,
+                    _       => float.MinValue,
+                };
+            } else if (trimId.TryTrimStart("[me].", out trimId)) {
+                return trimId switch {
+                    "count" => me.Count,
+                    _       => float.MinValue,
+                };
+            } else if (trimId.TryTrimStart("[op].", out trimId)) {
+                return trimId switch {
+                    "count" => op.Count,
+                    _       => float.MinValue,
+                };
+            }
+        }
+
+        return effect.GetIdentifier(id);
     }
 
     public void SetIdentifier(string id, float value)
@@ -161,7 +191,10 @@ public class Effect : IIdentifyHandler
             EffectAbility.GetToken  => EffectAbilityHandler.GetToken,
             _ => (e, s) => true,
         };
-        return AbilityFunc.Invoke(this, state);
+
+        var repeat = int.Parse(abilityOptionDict.Get("repeat", "1"));
+        
+        return Enumerable.Range(0, repeat).Select(x => AbilityFunc.Invoke(this, state)).All(x => x);
     }
 
     public bool CheckAndApply(BattleState state = null) {

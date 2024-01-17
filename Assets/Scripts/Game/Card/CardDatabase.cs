@@ -89,6 +89,9 @@ public static class CardDatabase
         { CardKeyword.Drain,    "吸血"      },
         { CardKeyword.Fanfare,  "入場曲"    },
         { CardKeyword.Lastword, "謝幕曲"    },
+        { CardKeyword.Attack,   "攻擊時"    },
+        { CardKeyword.Defense,  "交戰時"    },
+        { CardKeyword.Combo,    "連擊"      },
     };
 
     public static Dictionary<CardKeyword, string> keywordEnglishNameDict = new Dictionary<CardKeyword, string>() {
@@ -101,6 +104,9 @@ public static class CardDatabase
         { CardKeyword.Drain,    "drain"     },
         { CardKeyword.Fanfare,  "fanfare"   },
         { CardKeyword.Lastword, "lastword"  },
+        { CardKeyword.Attack,   "attack"    },
+        { CardKeyword.Defense,  "defense"   },
+        { CardKeyword.Combo,    "combo"     },
     };
 
     public static string GetPackName(this CardPack pack) => packNameDict.Get(pack, "-");
@@ -333,8 +339,8 @@ public enum CardTrait
 
 public enum CardKeyword 
 {
-    None = 0,   Storm = 1,  Ward = 2, Bane = 3, Rush = 4, Ambush = 5, Drain = 6,
-    Fanfare = 7,    Lastword = 8,
+    None = 0, Storm = 1, Ward = 2, Bane = 3, Rush = 4, Ambush = 5, Drain = 6,
+    Fanfare = 7, Lastword = 8, Attack = 9, Defense = 10, Combo = 11,
 }
 
 public enum BattlePlaceId 

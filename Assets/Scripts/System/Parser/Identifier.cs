@@ -12,6 +12,9 @@ public static class Identifier {
         var lhsUnit = effect.invokeUnit;
         var rhsUnit = state.GetRhsUnitById(lhsUnit.id);
         
+        if (id.TryTrimStart("lastEffect.", out trimId))
+            return effect.GetLastEffectIdentifier(trimId, state);
+
         if (id.TryTrimStart("effect.", out trimId))
             return effect.GetIdentifier(trimId);
         

@@ -25,7 +25,6 @@ public class PortalResultController : IMonoBehaviour
     public void Search(CardFilter filter) {
         resultModel.Filter(filter.Filter);
         resultModel.Sort(CardDatabase.Sorter, false);
-        resultView?.SetPortalResult(resultModel.Selections);
         OnResultSetPage();
     }
 
@@ -43,6 +42,7 @@ public class PortalResultController : IMonoBehaviour
             resultPageViews[i]?.SetPage(resultModel.Page, resultModel.LastPage);
             resultPageViews[i]?.SetStorageCount(resultModel.Count);
         }
+        resultView?.SetPortalResult(resultModel.Selections);
         onResultSetPageEvent?.Invoke(resultModel.Selections);
     }
 

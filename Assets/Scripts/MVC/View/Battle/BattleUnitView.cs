@@ -119,6 +119,17 @@ public class BattleUnitView : BattleBaseView
                         (i == healIndexList.Count - 1) ? SetMyUnit : null);
                 }
                 break;
+
+            case EffectAbility.GetToken:
+                var who = int.Parse(effect.hudOptionDict.Get("who", "-1"));
+                var tokenList = effect.hudOptionDict.Get("token", string.Empty).ToIntList('/');
+
+                if (who == 0)
+                    Anim.GetTokenAnim(0, tokenList.Select(Card.Get).ToList(), SetMyUnit);
+                else   
+                    SetMyUnit();
+
+                break;
         };
     }
 
@@ -206,6 +217,17 @@ public class BattleUnitView : BattleBaseView
                     Anim.HealAnim(1, healIndexList[i], healValueList[i], 
                         (i == healIndexList.Count - 1) ? SetOpUnit : null);
                 }
+                break;
+
+            case EffectAbility.GetToken:
+                var who = int.Parse(effect.hudOptionDict.Get("who", "-1"));
+                var tokenList = effect.hudOptionDict.Get("token", string.Empty).ToIntList('/');
+
+                if (who == 1)
+                    Anim.GetTokenAnim(1, tokenList.Select(Card.Get).ToList(), SetOpUnit);
+                else    
+                    SetOpUnit();
+
                 break;
         };
     }

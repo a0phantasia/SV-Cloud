@@ -94,4 +94,11 @@ public class BattleAnimManager : Manager<BattleAnimManager>
         damageView?.ShowHeal(info, heal, callback);
     }
 
+    public void GetTokenAnim(int unitId, List<Card> tokens, Action callback) {
+        if (unitId == 0)
+            drawView?.MyGetToken(tokens, callback);
+        else
+            drawView?.OpGetToken(tokens, callback);
+    }
+
 }

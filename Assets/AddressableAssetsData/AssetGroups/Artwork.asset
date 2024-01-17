@@ -21,32 +21,86 @@ MonoBehaviour:
     m_Address: 100000111
     m_ReadOnly: 0
     m_SerializedLabels:
-    - basic
+    - pack_0
+    - neutral
   - m_GUID: e51bfea80066535438fd60bad6f5cdfe
     m_Address: 100000112
     m_ReadOnly: 0
     m_SerializedLabels:
-    - basic
+    - pack_0
+    - neutral
   - m_GUID: 54d1c2e576f9752438fd1c2552d410af
     m_Address: 100000113
     m_ReadOnly: 0
     m_SerializedLabels:
-    - basic
+    - pack_0
+    - neutral
   - m_GUID: b628d14a1432f404ba2de6fa019c07fe
     m_Address: 100000114
     m_ReadOnly: 0
     m_SerializedLabels:
-    - basic
+    - pack_0
+    - neutral
   - m_GUID: 8f2f878146080984ab612b095e7aaa22
     m_Address: 100000115
     m_ReadOnly: 0
     m_SerializedLabels:
-    - basic
+    - pack_0
+    - neutral
   - m_GUID: be46fb746542e8b40ad125133b9a4696
     m_Address: 100000311
     m_ReadOnly: 0
     m_SerializedLabels:
-    - basic
+    - pack_0
+    - neutral
+  - m_GUID: da67e343cc1bf2d4ba6c02eb145c329c
+    m_Address: 100001111
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - elf
+    - pack_0
+  - m_GUID: 59842b5d04d9da6458ddf5efe2c91293
+    m_Address: 100001112
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - elf
+    - pack_0
+  - m_GUID: f8937ce5e862bd741a24b828e8d5e863
+    m_Address: 100001113
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - elf
+    - pack_0
+  - m_GUID: 814f7d481a1ee1c49ac62a36f172be53
+    m_Address: 900001111
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - elf
+    - pack_0
+  - m_GUID: ab3c612a2c2e17547a20d921709ecb78
+    m_Address: 100001114
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - elf
+    - pack_0
+  - m_GUID: c2e23bafc7546af418dca2ac643423c6
+    m_Address: 100001115
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - elf
+    - pack_0
+  - m_GUID: f535e3d9c1a54314bbe6f0f26edb8fce
+    m_Address: 100001116
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - elf
+    - pack_0
+  - m_GUID: 7bfa874b691afa341ae7dd36e516ee43
+    m_Address: 100001117
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - elf
+    - pack_0
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: 69e741ee149781a478094fca2d01f357, type: 2}
   m_SchemaSet:

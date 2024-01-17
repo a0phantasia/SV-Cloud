@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -20,8 +21,7 @@ public class BattleCardAmuletView : BattleBaseView
 
         SetCountdown(card.Countdown);
         SetArtwork(await card.Artwork);
-
-        //TODO FLAG
+        SetFlagIcon(card.effects);
         SetOutlineColor(Color.clear);
     }
 
@@ -39,6 +39,19 @@ public class BattleCardAmuletView : BattleBaseView
 
     private void SetArtwork(Texture2D artwork) {
         artworkRawImage.SetTexture(artwork ?? SpriteResources.DefaultSleeve?.texture);
+    }
+
+    private void SetFlagIcon(List<Effect> effects) {
+        var icon = SpriteResources.Empty;
+    
+        if (effects.Exists(x => x.timing == "on_this_destroy"))
+            icon = SpriteResources.Lastword;
+        else if (effects.Exists(x => (x.timing.TryTrimStart("on_", out var trimTiming)) && (!trimTiming.StartsWith("this_"))))
+            icon = SpriteResources.Flag;
+        else if (effects.Exists(x => (x.timing == "on_this_attack") || (x.timing == "on_this_defense")))
+            icon = SpriteResources.Flag;
+    
+        flagImage?.SetSprite(icon);
     }
 
     public void SetOutlineColor(Color color) {

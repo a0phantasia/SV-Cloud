@@ -1,5 +1,7 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Security.Cryptography.X509Certificates;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -26,10 +28,7 @@ public class BattleCardFollowerView : BattleBaseView
         hpOutline?.SetColor(ColorHelper.GetAtkHpOutlineColor(card.hp, card.hpMax, battleCard.OriginalCard.hp));
 
         SetArtwork(await card.Artwork, card.Type);
-
-        //TODO FLAG
-        flagImage?.gameObject.SetActive(false);
-
+        SetFlagIcon(card.effects);
         SetOutline(battleCard);
     }
 
@@ -37,6 +36,19 @@ public class BattleCardFollowerView : BattleBaseView
         var euler = new Vector3(0, type == CardType.Evolved ? 180 : 0, 0);
         artworkRawImage.rectTransform.rotation = Quaternion.Euler(euler);
         artworkRawImage.SetTexture(artwork ?? SpriteResources.DefaultSleeve?.texture);
+    }
+
+    private void SetFlagIcon(List<Effect> effects) {
+        var icon = SpriteResources.Empty;
+
+        if (effects.Exists(x => x.timing == "on_this_destroy"))
+            icon = SpriteResources.Lastword;
+        else if (effects.Exists(x => (x.timing.TryTrimStart("on_", out var trimTiming)) && (!trimTiming.StartsWith("this_"))))
+            icon = SpriteResources.Flag;
+        else if (effects.Exists(x => (x.timing == "on_this_attack") || (x.timing == "on_this_defense")))
+            icon = SpriteResources.Flag;
+
+        flagImage?.SetSprite(icon);
     }
 
     public void SetOutline(BattleCard battleCard) {
