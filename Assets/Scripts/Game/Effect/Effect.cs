@@ -12,6 +12,7 @@ public class Effect : IIdentifyHandler
         var effect = DatabaseManager.instance.GetEffectInfo(id);
         return (effect == null) ? null : new Effect(effect);
     }
+    public static Effect Default => new Effect("none", "none", EffectCondition.None, null, EffectAbility.None, null);
 
     public BattleCard source = null;
     public List<BattleCard> invokeTarget = null;
@@ -143,6 +144,10 @@ public class Effect : IIdentifyHandler
     public void SetIdentifier(string id, float value)
     {
         
+    }
+
+    public EffectTargetInfo GetEffectTargetInfo(BattleState state) {
+        return EffectTargetInfo.Parse(this, state);
     }
 
     public Dictionary<string, string> Parse(EffectAbility action, int[] data) {

@@ -9,6 +9,7 @@ public class BattleAnimManager : Manager<BattleAnimManager>
     [SerializeField] private BattleKeepCardView keepView;
     [SerializeField] private BattleTurnView turnView;
 
+    [SerializeField] private BattleTargetView targetView;
     [SerializeField] private BattleUseAnimView useView;
     [SerializeField] private BattleEvolveAnimView evolveView;
     [SerializeField] private BattleAttackAnimView attackView;

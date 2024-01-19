@@ -40,4 +40,12 @@ public class BattleCardPlaceInfo {
             _ => null,
         };
     }
+
+    public static BattleCardPlaceInfo Parse(short code) {
+        return new BattleCardPlaceInfo() {
+            unitId = code / 100,
+            place = (BattlePlaceId)(code % 100 / 10),
+            index = code % 10,
+        };
+    }
 }

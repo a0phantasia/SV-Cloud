@@ -46,41 +46,64 @@ public static class EffectDatabase {
     public static void SetInvokeTarget(this Effect effect, BattleState state) {
         var invokeUnit = effect.invokeUnit;
         var rhsUnit = state.GetRhsUnitById(invokeUnit.id);
-        var options = effect.target.Split('_');
-
-        if (options[0] == "none")
+        var info = effect.GetEffectTargetInfo(state);
+        
+        if (info.unit == "none")
             return;
 
-        if (options[0] == "self") {
+        if (info.unit == "self") {
             effect.invokeTarget = new List<BattleCard>() { effect.source };
         } else {
-            var allUnit = options[0] switch {
+            var allUnit = info.unit switch {
                 "all"   =>  new List<BattleUnit>() { invokeUnit, rhsUnit },
                 "me"    =>  new List<BattleUnit>() { invokeUnit },
                 "op"    =>  new List<BattleUnit>() { rhsUnit },
                 _       =>  new List<BattleUnit>(),
             };
-            var place = options[1].Split('+');
-            var type = options[2].Split('+').Select(x => x.ToCardTypeWithEnglish()).ToList();
-            var num = Parser.ParseEffectExpression(options[3], effect, state);
-            var mode = options[4].Split('+');
 
             var allPlace = new List<BattlePlace>();
-            for (int i = 0; i < place.Length; i++)
-                allUnit.ForEach(unit => allPlace.Add(unit.GetPlace(place[i].ToBattlePlace())));
+            for (int i = 0; i < info.places.Count; i++)
+                allUnit.ForEach(unit => allPlace.Add(unit.GetPlace(info.places[i])));
 
             var allCards = new List<BattleCard>();
-            allPlace.ForEach(x => allCards.AddRange(x.cards.Where(c => type.Contains(c.CurrentCard.Type))));
+            allPlace.ForEach(x => allCards.AddRange(x.cards.Where(c => info.types.Contains(c.CurrentCard.Type))));
 
-            if (mode.Contains("excludeSelf"))
+            if (info.mode.Contains("other"))
                 allCards.RemoveAll(x => x == effect.source);
 
-            effect.invokeTarget = mode[0] switch {
-                "random"    => allCards.Random(num, false),
-                "index"     => options.SubArray(5).Select(x => allCards[int.Parse(x)]).ToList(),
+            effect.invokeTarget = info.mode[0] switch {
+                "random"    => allCards.Random(info.num, false),
+                "index"     => info.options.Select(x => allCards[int.Parse(x)]).ToList(),
                 _ => effect.invokeTarget,
             };
         }
+    }
+}
+
+public class EffectTargetInfo 
+{
+    public Effect effect;
+    public string unit;
+    public List<BattlePlaceId> places;
+    public List<CardType> types;
+    public int num;
+    public List<string> mode;
+    public List<string> options;
+
+    public static EffectTargetInfo Parse(Effect effect, BattleState state) {
+        var info = new EffectTargetInfo();
+        var options = effect.target.Split('_');
+
+        info.unit = options[0];
+        if ((info.unit == "none") || (info.unit == "self"))
+            return info;
+
+        info.places = options[1].Split('+').Select(x => x.ToBattlePlace()).ToList();
+        info.types = options[2].Split('+').Select(x => x.ToCardTypeWithEnglish()).ToList();
+        info.num = Parser.ParseEffectExpression(options[3], effect, state);
+        info.mode = options[4].Split('+').ToList();
+        info.options = options.SubArray(5).ToList();
+        return info;
     }
 }
 

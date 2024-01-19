@@ -61,7 +61,12 @@ public class Battle
     /// </summary>
     public void PlayerAction(int[] data, bool isMe) {
         if (isMe) {
-            Hud.EnemyPlayerAction(data.Select(x => (short)x).ToArray());
+            short[] enemyData = data.Select(x => (short)x).ToArray();
+            if ((EffectAbility)data[0] == EffectAbility.Use) {
+                for (int i = 2; i < data.Length; i++)
+                    enemyData[i] = (short)((1 - (data[i] / 100)) * 100 + data[i] % 100);
+            }
+            Hud.EnemyPlayerAction(enemyData);
         }
 
         var leader = (isMe ? CurrentState.myUnit : CurrentState.opUnit).leader.leaderCard;

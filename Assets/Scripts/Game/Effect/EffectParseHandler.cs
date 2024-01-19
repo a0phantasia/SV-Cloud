@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using System;
 
 public static class EffectParseHandler
 {
@@ -34,6 +35,10 @@ public static class EffectParseHandler
     public static Dictionary<string, string> Use(int[] data) {
         var dict = new Dictionary<string, string>();
         dict.Set("index", data[0].ToString());
+        
+        if (data.Length > 1)
+            dict.Set("target", data.SubArray(1).Select(x => x.ToString()).ConcatToString("/"));
+
         return dict;
     }
 
