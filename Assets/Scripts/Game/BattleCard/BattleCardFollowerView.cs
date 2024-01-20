@@ -27,6 +27,8 @@ public class BattleCardFollowerView : BattleBaseView
         hpText?.SetColor(ColorHelper.GetAtkHpTextColor(card.hp, card.hpMax, battleCard.OriginalCard.hp));
         hpOutline?.SetColor(ColorHelper.GetAtkHpOutlineColor(card.hp, card.hpMax, battleCard.OriginalCard.hp));
 
+        cardFrameButton?.SetSprite(SpriteResources.GetBattleCardFrameSprite(card.TypeId, card.RarityId));
+
         SetArtwork(await card.Artwork, card.Type);
         SetFlagIcon(card.effects);
         SetOutline(battleCard);

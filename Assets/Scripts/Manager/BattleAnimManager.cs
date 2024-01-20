@@ -5,6 +5,8 @@ using UnityEngine;
 
 public class BattleAnimManager : Manager<BattleAnimManager>
 {
+    public bool IsSelectingTarget => targetView?.IsSelectingTarget ?? false;
+
     [SerializeField] private BattleStartView startView;
     [SerializeField] private BattleKeepCardView keepView;
     [SerializeField] private BattleTurnView turnView;
@@ -38,6 +40,10 @@ public class BattleAnimManager : Manager<BattleAnimManager>
 
     public void TurnStartAnim(string whosTurn, string description, Action callback) {
         turnView?.ShowTurnInfo(whosTurn, description, callback);
+    }
+
+    public void TargetAnim(string timing, BattleCard card, Action<List<short>> onSuccess, Action onFail) {
+        targetView?.StartSelectTarget(timing, card, onSuccess, onFail);
     }
 
     public void UseAnim(int unitId, BattleCard card, Action callback) {

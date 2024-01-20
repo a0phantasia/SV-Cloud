@@ -27,6 +27,9 @@ public class BattlePPView : BattleBaseView
     }
 
     public void SetTurnEnd() {
+        if (Anim.IsSelectingTarget)
+            return;
+
         Battle.PlayerAction(new int[] { (int)EffectAbility.TurnEnd }, true);
     }
 }

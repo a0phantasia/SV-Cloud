@@ -30,6 +30,8 @@ public static class EffectDatabase {
         {"heal",        EffectAbility.Heal},
         {"destroy",     EffectAbility.Destroy},
         {"vanish",      EffectAbility.Vanish},
+        {"return",      EffectAbility.Return},
+        {"transform",   EffectAbility.Transform},
         {"buff",        EffectAbility.Buff},
         {"debuff",      EffectAbility.Debuff},
         {"get_token",   EffectAbility.GetToken},
@@ -43,7 +45,13 @@ public static class EffectDatabase {
         return abilityConvDict.Get(ability, EffectAbility.None);
     }
 
+    public static bool IsTargetSelectableAbility(this EffectAbility ability) {
+        return (ability == EffectAbility.Use) || (ability == EffectAbility.Evolve);
+    }
+
     public static void SetInvokeTarget(this Effect effect, BattleState state) {
+        var currentUnit = state.currentUnit;
+
         var invokeUnit = effect.invokeUnit;
         var rhsUnit = state.GetRhsUnitById(invokeUnit.id);
         var info = effect.GetEffectTargetInfo(state);
@@ -71,11 +79,24 @@ public static class EffectDatabase {
             if (info.mode.Contains("other"))
                 allCards.RemoveAll(x => x == effect.source);
 
-            effect.invokeTarget = info.mode[0] switch {
-                "random"    => allCards.Random(info.num, false),
-                "index"     => info.options.Select(x => allCards[int.Parse(x)]).ToList(),
-                _ => effect.invokeTarget,
-            };
+            switch (info.mode[0]) {
+                default:
+                    break;
+                case "random":
+                    effect.invokeTarget = allCards.Random(info.num, false);
+                    break;
+                case "index":
+                    effect.invokeTarget = new List<BattleCard>();
+                    for (int i = 0; i <= info.num; i++) {
+                        var target = currentUnit.targetQueue.Dequeue();
+                        if (target == null)
+                            break;
+
+                        if (allCards.Contains(target))
+                            effect.invokeTarget.Add(target);
+                    }
+                break;
+            }
         }
     }
 }
@@ -115,14 +136,16 @@ public enum EffectAbility {
     None = 0,   SetResult = 1,  KeepCard = 2,   TurnStart = 3,  TurnEnd = 4,
     Use = 5,    Cover = 6,  Attack = 7, Evolve = 8, Fusion = 9, Act = 10,
 
-    SetKeyword  = 101,   
-    Draw        = 102, 
-    Summon      = 103,   
-    Damage      = 104,   
-    Heal        = 105,
-    Destroy     = 106,
-    Vanish      = 107,
-    Buff        = 108,
-    Debuff      = 109,
-    GetToken    = 110,
+    SetKeyword  = 100,   
+    Draw        = 101, 
+    Summon      = 102,   
+    Damage      = 103,   
+    Heal        = 104,
+    Destroy     = 105,
+    Vanish      = 106,
+    Return      = 107,
+    Transform   = 108,
+    Buff        = 109,
+    Debuff      = 110,
+    GetToken    = 111,
 }

@@ -12,7 +12,7 @@ public class Effect : IIdentifyHandler
         var effect = DatabaseManager.instance.GetEffectInfo(id);
         return (effect == null) ? null : new Effect(effect);
     }
-    public static Effect Default => new Effect("none", "none", EffectCondition.None, null, EffectAbility.None, null);
+    public static Effect None => new Effect("none", "none", EffectCondition.None, null, EffectAbility.None, null);
 
     public BattleCard source = null;
     public List<BattleCard> invokeTarget = null;
@@ -192,6 +192,7 @@ public class Effect : IIdentifyHandler
             EffectAbility.Summon    => EffectAbilityHandler.Summon,
             EffectAbility.Damage    => EffectAbilityHandler.Damage,
             EffectAbility.Destroy   => EffectAbilityHandler.Destroy,
+            EffectAbility.Return    => EffectAbilityHandler.Return,
             EffectAbility.Buff      => EffectAbilityHandler.Buff,
             EffectAbility.GetToken  => EffectAbilityHandler.GetToken,
             _ => (e, s) => true,

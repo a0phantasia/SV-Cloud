@@ -144,6 +144,7 @@ public static class EffectAbilityHandler
         unit.leader.PP = unit.leader.PPMax;
 
         // Clear data.
+        unit.targetQueue.Clear();
         unit.leader.ClearTurnIdentifier();
         
         // If specific turn comes, give player EP.
@@ -246,17 +247,20 @@ public static class EffectAbilityHandler
         if (!useCard.IsUsable(unit))
             return false;
 
+        // Record selected target.
+        var targetList = effect.abilityOptionDict.Get("target", string.Empty).ToIntList('/').Select(x => BattleCardPlaceInfo.Parse((short)x).GetBattleCard(state));
+        state.currentUnit.targetQueue = new Queue<BattleCard>(targetList);
+
         effect.source = useCard;
         effect.invokeTarget = new List<BattleCard>() { useCard };
 
+        // Use cost
         var cost = useCard.GetUseCost(unit.leader);
         unit.leader.PP -= cost;
         unit.hand.cards.Remove(useCard);
-        useCard.buffController.costBuff = 0;
-
-        // Record used card.
-        unit.leader.AddIdentifier("combo", 1);
         unit.grave.usedCards.Add(useCard.card);
+
+        useCard.buffController.costBuff = 0;
 
         // Follower and Amulet goes to field.
         if (useCard.CurrentCard.IsFollower() || (useCard.CurrentCard.Type == CardType.Amulet)) {
@@ -278,6 +282,9 @@ public static class EffectAbilityHandler
             unit.grave.GraveCount += 1;
             unit.grave.cards.Add(useCard);
         }
+
+        // Add combo.
+        unit.leader.AddIdentifier("combo", 1);
 
         effect.hudOptionDict.Set("log", "使用" + useCard.CurrentCard.name);
         Hud.SetState(state);
@@ -370,6 +377,9 @@ public static class EffectAbilityHandler
         if (card == null)
             effect.SetInvokeTarget(state);
         else {
+            var targetList = effect.abilityOptionDict.Get("target", string.Empty).ToIntList('/').Select(x => BattleCardPlaceInfo.Parse((short)x).GetBattleCard(state));
+            state.currentUnit.targetQueue = new Queue<BattleCard>(targetList);
+
             effect.source = card;
             effect.invokeTarget = new List<BattleCard>() { card };
         }
@@ -633,6 +643,10 @@ public static class EffectAbilityHandler
         EnqueueEffect("on_this_destroy", effect.invokeTarget, state);
         OnPhaseChange("on_destroy", state);
 
+        return true;
+    }
+
+    public static bool Return(this Effect effect, BattleState state) {
         return true;
     }
 

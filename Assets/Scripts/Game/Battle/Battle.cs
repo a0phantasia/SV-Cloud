@@ -62,7 +62,9 @@ public class Battle
     public void PlayerAction(int[] data, bool isMe) {
         if (isMe) {
             short[] enemyData = data.Select(x => (short)x).ToArray();
-            if ((EffectAbility)data[0] == EffectAbility.Use) {
+            var ability = (EffectAbility)data[0];
+            
+            if (ability.IsTargetSelectableAbility()) {
                 for (int i = 2; i < data.Length; i++)
                     enemyData[i] = (short)((1 - (data[i] / 100)) * 100 + data[i] % 100);
             }

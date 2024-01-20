@@ -31,6 +31,7 @@ public class BattleCardPlaceInfo {
 
     public BattleCard GetBattleCard(BattleState state) {
         var unit = (unitId == 0) ? state.myUnit : state.opUnit;
+        
         return place switch {
             BattlePlaceId.Deck => unit.deck.cards[index],
             BattlePlaceId.Hand => unit.hand.cards[index],
@@ -48,4 +49,5 @@ public class BattleCardPlaceInfo {
             index = code % 10,
         };
     }
+
 }

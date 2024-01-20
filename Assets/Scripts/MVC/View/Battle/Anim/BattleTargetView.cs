@@ -11,10 +11,15 @@ public class BattleTargetView : BattleBaseView
     [SerializeField] private Vector2 selectTargetPos;
     [SerializeField] private BattleLeaderView myLeaderView, opLeaderView;
     [SerializeField] private List<BattleCardView> myFieldCardViews, opFieldCardViews;
+    [SerializeField] private BattleHandView myHandView, opHandView;
     [SerializeField] private CardView cardView;
 
+    public bool IsSelectingTarget { get; private set; } = false;
+
     private Queue<Effect> targetEffectQueue = new Queue<Effect>();
-    private Effect currentEffect;
+    private Queue<EffectTargetInfo> infoQueue = new Queue<EffectTargetInfo>();
+    private Queue<List<short>> selectableQueue = new Queue<List<short>>();
+
     private EffectTargetInfo currentInfo;
 
     private List<short> currentSelectableList = new List<short>();
@@ -22,49 +27,39 @@ public class BattleTargetView : BattleBaseView
 
     private Action<List<short>> onSuccessTarget;
     private Action onFailTarget;
-    private int selectNum = 0, targetNum = 0;
+    private int selectNum = 0;
 
     private void Clear() {
         selectedTargetList.Clear();
         currentSelectableList.Clear();
 
+        selectNum = 0;
         targetEffectQueue.Clear();
-        targetNum = selectNum = 0;
+        infoQueue.Clear();
+        selectableQueue.Clear();
     }
 
-    public void UseCardSelectTarget(BattleCard useCard, Action<List<short>> onSuccess, Action onFail) {
-        var card = useCard.CurrentCard;
-
+    public void StartSelectTarget(string timing, BattleCard sourceCard, Action<List<short>> onSuccess, Action onFail) {
         Clear();
 
-        for (int i = 0; i < card.effects.Count; i++) {
-            var currentEffect = card.effects[i];
-            if (currentEffect.timing != "on_this_use")
-                continue;
+        sourceCard.GetTargetEffectWithTiming(timing, out targetEffectQueue, out infoQueue, out var selectableQueue);
 
-            currentEffect.invokeUnit = Battle.CurrentState.myUnit;
-            if (currentEffect.Condition(Battle.CurrentState)) {
-                var info = currentEffect.GetEffectTargetInfo(Battle.CurrentState);
-
-                if ((!List.IsNullOrEmpty(info.mode)) && (info.mode[0] == "index")) {
-                    targetNum += info.num;
-                    targetEffectQueue.Enqueue(currentEffect);
-                }
-            }
-            currentEffect.invokeTarget = null;
-        }
-
-        if (targetNum == 0) {
+        if (infoQueue.Count <= 0) {
             onSuccess?.Invoke(selectedTargetList);
             return;
         }
+        
+        IsSelectingTarget = true;
+        myHandView.SetHandMode(false);
 
-        cardView.rectTransform.anchoredPosition = selectTargetPos;
-        cardView.rectTransform.localScale = selectTargetScale * Vector3.one;
-        cardView.SetCard(card);
+        if (timing == "on_this_use") {
+            cardView.rectTransform.anchoredPosition = selectTargetPos;
+            cardView.rectTransform.localScale = selectTargetScale * Vector3.one;
+            cardView.SetCard(sourceCard.CurrentCard);
+        }
 
-        currentEffect = targetEffectQueue.Dequeue();
-        currentInfo = currentEffect.GetEffectTargetInfo(Battle.CurrentState);
+        currentInfo = infoQueue.Dequeue();
+        currentSelectableList = selectableQueue.Dequeue();
         
         onSuccessTarget = onSuccess;
         onFailTarget = onFail;
@@ -73,55 +68,46 @@ public class BattleTargetView : BattleBaseView
     }
 
     private void ShowTargetSelections() {
-        if (currentInfo.places.Contains(BattlePlaceId.Hand)) {
+        var cardPlaceInfos = currentSelectableList.Select(BattleCardPlaceInfo.Parse);
+        var myFieldIndex = cardPlaceInfos.Where(x => (x.unitId == 0) && (x.place == BattlePlaceId.Field)).Select(x => x.index).ToList();
+        var opFieldIndex = cardPlaceInfos.Where(x => (x.unitId == 1) && (x.place == BattlePlaceId.Field)).Select(x => x.index).ToList();
 
-        } else {
-            var myField = Battle.CurrentState.myUnit.field;
-            var opField = Battle.CurrentState.opUnit.field;
+        myFieldIndex.ForEach(x => myFieldCardViews[x].SetOutlineColor(ColorHelper.target));
+        opFieldIndex.ForEach(x => opFieldCardViews[x].SetOutlineColor(ColorHelper.target));
 
-            var myIndex = (currentInfo.unit == "op") ? new List<int>() : 
-                Enumerable.Range(0, myField.Count).Where(x => currentInfo.types.Contains(myField.cards[x].CurrentCard.Type)).ToList();
-            var opIndex = (currentInfo.unit == "me") ? new List<int>() : 
-                Enumerable.Range(0, opField.Count).Where(x => currentInfo.types.Contains(opField.cards[x].CurrentCard.Type)).ToList();
-
-            myIndex.ForEach(x => myFieldCardViews[x].SetOutlineColor(ColorHelper.target));
-            opIndex.ForEach(x => opFieldCardViews[x].SetOutlineColor(ColorHelper.target));
-
-            myIndex.ForEach(x => currentSelectableList.Add((short)((short)BattlePlaceId.Field * 10 + x)));
-            opIndex.ForEach(x => currentSelectableList.Add((short)(100 + (short)BattlePlaceId.Field * 10 + x)));
-
-            if ((currentInfo.unit != "op") && (currentInfo.places.Contains(BattlePlaceId.Leader)))
-                currentSelectableList.Add((short)BattlePlaceId.Leader * 10);
-
-            if ((currentInfo.unit != "me") && (currentInfo.places.Contains(BattlePlaceId.Leader)))
-                currentSelectableList.Add(100 + (short)BattlePlaceId.Leader * 10);
-        }
-
+        if (currentSelectableList.Count == 0)
+            OnSelectTarget(0);
     }
 
-    public void OnSelectTarget(short code) {
+    public void OnSelectTarget(int infoCode) {
+        var code = (short)infoCode;
+
+        if ((code != 0) && (!currentSelectableList.Contains(code)))
+            return;
+
         var info = BattleCardPlaceInfo.Parse(code);
         var fieldCardView = (info.unitId == 0) ? myFieldCardViews : opFieldCardViews;
 
-        if (!currentSelectableList.Contains(code))
-            return;
+        if (code != 0) {
+            currentSelectableList.Remove(code);
+            selectedTargetList.Add(code);
+            selectNum++;
 
-        currentSelectableList.Remove(code);
-        selectedTargetList.Add(code);
-        selectNum++;
-
-        if (info.place == BattlePlaceId.Field)
-            fieldCardView[info.index].SetOutlineColor(Color.cyan);
+            if (info.place == BattlePlaceId.Field)
+                fieldCardView[info.index].SetOutlineColor(Color.cyan);
+        }
 
         if ((selectNum == currentInfo.num) || (currentSelectableList.Count == 0)) {
-            if (targetEffectQueue.Count <= 0) {
+            selectedTargetList.Add(0);
+
+            if (infoQueue.Count <= 0) {
                 OnCancelTarget(true);
                 return;
             }
 
             selectNum = 0;
-            currentEffect = targetEffectQueue.Dequeue();
-            currentInfo = currentEffect.GetEffectTargetInfo(Battle.CurrentState);
+            currentInfo = infoQueue.Dequeue();
+            currentSelectableList = selectableQueue.Dequeue();
 
             selectedTargetList.Clear();
             currentSelectableList.Clear();
@@ -134,17 +120,21 @@ public class BattleTargetView : BattleBaseView
     public void OnCancelTarget(bool isSuccess) {
         cardView.SetCard(null);
 
-        if (targetNum <= 0)
+        if (!IsSelectingTarget)
             return;
 
-        Battle.CurrentState.currentEffect = Effect.Default;
-        Hud.SetState(Battle.CurrentState);
-        Hud.ProcessQueue();
+        IsSelectingTarget = false;
+        myHandView.SetHandMode(true);
 
-        if (isSuccess)
+        if (isSuccess) {
             onSuccessTarget?.Invoke(selectedTargetList);
-        else {
+        } else {
             Clear();
+
+            Battle.CurrentState.currentEffect = Effect.None;
+            Hud.SetState(Battle.CurrentState);
+            Hud.ProcessQueue();
+            
             onFailTarget?.Invoke();
         }
     }

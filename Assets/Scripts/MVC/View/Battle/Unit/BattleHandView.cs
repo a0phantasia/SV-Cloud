@@ -57,6 +57,9 @@ public class BattleHandView : BattleBaseView
     }
 
     public void SetHandMode(bool active) {
+        if (active && Anim.IsSelectingTarget)
+            return;
+
         SetHandMode(active, 425);
     }   
 
@@ -114,10 +117,19 @@ public class BattleHandView : BattleBaseView
 
         if (cardViews[index].rectTransform.anchoredPosition.y > useThresholdY) {
             cardViews[index].SetCard(null);  
-            Battle.PlayerAction(new int[2] { (int)EffectAbility.Use, index }, true);
+            Anim.TargetAnim("on_this_use", handCards[index], (target) => OnUseSuccess(index, target), null);
             return;
         }
 
+        OnUseFail(index);
+    }
+
+    private void OnUseSuccess(int index, List<short> target) {
+        int[] data = (new int[] { (int)EffectAbility.Use, index }).Concat(target.Select(x => (int)x)).ToArray();
+        Battle.PlayerAction(data, true);
+    }
+
+    private void OnUseFail(int index) {
         cardViews[index].rectTransform.anchoredPosition = initPos[index];
         cardViews[index].SetTag(cardViews[index].CurrentCard);
     }

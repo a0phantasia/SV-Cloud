@@ -15,13 +15,15 @@ public class BattleUnit : IIdentifyHandler
     public BattleHand hand;
     public BattleGrave grave;
 
+    public Queue<BattleCard> targetQueue;
+
     public bool isDone = false;
     public bool isMyTurn = false;
     public bool isFirst;
-    public bool isEvolveEnabled => (turn - (isFirst ? 1 : 0)) >= Player.currentBattle.Settings.evolveStart;
 
-    public string IsFirstText => isFirst ? "先手" : "後手";
     public bool IsMasterUnit => id == 0;
+    public string IsFirstText => isFirst ? "先手" : "後手";
+    public bool isEvolveEnabled => (turn - (isFirst ? 1 : 0)) >= Player.currentBattle.Settings.evolveStart;
 
     public int Id => id;
 
@@ -35,6 +37,8 @@ public class BattleUnit : IIdentifyHandler
         field = new BattleField();
         hand = new BattleHand();
         grave = new BattleGrave();
+
+        targetQueue = new Queue<BattleCard>();
 
         isFirst = first;
         isDone = false;
@@ -53,6 +57,8 @@ public class BattleUnit : IIdentifyHandler
         field = new BattleField(rhs.field);
         hand = new BattleHand(rhs.hand);
         grave = new BattleGrave(rhs.grave);
+
+        targetQueue = new Queue<BattleCard>(rhs.targetQueue);
 
         isFirst = rhs.isFirst;
         isDone = rhs.isDone;

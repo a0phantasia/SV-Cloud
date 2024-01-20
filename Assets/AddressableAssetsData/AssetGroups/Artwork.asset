@@ -101,6 +101,12 @@ MonoBehaviour:
     m_SerializedLabels:
     - elf
     - pack_0
+  - m_GUID: ca3e5378152ad704f84186030bf7202f
+    m_Address: 100001121
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - elf
+    - pack_0
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: 69e741ee149781a478094fca2d01f357, type: 2}
   m_SchemaSet:

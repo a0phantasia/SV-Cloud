@@ -19,6 +19,8 @@ public class BattleCardAmuletView : BattleBaseView
         if (card.Type != CardType.Amulet)
             return;
 
+        cardFrameButton?.SetSprite(SpriteResources.GetBattleCardFrameSprite(card.TypeId, card.RarityId));
+
         SetCountdown(card.Countdown);
         SetArtwork(await card.Artwork);
         SetFlagIcon(card.effects);

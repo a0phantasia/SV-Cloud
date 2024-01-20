@@ -24,6 +24,9 @@ public class BattleFieldView : BattleBaseView
         var unit = Hud.CurrentState.myUnit;
         var card = (index < fieldCount) ? fieldCards[index] : null;
 
+        if (Anim.IsSelectingTarget)
+            return;
+
         Hud.CurrentCardPlaceInfo = new BattleCardPlaceInfo() { 
             unitId = id,
             place = BattlePlaceId.Field,
@@ -88,7 +91,13 @@ public class BattleFieldView : BattleBaseView
         if ((info.unitId != 0) || (info.place != BattlePlaceId.Field))
             return;
         
-        Battle.PlayerAction(new int[2] { (int)EffectAbility.Evolve, info.index }, true);
+        var card = info.GetBattleCard(Battle.CurrentState);
+        Anim.TargetAnim("on_this_evolve_with_ep", card, (target) => OnEvolveSuccess(info.index, target), null);
+    }
+
+    private void OnEvolveSuccess(int index, List<short> target) {
+        int[] data = (new int[] { (int)EffectAbility.Evolve, index }).Concat(target.Select(x => (int)x)).ToArray();
+        Battle.PlayerAction(data, true);
     }
 
 }

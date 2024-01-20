@@ -3,15 +3,18 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class BattleCard : IIdentifyHandler
 {
+    public Battle Battle => Player.currentBattle;
+
     public int Id => CurrentCard.Id;
     public bool IsEvolved { get; protected set; }
     public Card card;
     public Card evolveCard;
     public Card OriginalCard => IsEvolved ? evolveCard : card;
-    public Card CurrentCard => GetCurrentCard();
+    public Card CurrentCard => GetCurrentCard(OriginalCard);
     public List<Effect> newEffects = new List<Effect>();
     public BattleCardBuffController buffController;
     public BattleCardActionController actionController;
@@ -81,8 +84,8 @@ public class BattleCard : IIdentifyHandler
             options.Set(id, value);
     }
 
-    public Card GetCurrentCard() {
-        var result = new Card(OriginalCard);
+    public Card GetCurrentCard(Card baseCard) {
+        var result = new Card(baseCard);
         result.cost += buffController.costBuff;
         result.atk += buffController.atkBuff;
         result.hpMax += buffController.hpBuff;
@@ -92,18 +95,85 @@ public class BattleCard : IIdentifyHandler
         return result;
     }
 
+    public void GetTargetEffectWithTiming(string timing, out Queue<Effect> targetEffectQueue, out Queue<EffectTargetInfo> targetInfoQueue, out Queue<List<short>> selectableTargetQueue) {
+        bool isEvolveTiming = timing == "on_this_evolve_with_ep";
+
+        var nowCard = GetCurrentCard(isEvolveTiming ? evolveCard : OriginalCard);
+
+        targetEffectQueue = new Queue<Effect>();
+        targetInfoQueue = new Queue<EffectTargetInfo>();
+        selectableTargetQueue = new Queue<List<short>>();
+
+        for (int i = 0; i < nowCard.effects.Count; i++) {
+            var currentEffect = nowCard.effects[i];
+            if (currentEffect.timing != timing)
+                continue;
+
+            currentEffect.invokeUnit = Battle.CurrentState.myUnit;
+            if (currentEffect.Condition(Battle.CurrentState)) {
+                var info = currentEffect.GetEffectTargetInfo(Battle.CurrentState);
+
+                if ((!List.IsNullOrEmpty(info.mode)) && (info.mode[0] == "index")) {
+                    targetEffectQueue.Enqueue(currentEffect);
+                    targetInfoQueue.Enqueue(info);
+                    selectableTargetQueue.Enqueue(GetCurrentSelectableTarget(info));
+                }
+            }
+            currentEffect.invokeTarget = null;
+        }
+    }
+
+    public List<short> GetCurrentSelectableTarget(EffectTargetInfo currentInfo) {
+        List<short> currentSelectableList = new List<short>();
+
+        if (currentInfo.places.Contains(BattlePlaceId.Hand)) {
+
+        } else {
+            var myField = Battle.CurrentState.myUnit.field;
+            var opField = Battle.CurrentState.opUnit.field;
+
+            var myIndex = (currentInfo.unit == "op") ? new List<int>() : 
+                Enumerable.Range(0, myField.Count).Where(x => currentInfo.types.Contains(myField.cards[x].CurrentCard.Type)).ToList();
+            var opIndex = (currentInfo.unit == "me") ? new List<int>() : 
+                Enumerable.Range(0, opField.Count).Where(x => currentInfo.types.Contains(opField.cards[x].CurrentCard.Type)).ToList();
+
+            myIndex.ForEach(x => currentSelectableList.Add((short)((short)BattlePlaceId.Field * 10 + x)));
+            opIndex.ForEach(x => currentSelectableList.Add((short)(100 + (short)BattlePlaceId.Field * 10 + x)));
+
+            if ((currentInfo.unit != "op") && (currentInfo.places.Contains(BattlePlaceId.Leader)))
+                currentSelectableList.Add((short)BattlePlaceId.Leader * 10);
+
+            if ((currentInfo.unit != "me") && (currentInfo.places.Contains(BattlePlaceId.Leader)))
+                currentSelectableList.Add(100 + (short)BattlePlaceId.Leader * 10);
+        }
+
+        return currentSelectableList;
+    }
+
     public int GetUseCost(Leader leader) {
         return CurrentCard.cost;
     }
 
-    public int GetEvolveCost() {
-        return 1;
-    }
-
     public bool IsUsable(BattleUnit sourceUnit) {
         bool isCostEnough = sourceUnit.leader.PP >= GetUseCost(sourceUnit.leader);
-        bool isFieldFull = (CurrentCard.Type == CardType.Follower) && (sourceUnit.field.IsFull);
-        return isCostEnough && (!isFieldFull);
+        bool isFieldFull = CurrentCard.IsFollower() && sourceUnit.field.IsFull;
+        bool isSpellTargetable = true;
+
+        if (CurrentCard.Type == CardType.Spell) {
+            GetTargetEffectWithTiming("on_this_use", out _, out var infoQueue, out var selectableQueue);
+
+            while (infoQueue.Count > 0) {
+                isSpellTargetable = infoQueue.Dequeue().num <= selectableQueue.Dequeue().Count;
+                if (!isSpellTargetable)
+                    break;
+            }
+        }
+
+        return isCostEnough && (!isFieldFull) && isSpellTargetable;
+    }
+
+    public int GetEvolveCost() {
+        return 1;
     }
 
     public bool IsEvolvable(BattleUnit sourceUnit) {

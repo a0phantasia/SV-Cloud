@@ -38,13 +38,15 @@ public class ResourceManager : Singleton<ResourceManager>
     }
 
     private void InitUIResources() {
-        for (int i = 0; i < fontString.Length; i++) {
+        for (int i = 0; i < fontString.Length; i++)
             LoadFont(fontString[i]);
-        }
-        for (int i = 0; i < numString.Length; i++) {
+        
+        for (int i = 0; i < numString.Length; i++)
             LoadSprite("Card Style/cost/" + numString[i].ToString());
-        }
+        
         InitAll<Sprite>("Sprites/Game/ep/ep_container", "Sprites/Game/ep/container");
+        InitAll<Sprite>("Sprites/Game/frame/follower_frame", "Sprites/Game/frame/follower");
+        InitAll<Sprite>("Sprites/Game/frame/amulet_frame", "Sprites/Game/frame/amulet");
     }
 
     // Get. If not exists in resDict, load it.

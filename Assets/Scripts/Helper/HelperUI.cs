@@ -116,6 +116,19 @@ public static class SpriteResources {
         return RM.instance.GetSprite("Card Style/frame/cardType_" + type + rarity);
     }
 
+    public static Sprite GetBattleCardFrameSprite(int type, int rarity) {
+        var category = (CardType)type switch {
+            CardType.Follower   =>  "follower",
+            CardType.Evolved    =>  "follower",
+            CardType.Amulet     =>  "amulet",
+            _ => string.Empty
+        };
+        
+        rarity += ((type == (int)CardType.Evolved) ? 4 : 0) - 1;
+
+        return RM.instance.GetSprite("Game/frame/" + category + "/" + rarity);
+    }
+
     public static Sprite GetDetailBackgroundSprite(int craft) {
         return RM.instance.GetSprite("Card Style/bg/background_" + craft);
     }

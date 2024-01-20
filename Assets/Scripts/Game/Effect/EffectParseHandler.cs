@@ -52,6 +52,10 @@ public static class EffectParseHandler
     public static Dictionary<string, string> Evolve(int[] data) {
         var dict = new Dictionary<string, string>();
         dict.Set("index", data[0].ToString());
+
+        if (data.Length > 1)
+            dict.Set("target", data.SubArray(1).Select(x => x.ToString()).ConcatToString("/"));
+
         return dict;
     }
 
