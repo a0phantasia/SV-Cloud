@@ -41,8 +41,8 @@ public static class String {
         return str.Substring(startIndex + 1, endIndex - startIndex - 1);
     }
     public static bool TryTrimParentheses(this string str, out string trim) {
-        trim = TrimParentheses(str);
-        return trim == str;
+        trim = str.TrimParentheses();
+        return trim != str;
     }
 
     public static string GetDescription(this string data, string defaultReturn = null) {
@@ -54,10 +54,13 @@ public static class String {
         return desc.Replace("[-]", "</color>").Replace("[", "<color=#").Replace("]", ">");
     }
 
-    public static string ConcatToString(this IEnumerable<string> data, string lineEnd = "\n") {
+    public static string ConcatToString(this IEnumerable<string> data, string lineEnd = "\n", bool trimEnd = true) {
         string result = string.Empty;
         foreach (var str in data)
             result += str + lineEnd;
+
+        if (trimEnd)
+            result = result.TrimEnd(lineEnd);
         
         return result;
     }
@@ -90,7 +93,7 @@ public static class String {
     /// We expect input to be "xxx,yyy,zzz....."
     /// </summary>
     public static List<float> ToFloatList(this string str, char delimeter = ',') {
-        str = str.TrimEnd(delimeter);
+        str = str.TrimEnd(delimeter).TrimEnd();
 
         if (string.IsNullOrEmpty(str) || (str == "none"))
             return new List<float>();
@@ -109,7 +112,7 @@ public static class String {
         return list;
     }
     public static List<int> ToIntList(this string str, char delimeter = ',') {
-        str = str.TrimEnd(delimeter);
+        str = str.TrimEnd(delimeter).TrimEnd();
 
         if (string.IsNullOrEmpty(str) || (str == "none"))
             return new List<int>();

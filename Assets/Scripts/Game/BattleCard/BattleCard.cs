@@ -8,6 +8,7 @@ using UnityEngine.UI;
 public class BattleCard : IIdentifyHandler
 {
     public Battle Battle => Player.currentBattle;
+    public BattleManager Hud => BattleManager.instance;
 
     public int Id => CurrentCard.Id;
     public bool IsEvolved { get; protected set; }
@@ -68,8 +69,21 @@ public class BattleCard : IIdentifyHandler
 
     public float GetIdentifier(string id)
     {
-        if (id.StartsWith("action."))
-            return actionController.GetIdentifier(id.TrimStart("action."));
+        string trimId;
+
+        if (id.TryTrimStart("current", out trimId)) {
+            if (trimId.TryTrimParentheses(out var option)) {
+                return option switch {
+                    "IF" => BattleCardFilter.Parse(trimId.TrimStart("[IF]")).FilterWithCurrentCard(this) ? 1 : 0,
+                    _ => 0
+                };
+            }
+            return CurrentCard.GetIdentifier(trimId.TrimStart('.'));
+        }
+
+        if (id.TryTrimStart("action.", out trimId))
+            return actionController.GetIdentifier(trimId);
+
 
         return id switch {
             _ => options.Get(id, 0),
@@ -86,13 +100,35 @@ public class BattleCard : IIdentifyHandler
 
     public Card GetCurrentCard(Card baseCard) {
         var result = new Card(baseCard);
-        result.cost += buffController.costBuff;
-        result.atk += buffController.atkBuff;
-        result.hpMax += buffController.hpBuff;
-        result.hp = result.hpMax - buffController.damage;
+        result.cost = Mathf.Max(result.cost + buffController.costBuff, 0);
+        result.atk = Mathf.Max(result.atk + buffController.atkBuff, 0);
+        result.hpMax = Mathf.Max(result.hpMax + buffController.hpBuff, 0);
+        result.hp = Mathf.Max(result.hpMax - buffController.damage, 0);
         result.effects.AddRange(newEffects);
         result.effects.ForEach(x => x.source = this);
         return result;
+    }
+
+    public string GetAdditionalDescription() {
+        var card = CurrentCard;
+        var description = string.Empty;
+        
+        if (card.keywords.Contains(CardKeyword.Combo)) {
+            var num = Hud.CurrentState.GetBelongUnit(this).leader.GetIdentifier("combo");
+            description += "(當前連擊數為 " + num + ")\n";
+        }
+
+        if (card.keywords.Contains(CardKeyword.Rally)){
+            var num = Hud.CurrentState.GetBelongUnit(this).leader.GetIdentifier("rally");
+            description += "(當前協作數為 " + num + ")\n";
+        }
+
+        if (card.keywords.Contains(CardKeyword.SpellBoost)){
+            var num = GetIdentifier(CardKeyword.SpellBoost.GetKeywordEnglishName());
+            description += "(當前魔力增幅為 " + num + " 次)\n";
+        }
+
+        return description;
     }
 
     public void GetTargetEffectWithTiming(string timing, out Queue<Effect> targetEffectQueue, out Queue<EffectTargetInfo> targetInfoQueue, out Queue<List<short>> selectableTargetQueue) {
@@ -133,9 +169,11 @@ public class BattleCard : IIdentifyHandler
             var opField = Battle.CurrentState.opUnit.field;
 
             var myIndex = (currentInfo.unit == "op") ? new List<int>() : 
-                Enumerable.Range(0, myField.Count).Where(x => currentInfo.types.Contains(myField.cards[x].CurrentCard.Type)).ToList();
+                Enumerable.Range(0, myField.Count).Where(x => currentInfo.filter.FilterWithCurrentCard(myField.cards[x])).ToList();
+                    
             var opIndex = (currentInfo.unit == "me") ? new List<int>() : 
-                Enumerable.Range(0, opField.Count).Where(x => currentInfo.types.Contains(opField.cards[x].CurrentCard.Type)).ToList();
+                Enumerable.Range(0, opField.Count).Where(x => opField.cards[x].IsTargetSelectable() && 
+                    currentInfo.filter.FilterWithCurrentCard(opField.cards[x])).ToList();
 
             myIndex.ForEach(x => currentSelectableList.Add((short)((short)BattlePlaceId.Field * 10 + x)));
             opIndex.ForEach(x => currentSelectableList.Add((short)(100 + (short)BattlePlaceId.Field * 10 + x)));
@@ -145,7 +183,11 @@ public class BattleCard : IIdentifyHandler
 
             if ((currentInfo.unit != "me") && (currentInfo.places.Contains(BattlePlaceId.Leader)))
                 currentSelectableList.Add(100 + (short)BattlePlaceId.Leader * 10);
+
         }
+
+        if (currentInfo.mode.Contains("other"))
+            currentSelectableList.Remove(Battle.CurrentState.GetCardPlaceInfo(this).ToShortCode());
 
         return currentSelectableList;
     }
@@ -169,7 +211,7 @@ public class BattleCard : IIdentifyHandler
             }
         }
 
-        return isCostEnough && (!isFieldFull) && isSpellTargetable;
+        return sourceUnit.isMyTurn && isCostEnough && (!isFieldFull) && isSpellTargetable;
     }
 
     public int GetEvolveCost() {
@@ -202,6 +244,11 @@ public class BattleCard : IIdentifyHandler
         return sourceUnit.isMyTurn && isAttackChanceLegal && (IsEvolved || isStayTurnLegal || isKeywordLegal);
     }
 
+    public bool IsTargetSelectable() {
+        bool isAmbush = actionController.IsKeywordAvailable(CardKeyword.Ambush);
+        return !isAmbush;
+    }
+
     // Evolve this follower. You should check IsEvolvable() before calling this if you use EP evolve.
     public void Evolve() {
         IsEvolved = true;
@@ -215,10 +262,12 @@ public class BattleCard : IIdentifyHandler
     public void SetKeyword(CardKeyword keyword, ModifyOption option) {
         if (option == ModifyOption.Add) {
             card.keywords.Add(keyword);
-            evolveCard.keywords.Add(keyword);
+            evolveCard?.keywords.Add(keyword);
+            actionController.AddIdentifier(keyword.GetKeywordEnglishName(), 1);
         } else if (option == ModifyOption.Remove) {
-            card.keywords = card.keywords.Where(x => x != keyword).ToList();
-            evolveCard.keywords = evolveCard.keywords.Where(x => x != keyword).ToList();
+            card.keywords.RemoveAll(x => x == keyword);
+            evolveCard?.keywords.RemoveAll(x => x == keyword);
+            actionController.SetIdentifier(keyword.GetKeywordEnglishName(), 0);
         }
     }
 

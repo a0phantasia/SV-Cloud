@@ -22,9 +22,9 @@ public class BattleCardAmuletView : BattleBaseView
         cardFrameButton?.SetSprite(SpriteResources.GetBattleCardFrameSprite(card.TypeId, card.RarityId));
 
         SetCountdown(card.Countdown);
-        SetArtwork(await card.Artwork);
         SetFlagIcon(card.effects);
         SetOutlineColor(Color.clear);
+        SetArtwork(await card.Artwork);
     }
 
     private void SetCountdown(int num) {
@@ -50,7 +50,7 @@ public class BattleCardAmuletView : BattleBaseView
             icon = SpriteResources.Lastword;
         else if (effects.Exists(x => (x.timing.TryTrimStart("on_", out var trimTiming)) && (!trimTiming.StartsWith("this_"))))
             icon = SpriteResources.Flag;
-        else if (effects.Exists(x => (x.timing == "on_this_attack") || (x.timing == "on_this_defense")))
+        else if (effects.Exists(x => (x.timing == "on_this_attack") || (x.timing == "on_this_defense") || (x.timing == "on_this_evolve")))
             icon = SpriteResources.Flag;
     
         flagImage?.SetSprite(icon);

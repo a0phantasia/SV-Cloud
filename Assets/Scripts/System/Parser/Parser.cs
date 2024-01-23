@@ -27,7 +27,7 @@ public static class Parser {
             condList.Add(new List<ICondition>());
             return;
         }
-        string[] _options_list = _data.Split(new char[] { '|' }, StringSplitOptions.RemoveEmptyEntries);
+        string[] _options_list = _data.Split(new char[] { '\\' }, StringSplitOptions.RemoveEmptyEntries);
         for (int i = 0; i < _options_list.Length; i++) {
             condList.Add(ParseCondtionList(_options_list[i]));
         }

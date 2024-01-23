@@ -38,7 +38,7 @@ public class CardInfoView : IMonoBehaviour
         gameObject.SetActive(active);
     }
 
-    public void SetCard(Card card) {
+    public void SetCard(Card card, string additionalDescription = null) {
         SetActive(card != null);
         buttonView?.Reset();
         SetBackgroundSizeAuto();
@@ -58,7 +58,7 @@ public class CardInfoView : IMonoBehaviour
         costText?.SetText(card.cost.ToString());
         atkText?.SetText(card.atk.ToString());
         hpText?.SetText(card.hp.ToString());
-        descriptionText?.SetText(card.description);
+        descriptionText?.SetText((additionalDescription ?? string.Empty) + card.description);
         descriptionText?.Rect?.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, descriptionText.PreferredSize.y);
         evolveView?.SetCard(card.EvolveCard);
 
@@ -80,7 +80,8 @@ public class CardInfoView : IMonoBehaviour
     }
 
     public void SetBattleCard(BattleCard card) {
-        SetCard(card?.OriginalCard);
+        var baseCard = card?.card;
+        SetCard(baseCard, card?.GetAdditionalDescription());
     }
 
     public float GetDescriptionTextPreferredSize(bool isEvolve = false) {

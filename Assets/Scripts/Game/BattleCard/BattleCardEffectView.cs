@@ -17,7 +17,7 @@ public class BattleCardEffectView : IMonoBehaviour
             return;
         }
         effectObjects[0]?.SetActive(card.actionController.IsKeywordAvailable(CardKeyword.Ward));
-        // effectObjects[1]?.SetActive(card.actionController.IsKeywordAvailable(CardKeyword.Ambush));
+        effectObjects[1]?.SetActive(card.actionController.IsKeywordAvailable(CardKeyword.Ambush));
     }
 
     public void SetTargeting(bool isTargeting) {

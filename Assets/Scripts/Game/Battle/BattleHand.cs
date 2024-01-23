@@ -13,7 +13,7 @@ public class BattleHand : BattlePlace
         cards = rhs.cards.Select(x => (x == null) ? null : new BattleCard(x)).ToList();
     }
 
-    protected override BattlePlaceId GetPlaceId()
+    public override BattlePlaceId GetPlaceId()
     {
         return BattlePlaceId.Hand;
     }

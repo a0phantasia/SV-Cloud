@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,30 +12,33 @@ public static class EffectDatabase {
     };
 
     private static Dictionary<string, EffectAbility> abilityConvDict = new Dictionary<string, EffectAbility>() {
-        {"none",        EffectAbility.None},
-        {"result",      EffectAbility.SetResult},
-        {"keep",        EffectAbility.KeepCard},
-        {"turn_start",  EffectAbility.TurnStart},
-        {"turn_end",    EffectAbility.TurnEnd},
-        {"use",         EffectAbility.Use},
-        {"cover",       EffectAbility.Cover},
-        {"attack",      EffectAbility.Attack},
-        {"evolve",      EffectAbility.Evolve},
-        {"fusion",      EffectAbility.Fusion},
-        {"act",         EffectAbility.Act},
+        {"none",        EffectAbility.None          },
+        {"result",      EffectAbility.SetResult     },
+        {"keep",        EffectAbility.KeepCard      },
+        {"turn_start",  EffectAbility.TurnStart     },
+        {"turn_end",    EffectAbility.TurnEnd       },
+        {"use",         EffectAbility.Use           },
+        {"cover",       EffectAbility.Cover         },
+        {"attack",      EffectAbility.Attack        },
+        {"evolve",      EffectAbility.Evolve        },
+        {"fusion",      EffectAbility.Fusion        },
+        {"act",         EffectAbility.Act           },
 
-        {"set_keyword", EffectAbility.SetKeyword},
-        {"draw",        EffectAbility.Draw},
-        {"summon",      EffectAbility.Summon},
-        {"damage",      EffectAbility.Damage},
-        {"heal",        EffectAbility.Heal},
-        {"destroy",     EffectAbility.Destroy},
-        {"vanish",      EffectAbility.Vanish},
-        {"return",      EffectAbility.Return},
-        {"transform",   EffectAbility.Transform},
-        {"buff",        EffectAbility.Buff},
-        {"debuff",      EffectAbility.Debuff},
-        {"get_token",   EffectAbility.GetToken},
+        {"set_keyword", EffectAbility.SetKeyword    },
+        {"draw",        EffectAbility.Draw          },
+        {"summon",      EffectAbility.Summon        },
+        {"damage",      EffectAbility.Damage        },
+        {"heal",        EffectAbility.Heal          },
+        {"destroy",     EffectAbility.Destroy       },
+        {"vanish",      EffectAbility.Vanish        },
+        {"return",      EffectAbility.Return        },
+        {"transform",   EffectAbility.Transform     },
+        {"buff",        EffectAbility.Buff          },
+        {"debuff",      EffectAbility.Debuff        },
+
+        {"get_token",   EffectAbility.GetToken      },
+        {"boost",       EffectAbility.SpellBoost    },
+        {"set_cost",    EffectAbility.SetCost       },
     };
 
     public static EffectCondition ToEffectCondition(this string condition) {
@@ -49,56 +53,6 @@ public static class EffectDatabase {
         return (ability == EffectAbility.Use) || (ability == EffectAbility.Evolve);
     }
 
-    public static void SetInvokeTarget(this Effect effect, BattleState state) {
-        var currentUnit = state.currentUnit;
-
-        var invokeUnit = effect.invokeUnit;
-        var rhsUnit = state.GetRhsUnitById(invokeUnit.id);
-        var info = effect.GetEffectTargetInfo(state);
-        
-        if (info.unit == "none")
-            return;
-
-        if (info.unit == "self") {
-            effect.invokeTarget = new List<BattleCard>() { effect.source };
-        } else {
-            var allUnit = info.unit switch {
-                "all"   =>  new List<BattleUnit>() { invokeUnit, rhsUnit },
-                "me"    =>  new List<BattleUnit>() { invokeUnit },
-                "op"    =>  new List<BattleUnit>() { rhsUnit },
-                _       =>  new List<BattleUnit>(),
-            };
-
-            var allPlace = new List<BattlePlace>();
-            for (int i = 0; i < info.places.Count; i++)
-                allUnit.ForEach(unit => allPlace.Add(unit.GetPlace(info.places[i])));
-
-            var allCards = new List<BattleCard>();
-            allPlace.ForEach(x => allCards.AddRange(x.cards.Where(c => info.types.Contains(c.CurrentCard.Type))));
-
-            if (info.mode.Contains("other"))
-                allCards.RemoveAll(x => x == effect.source);
-
-            switch (info.mode[0]) {
-                default:
-                    break;
-                case "random":
-                    effect.invokeTarget = allCards.Random(info.num, false);
-                    break;
-                case "index":
-                    effect.invokeTarget = new List<BattleCard>();
-                    for (int i = 0; i <= info.num; i++) {
-                        var target = currentUnit.targetQueue.Dequeue();
-                        if (target == null)
-                            break;
-
-                        if (allCards.Contains(target))
-                            effect.invokeTarget.Add(target);
-                    }
-                break;
-            }
-        }
-    }
 }
 
 public class EffectTargetInfo 
@@ -106,9 +60,9 @@ public class EffectTargetInfo
     public Effect effect;
     public string unit;
     public List<BattlePlaceId> places;
-    public List<CardType> types;
     public int num;
     public List<string> mode;
+    public BattleCardFilter filter = new BattleCardFilter(-1);
     public List<string> options;
 
     public static EffectTargetInfo Parse(Effect effect, BattleState state) {
@@ -120,9 +74,13 @@ public class EffectTargetInfo
             return info;
 
         info.places = options[1].Split('+').Select(x => x.ToBattlePlace()).ToList();
-        info.types = options[2].Split('+').Select(x => x.ToCardTypeWithEnglish()).ToList();
-        info.num = Parser.ParseEffectExpression(options[3], effect, state);
-        info.mode = options[4].Split('+').ToList();
+        info.num = Parser.ParseEffectExpression(options[2], effect, state);
+        info.mode = options[3].Split('+').ToList();
+
+        if (options.Length <= 4)
+            return info;
+
+        info.filter = BattleCardFilter.Parse(options[4]);
         info.options = options.SubArray(5).ToList();
         return info;
     }
@@ -148,4 +106,6 @@ public enum EffectAbility {
     Buff        = 109,
     Debuff      = 110,
     GetToken    = 111,
+    SpellBoost  = 112,
+    SetCost     = 113,
 }

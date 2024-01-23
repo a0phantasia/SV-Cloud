@@ -26,7 +26,7 @@ public class BattleBaseView : IMonoBehaviour
 
 public class BattleCardPlaceInfo {
     public int unitId = 0;
-    public BattlePlaceId place = BattlePlaceId.Deck;
+    public BattlePlaceId place = BattlePlaceId.None;
     public int index = 0;
 
     public BattleCard GetBattleCard(BattleState state) {
@@ -48,6 +48,10 @@ public class BattleCardPlaceInfo {
             place = (BattlePlaceId)(code % 100 / 10),
             index = code % 10,
         };
+    }
+
+    public short ToShortCode() {
+        return (short)(unitId * 100 + (int)place * 10 + index);
     }
 
 }

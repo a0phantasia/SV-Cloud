@@ -5,10 +5,10 @@ using UnityEngine.UI;
 
 public class PortalSearchView : IMonoBehaviour
 {
-    private string[] inputFieldType => new string[] { "name", "trait", "keyword", "description", "author" };
+    private string[] inputFieldType => new string[] { "name", "trait", "keyword", "description" };
 
     [SerializeField] private GameObject detailSearchPanel;
-    [SerializeField] private IInputField nameInputField, traitInputField, keywordInputField, descriptionInputField, authorInputField;
+    [SerializeField] private IInputField nameInputField, traitInputField, keywordInputField, descriptionInputField;
     [SerializeField] private List<Outline> formatOutlines;
     [SerializeField] private List<Image> craftImages, packImages, typeImages, rarityImages;
     [SerializeField] private List<Image> costImages, atkImages, hpImages;
@@ -44,7 +44,6 @@ public class PortalSearchView : IMonoBehaviour
             "trait" => traitInputField,
             "keyword" => keywordInputField,
             "description" => descriptionInputField,
-            "author" => authorInputField,
             _ => null,
         };
 

@@ -44,7 +44,7 @@ public class BattleAttackAnimView : BattleBaseView
         var fieldCount = myUnit.field.Count;
         var myCard = myUnit.field.cards[index];
 
-        if (!myCard.CurrentCard.IsFollower())
+        if (Hud.IsLocked || (!myCard.CurrentCard.IsFollower()))
             return;
         
         startPoint = GetFollowerPoint(index, fieldCount, -60);
@@ -67,7 +67,7 @@ public class BattleAttackAnimView : BattleBaseView
         var myUnit = Hud.CurrentState.myUnit;
         var myCard = myUnit.field.cards[index];
 
-        if (!myCard.CurrentCard.IsFollower())
+        if (Hud.IsLocked || (!myCard.CurrentCard.IsFollower()))
             return;
 
         RectTransformUtility.ScreenPointToLocalPointInRectangle(canvasRect, Input.mousePosition, Camera.main, out endPoint);
@@ -103,7 +103,7 @@ public class BattleAttackAnimView : BattleBaseView
         var myField = Hud.CurrentState.myUnit.field.cards;
         var opField = Hud.CurrentState.opUnit.field.cards;
 
-        if (!myField[index].CurrentCard.IsFollower())
+        if (Hud.IsLocked || (!myField[index].CurrentCard.IsFollower()))
             return;
         
         lineRenderer.positionCount = 0;

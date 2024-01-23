@@ -23,10 +23,14 @@ public class BattleUnitView : BattleBaseView
         SetUnit((id == 0) ? Battle.CurrentState.myUnit : Battle.CurrentState.opUnit);
     }
 
-    public void SetState(BattleState state) {
-        var effect = state.currentEffect;
-        var invokeUnit = effect.invokeUnit;
+    public void SetLock(bool isLocked) {
+        if (id != 0)
+            return;
 
+        handView.SetLock(isLocked);
+    }
+
+    public void SetState(BattleState state) {
         IsDone = false;
 
         if (id == 0) 
@@ -39,6 +43,7 @@ public class BattleUnitView : BattleBaseView
         var effect = state.currentEffect;
         var invokeUnit = effect.invokeUnit;
         var unit = state.myUnit;
+        var who = "me";
 
         Action SetMyUnit = (() => SetUnit(unit));
 
@@ -84,7 +89,8 @@ public class BattleUnitView : BattleBaseView
                 break;
 
             case EffectAbility.Draw:
-                if (invokeUnit.id != unit.id)
+                var whoDraw = effect.hudOptionDict.Get("who", "me");
+                if (whoDraw != who)
                     goto default;
 
                 var drawCount = int.Parse(effect.hudOptionDict.Get("count"));
@@ -121,14 +127,12 @@ public class BattleUnitView : BattleBaseView
                 break;
 
             case EffectAbility.GetToken:
-                var who = int.Parse(effect.hudOptionDict.Get("who", "-1"));
+                var whoGetToken = effect.hudOptionDict.Get("who", "me");
+                if (whoGetToken != who)
+                    goto default;
+
                 var tokenList = effect.hudOptionDict.Get("token", string.Empty).ToIntList('/');
-
-                if (who == 0)
-                    Anim.GetTokenAnim(0, tokenList.Select(Card.Get).ToList(), SetMyUnit);
-                else   
-                    SetMyUnit();
-
+                Anim.GetTokenAnim(0, tokenList.Select(Card.Get).ToList(), SetMyUnit);
                 break;
         };
     }
@@ -137,6 +141,7 @@ public class BattleUnitView : BattleBaseView
         var effect = state.currentEffect;
         var invokeUnit = effect.invokeUnit;
         var unit = state.opUnit;
+        var who = "op";
 
         Action SetOpUnit = (() => SetUnit(unit));
 
@@ -182,7 +187,8 @@ public class BattleUnitView : BattleBaseView
                 break;
 
             case EffectAbility.Draw:
-                if (invokeUnit.id != unit.id)
+                var whoDraw = effect.hudOptionDict.Get("who", "op");
+                if (whoDraw != who)
                     goto default;
                 
                 var count = int.Parse(effect.hudOptionDict.Get("count"));
@@ -220,14 +226,12 @@ public class BattleUnitView : BattleBaseView
                 break;
 
             case EffectAbility.GetToken:
-                var who = int.Parse(effect.hudOptionDict.Get("who", "-1"));
+                var whoGetToken = effect.hudOptionDict.Get("who", "op");
+                if (whoGetToken != who)
+                    goto default;
+
                 var tokenList = effect.hudOptionDict.Get("token", string.Empty).ToIntList('/');
-
-                if (who == 1)
-                    Anim.GetTokenAnim(1, tokenList.Select(Card.Get).ToList(), SetOpUnit);
-                else    
-                    SetOpUnit();
-
+                Anim.GetTokenAnim(1, tokenList.Select(Card.Get).ToList(), SetOpUnit);
                 break;
         };
     }

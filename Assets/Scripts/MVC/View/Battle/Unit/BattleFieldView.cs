@@ -14,7 +14,7 @@ public class BattleFieldView : BattleBaseView
     public int fieldCount => fieldCards.Count;
 
     public void SetField(BattleField field) {
-        fieldCards = field.cards.Select(x => x).ToList();
+        fieldCards = field.cards.ToList();
         for (int i = 0; i < cardViews.Count; i++) {
             cardViews[i].SetBattleCard((i < field.Count) ? field.cards[i] : null);
         }
@@ -88,7 +88,7 @@ public class BattleFieldView : BattleBaseView
 
     public void Evolve() {
         var info = Hud.CurrentCardPlaceInfo;
-        if ((info.unitId != 0) || (info.place != BattlePlaceId.Field))
+        if (Hud.IsLocked || (info.unitId != 0) || (info.place != BattlePlaceId.Field))
             return;
         
         var card = info.GetBattleCard(Battle.CurrentState);

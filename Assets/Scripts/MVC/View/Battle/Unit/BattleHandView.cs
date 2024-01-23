@@ -19,8 +19,16 @@ public class BattleHandView : BattleBaseView
 
     public bool Mode { get; private set; } = false;
     private List<Vector2> initPos = Enumerable.Repeat(default(Vector2), 9).ToList();
+    private List<Color> initColor = Enumerable.Repeat(Color.clear, 9).ToList();
     private List<BattleCard> handCards = new List<BattleCard>();
     private int handCount => handCards.Count;
+
+    public void SetLock(bool isLocked) {
+        if (id != 0)
+            return;
+
+        cardViews.ForEach(x => x.draggable.isMovable = !isLocked);
+    }
 
     public void SetHand(BattleUnit unit) {
         var leader = unit.leader;
@@ -33,11 +41,15 @@ public class BattleHandView : BattleBaseView
             return;
         }
 
-        handCards = hand.cards.Select(x => x).ToList();
+        handCards = hand.cards.ToList();
         for (int i = 0; i < cardViews.Count; i++) {
-            cardViews[i].SetBattleCard((i < hand.Count) ? hand.cards[i] : null);
-            cardViews[i].SetStatus("cost", (i < hand.Count) ? hand.cards[i].GetUseCost(leader) : 0);
-            cardViews[i].draggable.SetEnable((i < hand.Count) ? hand.cards[i].IsUsable(unit) : false);
+            var card = (i < hand.Count) ? hand.cards[i] : null;
+            var useCost = (i < hand.Count) ? hand.cards[i].GetUseCost(leader) : 0;
+            var isUsable = (i < hand.Count) ? hand.cards[i].IsUsable(unit) : false;
+
+            cardViews[i].SetBattleCard(card);
+            cardViews[i].SetStatus("cost", useCost);
+            cardViews[i].draggable.SetEnable(isUsable);
         }
 
         SetHandMode(Mode);
@@ -101,10 +113,11 @@ public class BattleHandView : BattleBaseView
     /// On begin drag card. Player drags the card to use.
     /// </summary>
     public void OnBeginDrag(int index) {
-        if (!index.IsInRange(0, cardViews.Count))
+        if (Hud.IsLocked || (!index.IsInRange(0, cardViews.Count)))
             return;
 
         cardViews[index].SetTag(null);
+        initColor[index] = cardViews[index].SetOutlineColor(Color.clear);
         initPos[index] = cardViews[index].rectTransform.anchoredPosition;
     }
 
@@ -112,7 +125,7 @@ public class BattleHandView : BattleBaseView
     /// On end drag card. If card pos is above useThresholdY, use the card.
     /// </summary>
     public void OnEndDrag(int index) {
-        if (!index.IsInRange(0, cardViews.Count))
+        if (Hud.IsLocked || (!index.IsInRange(0, cardViews.Count)))
             return;
 
         if (cardViews[index].rectTransform.anchoredPosition.y > useThresholdY) {
@@ -130,7 +143,8 @@ public class BattleHandView : BattleBaseView
     }
 
     private void OnUseFail(int index) {
-        cardViews[index].rectTransform.anchoredPosition = initPos[index];
         cardViews[index].SetTag(cardViews[index].CurrentCard);
+        cardViews[index].SetOutlineColor(initColor[index]);
+        cardViews[index].rectTransform.anchoredPosition = initPos[index];
     }
 }

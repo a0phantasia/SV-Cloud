@@ -80,33 +80,39 @@ public static class CardDatabase
     };
 
     public static Dictionary<CardKeyword, string> keywordNameDict = new Dictionary<CardKeyword, string>() {
-        { CardKeyword.None,     "-"         },
-        { CardKeyword.Storm,    "疾馳"      },
-        { CardKeyword.Ward,     "守護"      },
-        { CardKeyword.Bane,     "必殺"      },
-        { CardKeyword.Rush,     "突進"      },
-        { CardKeyword.Ambush,   "潛行"      },
-        { CardKeyword.Drain,    "吸血"      },
-        { CardKeyword.Fanfare,  "入場曲"    },
-        { CardKeyword.Lastword, "謝幕曲"    },
-        { CardKeyword.Attack,   "攻擊時"    },
-        { CardKeyword.Defense,  "交戰時"    },
-        { CardKeyword.Combo,    "連擊"      },
+        { CardKeyword.None,         "-"         },
+        { CardKeyword.Storm,        "疾馳"      },
+        { CardKeyword.Ward,         "守護"      },
+        { CardKeyword.Bane,         "必殺"      },
+        { CardKeyword.Rush,         "突進"      },
+        { CardKeyword.Ambush,       "潛行"      },
+        { CardKeyword.Drain,        "吸血"      },
+        { CardKeyword.Fanfare,      "入場曲"    },
+        { CardKeyword.Lastword,     "謝幕曲"    },
+        { CardKeyword.Attack,       "攻擊時"    },
+        { CardKeyword.Defense,      "交戰時"    },
+        { CardKeyword.Evolve,       "進化時"    },
+        { CardKeyword.Combo,        "連擊"      },
+        { CardKeyword.Rally,        "協作"      },
+        { CardKeyword.SpellBoost,   "魔力增幅"  },
     };
 
     public static Dictionary<CardKeyword, string> keywordEnglishNameDict = new Dictionary<CardKeyword, string>() {
-        { CardKeyword.None,     "-"         },
-        { CardKeyword.Storm,    "storm"     },
-        { CardKeyword.Ward,     "ward"      },
-        { CardKeyword.Bane,     "bane"      },
-        { CardKeyword.Rush,     "rush"      },
-        { CardKeyword.Ambush,   "ambush"    },
-        { CardKeyword.Drain,    "drain"     },
-        { CardKeyword.Fanfare,  "fanfare"   },
-        { CardKeyword.Lastword, "lastword"  },
-        { CardKeyword.Attack,   "attack"    },
-        { CardKeyword.Defense,  "defense"   },
-        { CardKeyword.Combo,    "combo"     },
+        { CardKeyword.None,         "-"         },
+        { CardKeyword.Storm,        "storm"     },
+        { CardKeyword.Ward,         "ward"      },
+        { CardKeyword.Bane,         "bane"      },
+        { CardKeyword.Rush,         "rush"      },
+        { CardKeyword.Ambush,       "ambush"    },
+        { CardKeyword.Drain,        "drain"     },
+        { CardKeyword.Fanfare,      "fanfare"   },
+        { CardKeyword.Lastword,     "lastword"  },
+        { CardKeyword.Attack,       "attack"    },
+        { CardKeyword.Defense,      "defense"   },
+        { CardKeyword.Evolve,       "evolve"    },
+        { CardKeyword.Combo,        "combo"     },
+        { CardKeyword.Rally,        "rally"     },
+        { CardKeyword.SpellBoost,   "boost"     },
     };
 
     public static string GetPackName(this CardPack pack) => packNameDict.Get(pack, "-");
@@ -147,141 +153,11 @@ public static class CardDatabase
     }
 
     public static BattlePlaceId ToBattlePlace(this string place) {
+        if (!placeNameDict.Values.Contains(place))
+            return BattlePlaceId.None;
+
         return placeNameDict.FirstOrDefault(x => x.Value == place).Key;
     }
-}
-
-public struct CardFilter
-{
-    public int format, zone;
-    public string name, trait, keyword, description, author;
-    public List<int> craftList, packList, typeList, rarityList, costList, atkList, hpList;
-    public bool isWithToken;
-
-    /// <summary>
-    /// Create a filter to search card from database.
-    /// </summary>
-    /// <param name="formatId">Format id. Set -1 if don't filter format</param>
-    public CardFilter(int formatId) {
-        format = formatId;
-        zone = 1;
-        name = trait = keyword = description = author = string.Empty;
-        craftList = new List<int>();
-        packList = new List<int>();
-        typeList = new List<int>();
-        rarityList = new List<int>();
-        costList = new List<int>();
-        atkList = new List<int>();
-        hpList = new List<int>();
-        isWithToken = false;
-    }
-
-    public void SetString(string which, string input) {
-        switch (which) {
-            default:
-                return;
-            case "name": 
-                name = input;
-                return;
-            case "trait":
-                trait = input;
-                return;
-            case "keyword":
-                keyword = input;
-                return;
-            case "description":
-                description = input;
-                return;
-            case "author":
-                author = input;
-                return;
-        }
-    }
-
-    public void SetInt(string which, int item) {
-        switch (which) {
-            default:
-                return;
-            case "format":
-                format = item;
-                return;
-            case "zone":
-                zone = item;
-                return;
-        }
-    }
-
-    public void SetBool(string which, bool item) {
-        switch (which) {
-            default:
-                return;
-            case "token":
-                isWithToken = item;
-                return;
-        }
-    }
-
-    public void SelectInt(string which, int item) {
-        var list = which switch {
-            "craft" => craftList,
-            "pack"  => packList,
-            "type"  => typeList,
-            "rarity"=> rarityList,
-            "cost"  => costList,
-            "atk"   => atkList,
-            "hp"    => hpList, 
-            _ => null,
-        };
-
-        if (item == -1) {
-            list?.Clear();
-            return;
-        }
-
-        if (Card.StatusName.Contains(which) && (item < 0)) {
-            if (list.Count <= 0)
-                return;
-
-            var below = Enumerable.Range(0, list.Max() + 1);
-            var above = Enumerable.Range(list.Min(), 10 - list.Min() + 1);
-            var result = item switch {
-                -2 => below,
-                -3 => above,
-                _ => list,
-            };
-            list.Clear();
-            list.AddRange(result);
-            return;
-        }
-
-        list?.Fluctuate(item);
-    }
-
-    public bool Filter(Card card) {
-        return FormatFilter(card) && ZoneFilter(card) && NameFilter(card)
-            && CostFilter(card) && AtkFilter(card) && HpFilter(card)
-            && CraftFilter(card) && PackFilter(card) && TypeFilter(card) 
-            && RarityFilter(card) && TraitFilter(card) && KeywordFilter(card) 
-            && DescriptionFilter(card) && AuthorFilter(card) && TokenFilter(card);
-    }
-
-    public bool FormatFilter(Card card) => (format == -1) || card.IsFormat((GameFormat)format);
-    public bool ZoneFilter(Card card) => (card.ZoneId == zone) || (card.PackId == 0);
-    public bool NameFilter(Card card) => string.IsNullOrEmpty(name) || card.name.Contains(name);
-    public bool CraftFilter(Card card) => craftList.IsNullOrEmpty() || craftList.Contains(card.CraftId);
-    public bool PackFilter(Card card) => packList.IsNullOrEmpty() || packList.Contains(card.PackId);
-    public bool TypeFilter(Card card) => (card.Type != CardType.Leader) && (card.Type != CardType.Evolved) && (typeList.IsNullOrEmpty() || typeList.Contains(card.TypeId));
-    public bool RarityFilter(Card card) => rarityList.IsNullOrEmpty() || rarityList.Contains(card.RarityId);
-    public bool TraitFilter(Card card) => string.IsNullOrEmpty(trait) || card.traits.Select(x => x.GetTraitName()).Contains(trait);
-    public bool KeywordFilter(Card card) => string.IsNullOrEmpty(keyword) || card.keywords.Select(x => x.GetKeywordName()).Contains(keyword);
-    public bool DescriptionFilter(Card card) => string.IsNullOrEmpty(description) || card.description.Contains(description);
-    public bool AuthorFilter(Card card) => string.IsNullOrEmpty(author) || (card.author == author);
-    public bool TokenFilter(Card card) => (card.Group == CardGroup.Normal) || (isWithToken && (card.Group == CardGroup.Token));
-
-    public bool CostFilter(Card card) => costList.IsNullOrEmpty() || costList.Contains(Mathf.Min(card.cost, 10));
-    public bool AtkFilter(Card card) => atkList.IsNullOrEmpty() || atkList.Contains(Mathf.Min(card.atk, 10));
-    public bool HpFilter(Card card) => hpList.IsNullOrEmpty() || hpList.Contains(Mathf.Min(card.hp, 10));
-
 }
 
 
@@ -340,7 +216,8 @@ public enum CardTrait
 public enum CardKeyword 
 {
     None = 0, Storm = 1, Ward = 2, Bane = 3, Rush = 4, Ambush = 5, Drain = 6,
-    Fanfare = 7, Lastword = 8, Attack = 9, Defense = 10, Combo = 11,
+    Fanfare = 7, Lastword = 8, Attack = 9, Defense = 10, Evolve = 11, 
+    Combo = 12, Rally = 13, SpellBoost = 14,
 }
 
 public enum BattlePlaceId 

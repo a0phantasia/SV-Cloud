@@ -7,7 +7,7 @@ public class CardDetailInfoView : IMonoBehaviour
 {
     [SerializeField] private Image background, craftEmblem;
     [SerializeField] private Text nameText, craftText, traitText;
-    [SerializeField] private Text tokenText, packText, authorText;
+    [SerializeField] private Text tokenText, packText;
  
     public void SetCard(Card card) {
         background?.SetSprite(SpriteResources.GetDetailBackgroundSprite(card.CraftId));
@@ -18,7 +18,6 @@ public class CardDetailInfoView : IMonoBehaviour
         traitText?.SetText(card.traits.GetTraitName());
         tokenText?.SetText(card.Group.GetGroupNote());
         packText?.SetText(card.Pack.GetPackName());
-        authorText?.SetText(card.author);
     }
 
 }

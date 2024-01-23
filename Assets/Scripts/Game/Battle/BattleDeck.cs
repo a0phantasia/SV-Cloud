@@ -23,7 +23,7 @@ public class BattleDeck : BattlePlace
         craft = rhs.craft;
     }
 
-    protected override BattlePlaceId GetPlaceId()
+    public override BattlePlaceId GetPlaceId()
     {
         return BattlePlaceId.Deck;
     }

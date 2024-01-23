@@ -29,9 +29,9 @@ public class BattleCardFollowerView : BattleBaseView
 
         cardFrameButton?.SetSprite(SpriteResources.GetBattleCardFrameSprite(card.TypeId, card.RarityId));
 
-        SetArtwork(await card.Artwork, card.Type);
         SetFlagIcon(card.effects);
         SetOutline(battleCard);
+        SetArtwork(await card.Artwork, card.Type);
     }
 
     private void SetArtwork(Texture2D artwork, CardType type) {
@@ -47,7 +47,7 @@ public class BattleCardFollowerView : BattleBaseView
             icon = SpriteResources.Lastword;
         else if (effects.Exists(x => (x.timing.TryTrimStart("on_", out var trimTiming)) && (!trimTiming.StartsWith("this_"))))
             icon = SpriteResources.Flag;
-        else if (effects.Exists(x => (x.timing == "on_this_attack") || (x.timing == "on_this_defense")))
+        else if (effects.Exists(x => (x.timing == "on_this_attack") || (x.timing == "on_this_defense") || (x.timing == "on_this_evolve")))
             icon = SpriteResources.Flag;
 
         flagImage?.SetSprite(icon);

@@ -78,7 +78,7 @@ public static class SpriteResources {
     public static Sprite EPUsed => RM.instance.GetSprite("Game/ep/ep_used");
     public static Sprite EPContainer => RM.instance.GetSprite("Game/ep/container/1");
     public static Sprite EPContainerUsed => RM.instance.GetSprite("Game/ep/container/0");
-    public static Sprite DeathCard => DefaultSleeve;
+    public static Sprite DeathCard => RM.instance.GetSprite("Game/icon/death");
     public static Sprite Lastword => RM.instance.GetSprite("Card Style/icon/lastword");
     public static Sprite Flag => RM.instance.GetSprite("Card Style/icon/flag");
 

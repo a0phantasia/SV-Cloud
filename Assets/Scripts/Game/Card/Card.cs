@@ -10,7 +10,7 @@ using UnityEngine.UI;
 
 public class Card : IIdentifyHandler
 {
-    public const int DATA_COL = 8;
+    public const int DATA_COL = 7;
     public const int DESC_COL = 2;
     public static string[] StatusName => new string[] { "cost", "atk", "hp" };
     public static Card Get(int id) => DatabaseManager.instance.GetCardInfo(id);
@@ -50,7 +50,6 @@ public class Card : IIdentifyHandler
     public List<Effect> effects = new List<Effect>();
     public Dictionary<string, string> options = new Dictionary<string, string>();
     public string description;
-    public string author;
 
     public Task<Texture2D> Artwork => Addressables.LoadAssetAsync<Texture2D>(ArtworkId.ToString()).Task;
     public Card EvolveCard => DatabaseManager.instance.GetCardInfo(EvolveId);
@@ -76,7 +75,6 @@ public class Card : IIdentifyHandler
 
         effectIds = _slicedData[5].ToIntList('/');
         tokenIds = _slicedData[6].ToIntList('/');
-        author = _slicedData[7].TrimEnd('\n');
     }
 
     private void InitExtraPorperty() {
@@ -102,7 +100,6 @@ public class Card : IIdentifyHandler
         options = new Dictionary<string, string>(rhs.options);
 
         description = rhs.description;
-        author = rhs.author;
 
         ArtworkId = rhs.ArtworkId;
         NameId = rhs.NameId;
@@ -124,6 +121,37 @@ public class Card : IIdentifyHandler
 
     public float GetIdentifier(string id) 
     {
+        string trimId;
+
+        if (id.TryTrimStart("trait", out trimId)) {
+            while (trimId.TryTrimParentheses(out var traitId)) {
+                var checkTrait = traitId.Split('|').Select(x => (CardTrait)int.Parse(x));
+                if (!checkTrait.Any(traits.Contains))
+                    return 0;
+
+                trimId = trimId.TrimStart("[" + traitId + "]");
+            }
+            return 1;
+        }
+
+        if (id.TryTrimStart("keyword", out trimId)) {
+            while (trimId.TryTrimParentheses(out var keywordId)) {
+                var checkKeyword = keywordId.Split('|').Select(x => (CardKeyword)int.Parse(x));
+                if (!checkKeyword.Any(keywords.Contains))
+                    return 0;
+
+                trimId = trimId.TrimStart("[" + keywordId + "]");
+            }
+            return 1;
+        }
+
+        if (id.TryTrimStart("type", out trimId)) {
+            if (trimId.TryTrimParentheses(out var typeId)) {
+                var checkType = typeId.Split('|').Select(x => (CardType)int.Parse(x));
+                return checkType.Contains(Type) ? 1 : 0;
+            }
+        }
+
         return id switch {
             "id" => this.id,
             "name" => NameId,

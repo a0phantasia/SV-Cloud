@@ -2523,11 +2523,11 @@ RectTransform:
   m_Father: {fileID: 1986994639}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0.5}
-  m_AnchorMax: {x: 0, y: 0.5}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
   m_AnchoredPosition: {x: 80, y: 0}
-  m_SizeDelta: {x: 260, y: 33}
-  m_Pivot: {x: 0, y: 0.5}
+  m_SizeDelta: {x: 260, y: 100}
+  m_Pivot: {x: 0, y: 1}
 --- !u!114 &247154889
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4137,7 +4137,6 @@ MonoBehaviour:
   traitInputField: {fileID: 839049146}
   keywordInputField: {fileID: 333294114}
   descriptionInputField: {fileID: 247154892}
-  authorInputField: {fileID: 1235380639}
   formatOutlines: []
   craftImages:
   - {fileID: 1095428479}
@@ -11639,19 +11638,7 @@ MonoBehaviour:
       m_Calls: []
   m_OnValueChanged:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 920284886}
-        m_TargetAssemblyTypeName: PortalSearchController, Assembly-CSharp
-        m_MethodName: SetAuthor
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
   m_CaretColor: {r: 0.19607843, g: 0.19607843, b: 0.19607843, a: 1}
   m_CustomCaretColor: 0
   m_SelectionColor: {r: 0.65882355, g: 0.80784315, b: 1, a: 0.7529412}
@@ -13017,7 +13004,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1347940872
 RectTransform:
   m_ObjectHideFlags: 0

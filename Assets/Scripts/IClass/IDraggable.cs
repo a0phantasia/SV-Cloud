@@ -11,7 +11,7 @@ public class IDraggable : IMonoBehaviour, IPointerDownHandler, IBeginDragHandler
     protected CanvasGroup canvasGroup;
     protected RectTransform rectTransform;
 
-    [SerializeField] protected bool isMovable = true;
+    [SerializeField] public bool isMovable = true;
     [SerializeField] public UnityEvent<RectTransform> onBeginDragEvent = new UnityEvent<RectTransform>();
     [SerializeField] public UnityEvent<RectTransform> onDragEvent = new UnityEvent<RectTransform>();
     [SerializeField] public UnityEvent<RectTransform> onEndDragEvent = new UnityEvent<RectTransform>();

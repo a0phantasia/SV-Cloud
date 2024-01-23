@@ -93,10 +93,6 @@ public class PortalSearchController : IMonoBehaviour
         searchModel.SetString("description", description);
     }
 
-    public void SetAuthor(string author) {
-        searchModel.SetString("author", author);
-    }
-
     public void SetToken(bool token) {
         searchModel.SetBool("token", token);
     }

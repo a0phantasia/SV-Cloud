@@ -5,8 +5,8 @@ using UnityEngine;
 
 public class Leader : BattlePlace
 {
-    public static string[] infoKeys => new string[] { "rally", "destroyedFollowerCount", "destroyedAmuletCount" };
-    public static string[] infoValues => new string[] { "協作數", "已被破壞的從者數", "已被破壞的護符數" };
+    public static string[] infoKeys => new string[] { "combo", "rally", "destroyedFollowerCount", "destroyedAmuletCount" };
+    public static string[] infoValues => new string[] { "連擊數", "協作數", "已被破壞的從者數", "已被破壞的護符數" };
 
     public int CraftId => leaderCard.CurrentCard.CraftId;
     public CardCraft Craft => leaderCard.CurrentCard.Craft;
@@ -42,7 +42,7 @@ public class Leader : BattlePlace
         isEpUsed = rhs.isEpUsed;
     }
 
-    protected override BattlePlaceId GetPlaceId()
+    public override BattlePlaceId GetPlaceId()
     {
         return BattlePlaceId.Leader;
     }

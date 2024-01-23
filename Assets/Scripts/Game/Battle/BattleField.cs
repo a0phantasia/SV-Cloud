@@ -24,7 +24,7 @@ public class BattleField : BattlePlace
         return index;
     }
 
-    protected override BattlePlaceId GetPlaceId()
+    public override BattlePlaceId GetPlaceId()
     {
         return BattlePlaceId.Field;
     }

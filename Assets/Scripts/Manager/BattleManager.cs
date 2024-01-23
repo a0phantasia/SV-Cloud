@@ -10,7 +10,6 @@ public class BattleManager : Manager<BattleManager>
 {
     public Battle Battle => Player.currentBattle;
 
-    [SerializeField] private GameObject lockObject;
     [SerializeField] private BattleSystemView systemView;
     [SerializeField] private BattleUnitView myView, opView;
     [SerializeField] private PhotonView masterPhotonView, clientPhotonView;
@@ -70,7 +69,7 @@ public class BattleManager : Manager<BattleManager>
             return;
 
         IsLocked = locked;
-        lockObject?.SetActive(locked);
+        myView.SetLock(IsLocked);
     }
 
     public void OnConfirmBattleResult() {

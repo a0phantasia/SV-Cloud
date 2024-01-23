@@ -69,9 +69,14 @@ public class BattleUnit : IIdentifyHandler
     /// Draw cards.
     /// </summary>
     /// <returns>Total cards drawn, including inHand and inGrave.</returns>
+    
     public List<BattleCard> Draw(int count, out List<BattleCard> inHand, out List<BattleCard> inGrave) {
+        return Draw(count, new BattleCardFilter(-1), out inHand, out inGrave);
+    }
+    
+    public List<BattleCard> Draw(int count, BattleCardFilter filter, out List<BattleCard> inHand, out List<BattleCard> inGrave) {
         var availableCount = hand.MaxCount - hand.Count;
-        var result = deck.cards.Take(count).ToList();
+        var result = deck.cards.Where(filter.FilterWithCurrentCard).Take(count).ToList();
 
         if (result.Count > availableCount) {
             inHand = result.GetRange(0, availableCount);
@@ -98,10 +103,10 @@ public class BattleUnit : IIdentifyHandler
 
     public float GetIdentifier(string id)
     {
-        var prefix = id.Split('.');
+        var prefix = id.Split('.', '[' );
         var place = GetPlace(prefix[0].ToBattlePlace());
         if (place != null)
-            return place.GetIdentifier(id.TrimStart(prefix[0] + "."));
+            return place.GetIdentifier(id.TrimStart(prefix[0]).TrimStart('.'));
 
         return id switch {
             "id"        => Id,

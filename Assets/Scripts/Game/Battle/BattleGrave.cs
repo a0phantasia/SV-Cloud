@@ -21,7 +21,7 @@ public class BattleGrave : BattlePlace
         usedCards = rhs.usedCards.Select(x => (x == null) ? null : new Card(x)).ToList();
     }
 
-    protected override BattlePlaceId GetPlaceId()
+    public override BattlePlaceId GetPlaceId()
     {
         return BattlePlaceId.Grave;
     }
@@ -34,6 +34,7 @@ public class BattleGrave : BattlePlace
 
 public enum BattleCardGraveReason {
     None = 0,
-    Destroy = 1,
-    DrawTooMuch = 2,
+    DrawTooMuch = 1,
+    Destroy = 2,
+    Return = 3,
 }

@@ -57,6 +57,22 @@ public class BattleState
         clientUnit.isMyTurn = !isMasterTurn;
     }
 
+    public virtual BattleCardPlaceInfo GetCardPlaceInfo(BattleCard card) {
+        var unit = GetBelongUnit(card);
+
+        if (unit == null)
+            return new BattleCardPlaceInfo();
+
+        var place = unit.GetBelongPlace(card);
+        var index = place.cards.IndexOf(card);  
+
+        return new BattleCardPlaceInfo(){
+            unitId = (unit.id == myUnit.id) ? 0 : 1,
+            place = place.PlaceId,
+            index = index,
+        };
+    }
+
     public virtual BattleUnit GetBelongUnit(BattleCard card) {
         for (var placeId = BattlePlaceId.Deck; placeId <= BattlePlaceId.Grave; placeId++) {
             var myPlace = myUnit.GetPlace(placeId);

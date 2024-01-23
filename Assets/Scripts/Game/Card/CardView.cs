@@ -17,6 +17,7 @@ public class CardView : IMonoBehaviour
     [SerializeField] private List<Image> costImages = new List<Image>();
     [SerializeField] private List<Image> atkImages = new List<Image>();
     [SerializeField] private List<Image> hpImages = new List<Image>();
+    [SerializeField] private List<Image> outlines = new List<Image>();
     [SerializeField] private GameObject countObject, countLimitObject;
     [SerializeField] private Text countText;
     [SerializeField] private GameObject tagObject;
@@ -36,6 +37,7 @@ public class CardView : IMonoBehaviour
         
         SetName(card.name);
         SetFrame(card.TypeId, card.RarityId);
+        SetOutlineType(card.Type);
         SetGem(card.CraftId);
         SetStatus("cost", card.cost);
         SetStatus("atk", card.atk);
@@ -75,6 +77,23 @@ public class CardView : IMonoBehaviour
         gemImage?.SetSprite(SpriteResources.GetCardGemSprite(craft));
     }
 
+    public void SetOutlineType(CardType type) {
+        var id = type switch {
+            CardType.Follower   => 0,
+            CardType.Evolved    => 0,
+            CardType.Spell      => 1,
+            CardType.Amulet     => 2,
+            CardType.Territory  => 2,
+            _ => -1,
+        };
+        outlines.ForEach(x => x.gameObject.SetActive(false));
+        
+        if (id == -1)
+            return;
+
+        outlines[id].gameObject.SetActive(true);
+    }
+
     public void SetStatus(string status, int num) {
         var images = status switch {
             "cost" => costImages,
@@ -102,6 +121,12 @@ public class CardView : IMonoBehaviour
 
     public void SetCallback(Action callback, string which = "onClick") {
         cardFrameButton?.onPointerClickEvent.SetListener(callback.Invoke);
+    }
+
+    public Color SetOutlineColor(Color color) {
+        var oldColor = outlines[0].color;
+        outlines.ForEach(x => x.SetColor(color));
+        return oldColor;
     }
 
     public void SetCount(int count) {

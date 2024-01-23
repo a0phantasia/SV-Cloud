@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -5,7 +6,7 @@ using UnityEngine;
 
 public class BattlePlace
 {
-    public BattlePlaceId placeId => GetPlaceId();
+    public BattlePlaceId PlaceId => GetPlaceId();
     public List<BattleCard> cards = new List<BattleCard>();
     public int MaxCount;
     public int Count => cards.Count;
@@ -24,7 +25,7 @@ public class BattlePlace
         options = new Dictionary<string, float>(rhs.options);
     }
 
-    protected virtual BattlePlaceId GetPlaceId() {
+    public virtual BattlePlaceId GetPlaceId() {
         return BattlePlaceId.None;
     }
 
@@ -33,7 +34,28 @@ public class BattlePlace
     }
 
     public virtual float GetIdentifier(string id) {
-        return options.Get(id, 0);
+        var trimId = id.Split('.')[0];
+
+        if (id.StartsWith("[")) {
+            var filter = BattleCardFilter.Parse(trimId);
+            var filterCards = cards.Where(filter.FilterWithCurrentCard).ToList();
+
+            trimId = id.TrimStart(trimId).TrimStart('.');
+            if (trimId.TryTrimStart("first.", out trimId))
+                return filterCards.FirstOrDefault()?.GetIdentifier(trimId) ?? 0;
+
+            return trimId switch {
+                "count" => filterCards.Count,
+                _ => 0,
+            };
+        }
+
+        return id switch {
+            "count"     => Count,
+            "maxCount"  => MaxCount,
+            "isFull"    => IsFull ? 1 : 0,
+            _           => options.Get(id, 0),
+        };
     }
 
     public virtual void SetIdentifier(string id, float num) {

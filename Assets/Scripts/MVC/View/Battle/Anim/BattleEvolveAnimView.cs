@@ -29,6 +29,7 @@ public class BattleEvolveAnimView : BattleBaseView
         var cardViews = (info.unitId == 0) ? myCardViews : opCardViews;
 
         // Anim start.
+        evolveBackground.gameObject?.SetActive(true);
         cardViews[info.index].SetTransparent(true);
         particleImage.gameObject.SetActive(true);
         particleImage.rectTransform.localScale = Vector3.one;
@@ -120,6 +121,7 @@ public class BattleEvolveAnimView : BattleBaseView
         }
 
         // Anim end.
+        evolveBackground?.gameObject.SetActive(false);
         evolveBackground?.SetColor(Color.clear);
         particleImage.gameObject.SetActive(false);
 
