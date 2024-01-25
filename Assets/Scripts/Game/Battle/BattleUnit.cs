@@ -112,6 +112,7 @@ public class BattleUnit : IIdentifyHandler
             "id"        => Id,
             "isFirst"   => isFirst ? 1 : 0,
             "isMyTurn"  => isMyTurn ? 1 : 0,
+            "isDone"    => isDone ? 1 : 0,
             _ => float.MinValue,
         };
     }

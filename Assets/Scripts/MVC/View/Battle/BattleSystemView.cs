@@ -34,6 +34,7 @@ public class BattleSystemView : BattleBaseView
                     BattleLoseReason.Retire     => (result == "LOSE" ? "你" : "對手") + "已放棄對戰",
                     BattleLoseReason.LeaderDie  => (result == "LOSE" ? "你" : "對手") + "的主戰者陣亡",
                     BattleLoseReason.Deckout    => (result == "LOSE" ? "你" : "對手") + "的牌庫已抽乾",
+                    BattleLoseReason.TurnOverMax=> (result == "LOSE" ? "你" : "對手") + "的回合數已達上限",
                     _ => string.Empty,
                 };
                 Anim.ResultAnim("YOU " + result, reason, () => {

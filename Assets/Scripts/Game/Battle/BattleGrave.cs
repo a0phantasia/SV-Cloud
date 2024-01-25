@@ -7,7 +7,7 @@ public class BattleGrave : BattlePlace
 {
     public int GraveCount = 0;
     public List<Card> usedCards = new List<Card>();
-    public List<Card> destroyedCards => cards.Where(x => x.GetIdentifier("graveReason") == (float)BattleCardGraveReason.Destroy).Select(x => x.card).ToList();
+    public List<Card> destroyedCards => cards.Where(x => x.GetIdentifier("graveReason") == (float)BattleCardGraveReason.Destroy).Select(x => x.baseCard).ToList();
     public List<Card> destroyedFollowers => destroyedCards.Where(x => x.IsFollower()).ToList();
 
     public List<Card> DistinctUsedCards => usedCards.Select(x => x.id).Distinct().Select(Card.Get).OrderBy(CardDatabase.Sorter).ToList();
@@ -28,7 +28,7 @@ public class BattleGrave : BattlePlace
 
     public override bool Contains(BattleCard battleCard)
     {
-        return base.Contains(battleCard) || usedCards.Contains(battleCard.card);
+        return base.Contains(battleCard) || usedCards.Contains(battleCard.baseCard);
     }
 }
 

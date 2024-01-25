@@ -86,4 +86,14 @@ public class BattleState
         return null;
     }
 
+    public virtual void RemoveUntilEffect() {
+        for (var placeId = BattlePlaceId.Deck; placeId <= BattlePlaceId.Grave; placeId++) {
+            var lhsPlace = currentUnit.GetPlace(placeId);
+            var rhsPlace = GetRhsUnitById(currentUnit.id).GetPlace(placeId);
+
+            lhsPlace?.cards.ForEach(x => x.RemoveUntilEffect());
+            rhsPlace?.cards.ForEach(x => x.RemoveUntilEffect());
+        }
+    }
+
 }

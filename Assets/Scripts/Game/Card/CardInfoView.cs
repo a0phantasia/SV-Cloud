@@ -80,7 +80,7 @@ public class CardInfoView : IMonoBehaviour
     }
 
     public void SetBattleCard(BattleCard card) {
-        var baseCard = card?.card;
+        var baseCard = card?.baseCard;
         SetCard(baseCard, card?.GetAdditionalDescription());
     }
 

@@ -2,48 +2,52 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using ExitGames.Client.Photon.StructWrapping;
 using UnityEngine;
 
 public static class EffectDatabase {
-
-    private static Dictionary<string, EffectCondition> condConvDict = new Dictionary<string, EffectCondition>() {
-        {"none", EffectCondition.None},
-    };
-
     private static Dictionary<string, EffectAbility> abilityConvDict = new Dictionary<string, EffectAbility>() {
-        {"none",        EffectAbility.None          },
-        {"result",      EffectAbility.SetResult     },
-        {"keep",        EffectAbility.KeepCard      },
-        {"turn_start",  EffectAbility.TurnStart     },
-        {"turn_end",    EffectAbility.TurnEnd       },
-        {"use",         EffectAbility.Use           },
-        {"cover",       EffectAbility.Cover         },
-        {"attack",      EffectAbility.Attack        },
-        {"evolve",      EffectAbility.Evolve        },
-        {"fusion",      EffectAbility.Fusion        },
-        {"act",         EffectAbility.Act           },
+        {"none",            EffectAbility.None          },
+        {"result",          EffectAbility.SetResult     },
+        {"keep",            EffectAbility.KeepCard      },
+        {"turn_start",      EffectAbility.TurnStart     },
+        {"turn_end",        EffectAbility.TurnEnd       },
+        {"use",             EffectAbility.Use           },
+        {"cover",           EffectAbility.Cover         },
+        {"attack",          EffectAbility.Attack        },
+        {"evolve",          EffectAbility.Evolve        },
+        {"fusion",          EffectAbility.Fusion        },
+        {"act",             EffectAbility.Act           },
 
-        {"set_keyword", EffectAbility.SetKeyword    },
-        {"draw",        EffectAbility.Draw          },
-        {"summon",      EffectAbility.Summon        },
-        {"damage",      EffectAbility.Damage        },
-        {"heal",        EffectAbility.Heal          },
-        {"destroy",     EffectAbility.Destroy       },
-        {"vanish",      EffectAbility.Vanish        },
-        {"return",      EffectAbility.Return        },
-        {"transform",   EffectAbility.Transform     },
-        {"buff",        EffectAbility.Buff          },
-        {"debuff",      EffectAbility.Debuff        },
+        {"set_keyword",     EffectAbility.SetKeyword    },
+        {"draw",            EffectAbility.Draw          },
+        {"summon",          EffectAbility.Summon        },
+        {"damage",          EffectAbility.Damage        },
+        {"heal",            EffectAbility.Heal          },
+        {"destroy",         EffectAbility.Destroy       },
+        {"vanish",          EffectAbility.Vanish        },
+        {"return",          EffectAbility.Return        },
+        {"transform",       EffectAbility.Transform     },
+        {"buff",            EffectAbility.Buff          },
+        {"debuff",          EffectAbility.Debuff        },
 
-        {"get_token",   EffectAbility.GetToken      },
-        {"boost",       EffectAbility.SpellBoost    },
-        {"set_cost",    EffectAbility.SetCost       },
+        {"get_token",       EffectAbility.GetToken      },
+        {"boost",           EffectAbility.SpellBoost    },
+        {"set_cost",        EffectAbility.SetCost       },
+        {"ramp",            EffectAbility.Ramp          },
+        {"add_effect",      EffectAbility.AddEffect     },
+        {"remove_effect",   EffectAbility.RemoveEffect  },
     };
 
-    public static EffectCondition ToEffectCondition(this string condition) {
-        return condConvDict.Get(condition, EffectCondition.None);
-    }
+    private static Dictionary<string, string> leaderInfoDict = new Dictionary<string, string>() {
+        {"combo", "連擊數" },
+        {"rally", "協作數" },
+        {"destroyedFollowerCount", "已被破壞的從者數" },
+        {"destroyedAmuletCount",   "已被破壞的護符數" },
+    };
+
+    private static Dictionary<string, string> sourceInfoDict = new Dictionary<string, string>() {
+        {"boost", "魔力增幅" },
+    };
 
     public static EffectAbility ToEffectAbility(this string ability) {
         return abilityConvDict.Get(ability, EffectAbility.None);
@@ -53,6 +57,12 @@ public static class EffectDatabase {
         return (ability == EffectAbility.Use) || (ability == EffectAbility.Evolve);
     }
 
+    public static string[] GetLeaderInfoKeys() => leaderInfoDict.Keys.ToArray();
+    public static string[] GetLeaderInfoValues() => leaderInfoDict.Values.ToArray();
+    public static string ToLeaderInfoValue(this string key) => leaderInfoDict.Get(key, string.Empty);
+    public static string[] GetSourceInfoKeys() => sourceInfoDict.Keys.ToArray();
+    public static string[] GetSourceInfoValues() => sourceInfoDict.Values.ToArray();
+    public static string ToSourceInfoValue(this string key) => sourceInfoDict.Get(key, string.Empty);
 }
 
 public class EffectTargetInfo 
@@ -86,10 +96,6 @@ public class EffectTargetInfo
     }
 }
 
-public enum EffectCondition {
-    None,
-}
-
 public enum EffectAbility {
     None = 0,   SetResult = 1,  KeepCard = 2,   TurnStart = 3,  TurnEnd = 4,
     Use = 5,    Cover = 6,  Attack = 7, Evolve = 8, Fusion = 9, Act = 10,
@@ -105,7 +111,11 @@ public enum EffectAbility {
     Transform   = 108,
     Buff        = 109,
     Debuff      = 110,
+
     GetToken    = 111,
     SpellBoost  = 112,
     SetCost     = 113,
+    Ramp        = 114,
+    AddEffect   = 115,
+    RemoveEffect= 116,
 }

@@ -1,16 +1,27 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class BattleCardBuffController
 {
-    public int costBuff, atkBuff, hpBuff;
-    public int damage;
-
+    private int costBuff, atkBuff, hpBuff, damage;
+    public List<KeyValuePair<Func<bool>, CardStatus>> tmpBuff = new List<KeyValuePair<Func<bool>, CardStatus>>();
     public Dictionary<string, float> options = new Dictionary<string, float>();
+
+    public int CostBuff => costBuff + tmpBuff.Sum(x => x.Value.cost);
+    public int AtkBuff => atkBuff + tmpBuff.Sum(x => x.Value.atk);
+    public int HpBuff => hpBuff + tmpBuff.Sum(x => x.Value.hp);
+    public int Damage {
+        get => damage;
+        set => damage = value;
+    }
 
     public BattleCardBuffController() {
         costBuff = atkBuff = hpBuff = damage = 0;
+        tmpBuff = new List<KeyValuePair<Func<bool>, CardStatus>>();
+        options = new Dictionary<string, float>();
     }
 
     public BattleCardBuffController(BattleCardBuffController rhs) {
@@ -18,36 +29,39 @@ public class BattleCardBuffController
         atkBuff = rhs.atkBuff;
         hpBuff = rhs.hpBuff;
         damage = rhs.damage;
+        tmpBuff = rhs.tmpBuff.ToList();
         options = new Dictionary<string, float>(rhs.options);
     }
 
-    public float GetIdentifier(string id) 
-    {
+    public float GetIdentifier(string id) {
         return id switch {
-            "costBuff" => costBuff,
-            "atkBuff" => atkBuff,
-            "hpBuff" => hpBuff,
-            "damage" => damage,
+            "isBuffed" => ((AtkBuff > 0) || (HpBuff > 0)) ? 1 : 0,
             _ => options.Get(id, 0),
         };
     }
-    public void SetIdentifier(string id, float num) {
-        switch (id) {
-            default:
-                options.Set(id, num);
-                return;
-            case "damage":
-                damage = (int)num;
-                return;
-            case "costBuff":
-                costBuff =(int)num;
-                return;
-            case "atkBuff":
-                atkBuff =(int)num;
-                return;
-            case "hpBuff":
-                hpBuff =(int)num;
-                return;
-        }
+
+    public void RemoveUntilEffect() {
+        tmpBuff.RemoveAll(x => x.Key.Invoke());
     }
+
+    public int TakeDamage(int dmg) {
+        damage += dmg;
+        return dmg;
+    }
+
+    public void TakeBuff(CardStatus status, Func<bool> untilCondition) {
+        if (untilCondition == null) {
+            costBuff += status.cost;
+            atkBuff += status.atk;
+            hpBuff += status.hp;
+            return;
+        }
+        tmpBuff.Add(new KeyValuePair<Func<bool>, CardStatus>(untilCondition, status));
+    }
+    
+    public void ClearCostBuff() {
+        costBuff = 0;
+        tmpBuff.RemoveAll(x => x.Value.cost != 0);
+    }
+
 }

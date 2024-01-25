@@ -12,9 +12,9 @@ public class BattleCard : IIdentifyHandler
 
     public int Id => CurrentCard.Id;
     public bool IsEvolved { get; protected set; }
-    public Card card;
+    public Card baseCard;
     public Card evolveCard;
-    public Card OriginalCard => IsEvolved ? evolveCard : card;
+    public Card OriginalCard => IsEvolved ? evolveCard : baseCard;
     public Card CurrentCard => GetCurrentCard(OriginalCard);
     public List<Effect> newEffects = new List<Effect>();
     public BattleCardBuffController buffController;
@@ -22,13 +22,13 @@ public class BattleCard : IIdentifyHandler
 
     public Dictionary<string, float> options = new Dictionary<string, float>();
     
-    public BattleCard(Card baseCard) {
+    public BattleCard(Card card) {
         IsEvolved = false;
 
-        card = (baseCard == null) ? null : new Card(baseCard);
-        evolveCard = (card?.EvolveCard == null) ? null : new Card(card.EvolveCard);
+        baseCard = (card == null) ? null : new Card(card);
+        evolveCard = (baseCard?.EvolveCard == null) ? null : new Card(baseCard.EvolveCard);
         
-        card?.effects.ForEach(x => x.source = this);
+        baseCard?.effects.ForEach(x => x.source = this);
         evolveCard?.effects.ForEach(x => x.source = this);
 
         buffController = new BattleCardBuffController();
@@ -38,10 +38,10 @@ public class BattleCard : IIdentifyHandler
     public BattleCard(BattleCard rhs) {
         IsEvolved = rhs.IsEvolved;
         
-        card = (rhs.card == null) ? null : new Card(rhs.card);
+        baseCard = (rhs.baseCard == null) ? null : new Card(rhs.baseCard);
         evolveCard = (rhs.evolveCard == null) ? null : new Card(rhs.evolveCard);
 
-        card?.effects.ForEach(x => x.source = this);
+        baseCard?.effects.ForEach(x => x.source = this);
         evolveCard?.effects.ForEach(x => x.source = this);
 
         newEffects = rhs.newEffects.Select(x => new Effect(x)).ToList();
@@ -100,10 +100,10 @@ public class BattleCard : IIdentifyHandler
 
     public Card GetCurrentCard(Card baseCard) {
         var result = new Card(baseCard);
-        result.cost = Mathf.Max(result.cost + buffController.costBuff, 0);
-        result.atk = Mathf.Max(result.atk + buffController.atkBuff, 0);
-        result.hpMax = Mathf.Max(result.hpMax + buffController.hpBuff, 0);
-        result.hp = Mathf.Max(result.hpMax - buffController.damage, 0);
+        result.cost = Mathf.Max(result.cost + buffController.CostBuff, 0);
+        result.atk = Mathf.Max(result.atk + buffController.AtkBuff, 0);
+        result.hpMax = Mathf.Max(result.hpMax + buffController.HpBuff, 0);
+        result.hp = Mathf.Max(result.hpMax - buffController.Damage, 0);
         result.effects.AddRange(newEffects);
         result.effects.ForEach(x => x.source = this);
         return result;
@@ -112,20 +112,32 @@ public class BattleCard : IIdentifyHandler
     public string GetAdditionalDescription() {
         var card = CurrentCard;
         var description = string.Empty;
-        
-        if (card.keywords.Contains(CardKeyword.Combo)) {
-            var num = Hud.CurrentState.GetBelongUnit(this).leader.GetIdentifier("combo");
-            description += "(當前連擊數為 " + num + ")\n";
+        var leaderInfoKeys = new List<string>();
+        var sourceInfoKeys = new List<string>();
+
+        for (int i = 0; i < card.effects.Count; i++) {
+            var currentEffect = card.effects[i];
+            if (List.IsNullOrEmpty(currentEffect.condition))
+                continue;
+
+            for (int j = 0; j < currentEffect.condition.Count; j++) {
+                var currentCondition = currentEffect.condition[j];
+                if (currentCondition.TryTrimStart("leader.", out var leaderKey))
+                    leaderInfoKeys.Add(leaderKey);
+                else if (currentCondition.TryTrimStart("source.", out var sourceKey))
+                    sourceInfoKeys.Add(sourceKey);
+            }
+        }
+        leaderInfoKeys = leaderInfoKeys.Distinct().ToList();
+        sourceInfoKeys = sourceInfoKeys.Distinct().ToList();
+
+        for (int i = 0; i < leaderInfoKeys.Count; i++) {
+            var num = Hud.CurrentState.GetBelongUnit(this).leader.GetIdentifier(leaderInfoKeys[i]);
+            description += "（當前" + leaderInfoKeys[i].ToLeaderInfoValue() + "為 " + num + "）\n";
         }
 
-        if (card.keywords.Contains(CardKeyword.Rally)){
-            var num = Hud.CurrentState.GetBelongUnit(this).leader.GetIdentifier("rally");
-            description += "(當前協作數為 " + num + ")\n";
-        }
-
-        if (card.keywords.Contains(CardKeyword.SpellBoost)){
-            var num = GetIdentifier(CardKeyword.SpellBoost.GetKeywordEnglishName());
-            description += "(當前魔力增幅為 " + num + " 次)\n";
+        for (int i = 0; i < sourceInfoKeys.Count; i++) {
+            description += "（當前" + sourceInfoKeys[i].ToSourceInfoValue() + "為 " + GetIdentifier(sourceInfoKeys[i]) + "）\n";
         }
 
         return description;
@@ -249,30 +261,33 @@ public class BattleCard : IIdentifyHandler
         return !isAmbush;
     }
 
+    public void RemoveUntilEffect() {
+        buffController.RemoveUntilEffect();    
+    }
+
     // Evolve this follower. You should check IsEvolvable() before calling this if you use EP evolve.
     public void Evolve() {
         IsEvolved = true;
     }
 
-    public int TakeDamage(int damage) {
-        buffController.damage += damage;
-        return damage;
-    }
-
     public void SetKeyword(CardKeyword keyword, ModifyOption option) {
         if (option == ModifyOption.Add) {
-            card.keywords.Add(keyword);
+            baseCard.keywords.Add(keyword);
             evolveCard?.keywords.Add(keyword);
             actionController.AddIdentifier(keyword.GetKeywordEnglishName(), 1);
         } else if (option == ModifyOption.Remove) {
-            card.keywords.RemoveAll(x => x == keyword);
+            baseCard.keywords.RemoveAll(x => x == keyword);
             evolveCard?.keywords.RemoveAll(x => x == keyword);
             actionController.SetIdentifier(keyword.GetKeywordEnglishName(), 0);
         }
     }
 
-    public void TakeBuff(int atk, int hp) {
-        buffController.atkBuff += atk;
-        buffController.hpBuff += hp;
+    public int TakeDamage(int damage) {
+        return buffController.TakeDamage(damage);
     }
+
+    public void TakeBuff(CardStatus status, Func<bool> untilCondition) {
+        buffController.TakeBuff(status, untilCondition);
+    }
+
 }

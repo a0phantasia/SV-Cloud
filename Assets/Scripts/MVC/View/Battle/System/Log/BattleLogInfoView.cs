@@ -1,6 +1,5 @@
 using System.Collections;
 using System.Collections.Generic;
-using ExitGames.Client.Photon.StructWrapping;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -15,9 +14,11 @@ public class BattleLogInfoView : BattleBaseView
     public void LogInfo(BattleState state) {
         int myCount = 0;
         int opCount = 0;
-        for (int index = 0; index < Leader.infoKeys.Length; index++) {
-            var key = Leader.infoKeys[index];
-            var value = Leader.infoValues[index];
+        var infoKeys = EffectDatabase.GetLeaderInfoKeys();
+        var infoValues = EffectDatabase.GetLeaderInfoValues();
+        for (int index = 0; index < infoKeys.Length; index++) {
+            var key = infoKeys[index];
+            var value = infoValues[index];
             var info = state.myUnit.leader.GetIdentifier(key);
             
             if (info > 0) {

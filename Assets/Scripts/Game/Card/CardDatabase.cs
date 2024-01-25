@@ -160,7 +160,6 @@ public static class CardDatabase
     }
 }
 
-
 public enum CardGroup 
 {
     Normal = 1, Balanced = 2, Territorize = 6, Accelerate = 7, Crystal = 8, Token = 9

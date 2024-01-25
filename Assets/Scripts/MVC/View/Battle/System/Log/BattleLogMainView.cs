@@ -30,7 +30,7 @@ public class BattleLogMainView : BattleBaseView
             var obj = Instantiate(SpriteResources.Log, scrollRect.content);
             var logPrefab = obj.GetComponent<LogInfoView>();
 
-            logPrefab.SetEffect(logArray[i], state, () => cardInfoView?.SetCard(logCard.card));
+            logPrefab.SetEffect(logArray[i], state, () => cardInfoView?.SetCard(logCard.baseCard));
             battleLogs.Add(logPrefab);
         }
     }

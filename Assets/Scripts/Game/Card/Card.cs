@@ -187,3 +187,14 @@ public class Card : IIdentifyHandler
         };
     }
 }
+
+public struct CardStatus 
+{
+    public int cost, atk, hp;
+
+    public CardStatus(int cost, int atk, int hp) {
+        this.cost = cost;
+        this.atk = atk;
+        this.hp = hp;
+    }
+}

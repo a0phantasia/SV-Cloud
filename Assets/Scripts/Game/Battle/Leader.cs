@@ -5,9 +5,6 @@ using UnityEngine;
 
 public class Leader : BattlePlace
 {
-    public static string[] infoKeys => new string[] { "combo", "rally", "destroyedFollowerCount", "destroyedAmuletCount" };
-    public static string[] infoValues => new string[] { "連擊數", "協作數", "已被破壞的從者數", "已被破壞的護符數" };
-
     public int CraftId => leaderCard.CurrentCard.CraftId;
     public CardCraft Craft => leaderCard.CurrentCard.Craft;
     public BattleCard leaderCard => cards[0];
@@ -71,6 +68,7 @@ public class Leader : BattlePlace
             "ep" => ep,
             "epMax" => EpMax,
             "isEpUsed" => isEpUsed ? 1 : 0,
+            "isAwake"  => ((options.Get("lockAwake") <= 0) && (PPMax >= 7) || (options.Get("forceAwake") > 0))  ? 1 : 0,
             _ => base.GetIdentifier(id),
         };
     }
@@ -84,13 +82,13 @@ public class Leader : BattlePlace
                 PP = (int)num;
                 return;
             case "ppMax":
-                PPMax = (int)num;
+                PPMax = Mathf.Max((int)num, 0);
                 return;
             case "ep":
                 EP = (int)num;
                 return;
             case "epMax":
-                EpMax = (int)num;
+                EpMax = Mathf.Max((int)num, 0);
                 return;
             case "isEpUsed":
                 isEpUsed = num != 0;

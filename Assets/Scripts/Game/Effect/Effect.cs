@@ -3,7 +3,6 @@ using System.Linq;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEditorInternal;
 
 public class Effect : IIdentifyHandler
 {
@@ -12,7 +11,8 @@ public class Effect : IIdentifyHandler
         var effect = DatabaseManager.instance.GetEffectInfo(id);
         return (effect == null) ? null : new Effect(effect);
     }
-    public static Effect None => new Effect("none", "none", EffectCondition.None, null, EffectAbility.None, null);
+    public static Effect None => new Effect("none", "none", null, null, EffectAbility.None, null);
+    public static Battle Battle => Player.currentBattle;
 
     public BattleCard source = null;
     public Effect sourceEffect = null;
@@ -23,7 +23,7 @@ public class Effect : IIdentifyHandler
     public int Id => id;
     public string timing { get; private set; }
     public string target { get; private set; }
-    public EffectCondition condition { get; private set; }
+    public List<string> condition { get; private set; }
     public List<List<ICondition>> condOptionDictList { get; private set; } = new List<List<ICondition>>();
     public EffectAbility ability { get; private set; }
     public Dictionary<string, string> abilityOptionDict { get; private set; } = new Dictionary<string, string>();
@@ -37,7 +37,7 @@ public class Effect : IIdentifyHandler
         id = int.Parse(_slicedData[0]);
         timing = _slicedData[1];
         target = _slicedData[2];
-        condition = _slicedData[3].ToEffectCondition();
+        condition = (_slicedData[3] == "none") ? null : _slicedData[3].Split('/').ToList();
         condOptionDictList.ParseMultipleCondition(_slicedData[4]);
         ability = _slicedData[5].ToEffectAbility();
         abilityOptionDict.ParseOptions(_slicedData[6]);
@@ -45,7 +45,7 @@ public class Effect : IIdentifyHandler
     }
 
     public Effect(string _timing, string _target, 
-        EffectCondition _condition, List<List<ICondition>> _condition_option,
+        List<string> _condition, List<List<ICondition>> _condition_option,
         EffectAbility _ability, Dictionary<string, string> _ability_option) {
         source = null;
         timing = _timing;
@@ -65,7 +65,7 @@ public class Effect : IIdentifyHandler
         source = null;
         timing = "none";
         target = "none";
-        condition = EffectCondition.None;
+        condition = null;
         condOptionDictList.Add(new List<ICondition>());
         ability = (EffectAbility)data[0];
         abilityOptionDict = Parse(ability, data.SubArray(1));
@@ -197,31 +197,53 @@ public class Effect : IIdentifyHandler
         }
 
         Func<Effect, BattleState, bool> AbilityFunc = ability switch {
-            EffectAbility.SetResult => EffectAbilityHandler.SetResult,
-            EffectAbility.KeepCard  => EffectAbilityHandler.KeepCard,
-            EffectAbility.TurnStart => EffectAbilityHandler.OnTurnStart,
-            EffectAbility.TurnEnd   => EffectAbilityHandler.OnTurnEnd,
-            EffectAbility.Use       => EffectAbilityHandler.Use,
-            EffectAbility.Attack    => EffectAbilityHandler.Attack,
-            EffectAbility.Evolve    => EffectAbilityHandler.Evolve,
+            EffectAbility.SetResult     => EffectAbilityHandler.SetResult,
+            EffectAbility.KeepCard      => EffectAbilityHandler.KeepCard,
+            EffectAbility.TurnStart     => EffectAbilityHandler.OnTurnStart,
+            EffectAbility.TurnEnd       => EffectAbilityHandler.OnTurnEnd,
+            EffectAbility.Use           => EffectAbilityHandler.Use,
+            EffectAbility.Attack        => EffectAbilityHandler.Attack,
+            EffectAbility.Evolve        => EffectAbilityHandler.Evolve,
 
-            EffectAbility.SetKeyword=> EffectAbilityHandler.SetKeyword,
-            EffectAbility.Draw      => EffectAbilityHandler.Draw,
-            EffectAbility.Summon    => EffectAbilityHandler.Summon,
-            EffectAbility.Damage    => EffectAbilityHandler.Damage,
-            EffectAbility.Destroy   => EffectAbilityHandler.Destroy,
-            EffectAbility.Return    => EffectAbilityHandler.Return,
-            EffectAbility.Buff      => EffectAbilityHandler.Buff,
+            EffectAbility.SetKeyword    => EffectAbilityHandler.SetKeyword,
+            EffectAbility.Draw          => EffectAbilityHandler.Draw,
+            EffectAbility.Summon        => EffectAbilityHandler.Summon,
+            EffectAbility.Damage        => EffectAbilityHandler.Damage,
+            EffectAbility.Destroy       => EffectAbilityHandler.Destroy,
+            EffectAbility.Return        => EffectAbilityHandler.Return,
+            EffectAbility.Buff          => EffectAbilityHandler.Buff,
+            EffectAbility.Debuff        => EffectAbilityHandler.Debuff,
 
-            EffectAbility.GetToken  => EffectAbilityHandler.GetToken,
-            EffectAbility.SpellBoost=> EffectAbilityHandler.SpellBoost,
-            EffectAbility.SetCost   => EffectAbilityHandler.SetCost,
+            EffectAbility.GetToken      => EffectAbilityHandler.GetToken,
+            EffectAbility.SpellBoost    => EffectAbilityHandler.SpellBoost,
+            EffectAbility.SetCost       => EffectAbilityHandler.SetCost,
+            EffectAbility.Ramp          => EffectAbilityHandler.Ramp,
+            EffectAbility.AddEffect     => EffectAbilityHandler.AddEffect,
+            EffectAbility.RemoveEffect  => EffectAbilityHandler.RemoveEffect,
+
             _ => (e, s) => true,
         };
 
+        var result = true;
         var repeat = int.Parse(abilityOptionDict.Get("repeat", "1"));
-        
-        return Enumerable.Range(0, repeat).All(x => AbilityFunc.Invoke(this, state));
+
+        for (int i = 0; i < repeat; i++) {
+            result = result && AbilityFunc.Invoke(this, state);
+
+            /*
+            var appendixEffect = Effect.Get(int.Parse(abilityOptionDict.Get("appendix", "0")));
+            if (appendixEffect != null) {
+                appendixEffect.source = this.source;
+                appendixEffect.sourceEffect = this;
+                appendixEffect.invokeUnit = this.invokeUnit;
+                Battle.EnqueueEffect(appendixEffect);
+            } 
+            */  
+        }
+
+        state.RemoveUntilEffect();
+
+        return result;
     }
 
     public bool CheckAndApply(BattleState state = null) {
@@ -303,5 +325,14 @@ public class Effect : IIdentifyHandler
                 }
                 break;
         }
+    }
+
+    public Func<bool> GetCheckCondition(string checkTiming, BattleState state) {
+        return checkTiming switch {
+            "turn_end"      => () => state.currentEffect.ability == EffectAbility.TurnEnd,
+            "me_turn_end"   => () => (state.currentEffect.ability == EffectAbility.TurnEnd) && (invokeUnit.isDone),
+            "op_turn_end"   => () => (state.currentEffect.ability == EffectAbility.TurnEnd) && (state.GetRhsUnitById(invokeUnit.id).isDone),
+            _               => null,
+        };
     }
 }
