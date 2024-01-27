@@ -84,7 +84,6 @@ public class BattleCard : IIdentifyHandler
         if (id.TryTrimStart("action.", out trimId))
             return actionController.GetIdentifier(trimId);
 
-
         return id switch {
             _ => options.Get(id, 0),
         };
@@ -286,8 +285,19 @@ public class BattleCard : IIdentifyHandler
         return buffController.TakeDamage(damage);
     }
 
+    public int TakeHeal(int heal) {
+        return buffController.TakeHeal(heal);
+    }
+
     public void TakeBuff(CardStatus status, Func<bool> untilCondition) {
         buffController.TakeBuff(status, untilCondition);
+    }
+
+    public int TakeCountdown(int add) {
+        if (baseCard.countdown > 0)
+            baseCard.countdown = Mathf.Max(baseCard.countdown + add, 0); 
+            
+        return add;
     }
 
 }

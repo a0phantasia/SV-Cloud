@@ -29,7 +29,7 @@ public class BattleCardFollowerView : BattleBaseView
 
         cardFrameButton?.SetSprite(SpriteResources.GetBattleCardFrameSprite(card.TypeId, card.RarityId));
 
-        SetFlagIcon(card.effects);
+        SetFlagIcon(battleCard);
         SetOutline(battleCard);
         SetArtwork(await card.Artwork, card.Type);
     }
@@ -40,15 +40,20 @@ public class BattleCardFollowerView : BattleBaseView
         artworkRawImage.SetTexture(artwork ?? SpriteResources.DefaultSleeve?.texture);
     }
 
-    private void SetFlagIcon(List<Effect> effects) {
+    private void SetFlagIcon(BattleCard card) {
+        var effects = card.CurrentCard.effects;
         var icon = SpriteResources.Empty;
 
         if (effects.Exists(x => x.timing == "on_this_destroy"))
-            icon = SpriteResources.Lastword;
+            icon = SpriteResources.GetCardIcon("lastword");
         else if (effects.Exists(x => (x.timing.TryTrimStart("on_", out var trimTiming)) && (!trimTiming.StartsWith("this_"))))
-            icon = SpriteResources.Flag;
+            icon = SpriteResources.GetCardIcon("flag");
         else if (effects.Exists(x => (x.timing == "on_this_attack") || (x.timing == "on_this_defense") || (x.timing == "on_this_evolve")))
-            icon = SpriteResources.Flag;
+            icon = SpriteResources.GetCardIcon("flag");
+        else if (card.actionController.IsKeywordAvailable(CardKeyword.Bane))
+            icon = SpriteResources.GetCardIcon("bane");
+        else if (card.actionController.IsKeywordAvailable(CardKeyword.Drain))
+            icon = SpriteResources.GetCardIcon("drain");
 
         flagImage?.SetSprite(icon);
     }

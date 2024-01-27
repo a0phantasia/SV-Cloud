@@ -30,10 +30,11 @@ public class CreateRoomController : IMonoBehaviour
             masterName = Player.Nickname,
             clientName = "電腦",
         };
-        BattleDeck myDeck = new BattleDeck(1, 1, 1, (new List<int>() { 100004114, 100003114, 100004221, 100003217 })
-            .Concat(Enumerable.Repeat(100003211 , 36)).ToArray());
-        BattleDeck opDeck = new BattleDeck(1, 1, 2, Enumerable.Repeat(100002111, 40).ToArray());
-        Battle battle = new Battle(myDeck, opDeck, settings);
-        SceneLoader.instance.ChangeScene(SceneId.Battle);
+        ResourceManager.LoadCSV("Data/System/deckTest.csv", (data) => {
+            BattleDeck myDeck = new BattleDeck(1, 1, 1, data[0].ToIntList('/').ToArray());
+            BattleDeck opDeck = new BattleDeck(1, 1, 2, data[1].ToIntList('/').ToArray());
+            Battle battle = new Battle(myDeck, opDeck, settings);
+            SceneLoader.instance.ChangeScene(SceneId.Battle);
+        }, Debug.Log);
     }
 }

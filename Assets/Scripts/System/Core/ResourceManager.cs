@@ -225,7 +225,7 @@ public class ResourceManager : Singleton<ResourceManager>
     }
 
     public void LoadKeywordInfo(Action<Dictionary<int, string[]>> onSuccess = null) {
-        LoadCSV(cardUrl + "keyword.csv", (data) => onSuccess?.Invoke(GetDescriptionInfoDict(data, 2)));
+        LoadCSV(cardUrl + "keyword.csv", (data) => onSuccess?.Invoke(GetDescriptionInfoDict(data, 3)));
     }
 
     private T[] InitAll<T>(string path, string key) where T : Object {

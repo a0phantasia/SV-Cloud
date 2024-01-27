@@ -6,8 +6,10 @@ using UnityEngine.UI;
 
 public class BattleCardEffectView : IMonoBehaviour
 {
+    [SerializeField] private float vanishSeconds;
     [SerializeField] private float damageSeconds, damagePosDeltaY;
     [SerializeField] private GameObject targetObject;
+    [SerializeField] private GameObject vanishObject;
     [SerializeField] private Text damageText;
     [SerializeField] private List<GameObject> effectObjects;
 
@@ -38,7 +40,7 @@ public class BattleCardEffectView : IMonoBehaviour
 
         while (currentTime < finishTime) {
             percent = currentTime / finishTime;
-            damageText.rectTransform.anchoredPosition = new Vector2(initPos.x, initPos.y + damagePosDeltaY * (color == Color.red ? 0.5f : percent));
+            damageText.rectTransform.anchoredPosition = new Vector2(initPos.x, initPos.y + (color == Color.red ? 5f : (damagePosDeltaY * percent)));
             currentTime += Time.deltaTime;
             yield return null;
         }
@@ -46,6 +48,40 @@ public class BattleCardEffectView : IMonoBehaviour
         damageText.SetColor(Color.clear);
         damageText.rectTransform.anchoredPosition = initPos;
 
+        callback?.Invoke();
+    }
+
+    public void SetLeaveField(string type, Action callback) {
+        switch (type) {
+            default:
+                callback?.Invoke();
+                break;
+            case "vanish":
+                StartCoroutine(VanishField(callback));
+                break;
+        }
+    }
+
+    private IEnumerator VanishField(Action callback) {
+        if (vanishObject == null) {
+            callback?.Invoke();
+            yield break;
+        }
+
+        vanishObject.transform.localScale = Vector3.one;
+        vanishObject.SetActive(true);
+
+        yield return new WaitForSeconds(0.15f);
+
+        float currentTime = 0, finishTime = vanishSeconds, percent = 0;
+        while (currentTime < finishTime) {
+            percent = currentTime / finishTime;
+            vanishObject.transform.localScale = Mathf.Lerp(1, 0, percent) * Vector3.one;
+            currentTime += Time.deltaTime;
+            yield return null;
+        }
+
+        vanishObject.SetActive(false);
         callback?.Invoke();
     }
 }

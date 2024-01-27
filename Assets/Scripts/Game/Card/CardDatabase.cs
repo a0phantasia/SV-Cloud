@@ -79,42 +79,6 @@ public static class CardDatabase
         { CardTrait.Commander,  "指揮官"    },
     };
 
-    public static Dictionary<CardKeyword, string> keywordNameDict = new Dictionary<CardKeyword, string>() {
-        { CardKeyword.None,         "-"         },
-        { CardKeyword.Storm,        "疾馳"      },
-        { CardKeyword.Ward,         "守護"      },
-        { CardKeyword.Bane,         "必殺"      },
-        { CardKeyword.Rush,         "突進"      },
-        { CardKeyword.Ambush,       "潛行"      },
-        { CardKeyword.Drain,        "吸血"      },
-        { CardKeyword.Fanfare,      "入場曲"    },
-        { CardKeyword.Lastword,     "謝幕曲"    },
-        { CardKeyword.Attack,       "攻擊時"    },
-        { CardKeyword.Defense,      "交戰時"    },
-        { CardKeyword.Evolve,       "進化時"    },
-        { CardKeyword.Combo,        "連擊"      },
-        { CardKeyword.Rally,        "協作"      },
-        { CardKeyword.SpellBoost,   "魔力增幅"  },
-    };
-
-    public static Dictionary<CardKeyword, string> keywordEnglishNameDict = new Dictionary<CardKeyword, string>() {
-        { CardKeyword.None,         "-"         },
-        { CardKeyword.Storm,        "storm"     },
-        { CardKeyword.Ward,         "ward"      },
-        { CardKeyword.Bane,         "bane"      },
-        { CardKeyword.Rush,         "rush"      },
-        { CardKeyword.Ambush,       "ambush"    },
-        { CardKeyword.Drain,        "drain"     },
-        { CardKeyword.Fanfare,      "fanfare"   },
-        { CardKeyword.Lastword,     "lastword"  },
-        { CardKeyword.Attack,       "attack"    },
-        { CardKeyword.Defense,      "defense"   },
-        { CardKeyword.Evolve,       "evolve"    },
-        { CardKeyword.Combo,        "combo"     },
-        { CardKeyword.Rally,        "rally"     },
-        { CardKeyword.SpellBoost,   "boost"     },
-    };
-
     public static string GetPackName(this CardPack pack) => packNameDict.Get(pack, "-");
     public static string GetZoneName(this CardZone zone) => zoneNameDict.Get(zone, "自訂");
     public static string GetFormatName(this GameFormat format) => formatNameDict.Get(format, "無限制");
@@ -124,8 +88,9 @@ public static class CardDatabase
     public static string GetTypeEnglishName(this CardType type) => typeEnglishNameDict.Get(type, "主戰者");
     public static string GetRarityName(this CardRarity rarity) => rarityNameDict.Get(rarity, "傳說");
     public static string GetTraitName(this CardTrait trait) => traitNameDict.Get(trait, "-");
-    public static string GetKeywordName(this CardKeyword keyword) => keywordNameDict.Get(keyword, "-");
-    public static string GetKeywordEnglishName(this CardKeyword keyword) => keywordEnglishNameDict.Get(keyword, "-");
+    public static string GetKeywordName(this CardKeyword keyword) => DatabaseManager.instance.GetKeywordName((int)keyword);
+    public static string GetKeywordEnglishName(this CardKeyword keyword) => DatabaseManager.instance.GetKeywordEnglishName((int)keyword);
+    public static string GetKeywordInfo(this CardKeyword keyword) => DatabaseManager.instance.GetKeywordInfo((int)keyword);
 
     public static int GetMaxCardCountInDeck(this GameFormat format) => format switch {
         GameFormat.TwoPick => 30,
@@ -216,7 +181,8 @@ public enum CardKeyword
 {
     None = 0, Storm = 1, Ward = 2, Bane = 3, Rush = 4, Ambush = 5, Drain = 6,
     Fanfare = 7, Lastword = 8, Attack = 9, Defense = 10, Evolve = 11, 
-    Combo = 12, Rally = 13, SpellBoost = 14,
+    Combo = 12, Rally = 13, SpellBoost = 14, Awake = 15, Necromance = 16,
+    Venge = 17, Countdown = 18,
 }
 
 public enum BattlePlaceId 

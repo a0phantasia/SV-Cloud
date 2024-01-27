@@ -53,4 +53,9 @@ public class BattleCardView : IMonoBehaviour
     public void SetDamage(int damage, Color color, Action callback) {
         effectView?.SetDamage(damage, color, callback);
     }
+
+    public void SetLeaveField(string type, Action callback) {
+        SetTransparent(true);
+        effectView?.SetLeaveField(type, callback);
+    }
 }

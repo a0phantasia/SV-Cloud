@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
@@ -31,7 +32,6 @@ public class Card : IIdentifyHandler
     public int NameId { get; protected set; }
     public int ArtworkId { get; protected set; }
     public int CountLimit { get; protected set; }
-    public int Countdown { get; protected set; }
 
     public CardGroup Group => (CardGroup)GroupId;
     public CardZone Zone => (CardZone)ZoneId;
@@ -42,7 +42,7 @@ public class Card : IIdentifyHandler
     public CardRarity Rarity => (CardRarity)RarityId;
 
     public string name;
-    public int cost, atk, hp, hpMax;
+    public int cost, atk, hp, hpMax, countdown;
     public List<CardTrait> traits = new List<CardTrait>();
     public List<CardKeyword> keywords = new List<CardKeyword>();
     public List<int> tokenIds = new List<int>();
@@ -83,7 +83,7 @@ public class Card : IIdentifyHandler
 
         NameId = int.Parse(options.Get("nameId", id.ToString()));
         CountLimit = int.Parse(options.Get("limit", "3"));
-        Countdown = int.Parse(options.Get("countdown", "-1"));
+        countdown = int.Parse(options.Get("countdown", "-1"));
     }
 
     public Card(Card rhs) {
@@ -104,7 +104,7 @@ public class Card : IIdentifyHandler
         ArtworkId = rhs.ArtworkId;
         NameId = rhs.NameId;
         CountLimit = rhs.CountLimit;
-        Countdown = rhs.Countdown;
+        countdown = rhs.countdown;
         
         SetEffects(rhs.effectIds);
     }
@@ -162,14 +162,20 @@ public class Card : IIdentifyHandler
             "type" => TypeId,
             "rarity" => RarityId,
             "serial" => SerialNum,
-            _ => float.Parse(options.Get(id, float.MinValue.ToString())),
+
+            "cost" => cost,
+            "atk" => atk,
+            "hp" => hp,
+            "hpMax" => hpMax,
+            "countdown" => countdown,
+            _ => float.Parse(options.Get(id, "0")),
         };
     }
 
     public bool TryGetIdenfier(string id, out float value)
     {
         value = GetIdentifier(id);
-        return value == float.MinValue;
+        return true;
     }
 
     public void SetIdentifier(string id, float value)

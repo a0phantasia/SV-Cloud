@@ -49,6 +49,12 @@ public class BattleCardBuffController
         return dmg;
     }
 
+    public int TakeHeal(int heal) {
+        var realHeal = Mathf.Min(heal, damage);
+        damage -= realHeal;
+        return realHeal;
+    }
+
     public void TakeBuff(CardStatus status, Func<bool> untilCondition) {
         if (untilCondition == null) {
             costBuff += status.cost;

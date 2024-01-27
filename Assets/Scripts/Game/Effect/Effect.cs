@@ -3,6 +3,7 @@ using System.Linq;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using ExitGames.Client.Photon.StructWrapping;
 
 public class Effect : IIdentifyHandler
 {
@@ -196,61 +197,21 @@ public class Effect : IIdentifyHandler
             state.currentEffect = this;
         }
 
-        Func<Effect, BattleState, bool> AbilityFunc = ability switch {
-            EffectAbility.SetResult     => EffectAbilityHandler.SetResult,
-            EffectAbility.KeepCard      => EffectAbilityHandler.KeepCard,
-            EffectAbility.TurnStart     => EffectAbilityHandler.OnTurnStart,
-            EffectAbility.TurnEnd       => EffectAbilityHandler.OnTurnEnd,
-            EffectAbility.Use           => EffectAbilityHandler.Use,
-            EffectAbility.Attack        => EffectAbilityHandler.Attack,
-            EffectAbility.Evolve        => EffectAbilityHandler.Evolve,
-
-            EffectAbility.SetKeyword    => EffectAbilityHandler.SetKeyword,
-            EffectAbility.Draw          => EffectAbilityHandler.Draw,
-            EffectAbility.Summon        => EffectAbilityHandler.Summon,
-            EffectAbility.Damage        => EffectAbilityHandler.Damage,
-            EffectAbility.Destroy       => EffectAbilityHandler.Destroy,
-            EffectAbility.Return        => EffectAbilityHandler.Return,
-            EffectAbility.Buff          => EffectAbilityHandler.Buff,
-            EffectAbility.Debuff        => EffectAbilityHandler.Debuff,
-
-            EffectAbility.GetToken      => EffectAbilityHandler.GetToken,
-            EffectAbility.SpellBoost    => EffectAbilityHandler.SpellBoost,
-            EffectAbility.SetCost       => EffectAbilityHandler.SetCost,
-            EffectAbility.Ramp          => EffectAbilityHandler.Ramp,
-            EffectAbility.AddEffect     => EffectAbilityHandler.AddEffect,
-            EffectAbility.RemoveEffect  => EffectAbilityHandler.RemoveEffect,
-
-            _ => (e, s) => true,
-        };
-
         var result = true;
         var repeat = int.Parse(abilityOptionDict.Get("repeat", "1"));
+        var abilityFunc = EffectAbilityHandler.GetAbilityFunc(ability);
 
         for (int i = 0; i < repeat; i++) {
-            result = result && AbilityFunc.Invoke(this, state);
-
-            /*
-            var appendixEffect = Effect.Get(int.Parse(abilityOptionDict.Get("appendix", "0")));
-            if (appendixEffect != null) {
-                appendixEffect.source = this.source;
-                appendixEffect.sourceEffect = this;
-                appendixEffect.invokeUnit = this.invokeUnit;
-                Battle.EnqueueEffect(appendixEffect);
-            } 
-            */  
+            if (!EffectAbilityHandler.Preprocess(this, state)) {
+                result = false;
+                continue;
+            }
+            result &= abilityFunc.Invoke(this, state);
         }
 
-        state.RemoveUntilEffect();
-
-        return result;
-    }
-
-    public bool CheckAndApply(BattleState state = null) {
-        if (!Condition(state))
-            return false;
+        EffectAbilityHandler.Postprocess(this, state);
         
-        return Apply(state);
+        return result;
     }
 
     public void SetInvokeTarget(BattleState state) {

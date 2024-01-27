@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,8 +19,9 @@ public class KeywordView : IMonoBehaviour
 
     private void InitDropdownOptions() {
         var keywordNames = new List<string>();
-        for (int i = 0; i < CardDatabase.keywordNameDict.Count; i++) {
-            keywordNames.Add(CardDatabase.keywordNameDict[(CardKeyword)i]);  
+        for (int id = 0; id < GameManager.versionData.keywordCount; id++) {
+            var keyword = (CardKeyword)id;
+            keywordNames.Add(keyword.GetKeywordName());
         }
         dropdown?.ClearOptions();
         dropdown?.AddOptions(keywordNames);
@@ -27,7 +29,8 @@ public class KeywordView : IMonoBehaviour
     }
 
     public void OnSelectKeyword(int keywordId) {
-        descriptionText?.SetText(DatabaseManager.instance.GetKeywordInfo(keywordId));
+        var keyword = (CardKeyword)keywordId;
+        descriptionText?.SetText(keyword.GetKeywordInfo());
     }
 
 }

@@ -29,6 +29,7 @@ public class BattleState
 
         masterUnit = new BattleUnit(0, settings.masterName , masterDeck, isMasterTurn);
         clientUnit = new BattleUnit(1, settings.clientName , clientDeck, !isMasterTurn);
+        masterUnit.leader.leaderCard.TakeDamage(10);
     }
 
     public BattleState(BattleState rhs) {

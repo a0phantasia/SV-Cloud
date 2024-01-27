@@ -101,6 +101,15 @@ public class BattleAnimManager : Manager<BattleAnimManager>
         damageView?.ShowHeal(info, heal, callback);
     }
 
+    public void LeaveFieldAnim(int unitId, int index, string type, Action callback) {
+        var info = new BattleCardPlaceInfo() {
+            unitId = unitId,
+            place = (index == -1) ? BattlePlaceId.Leader : BattlePlaceId.Field,
+            index = index,
+        };
+        damageView?.ShowLeaveField(info, type, callback);
+    }
+
     public void GetTokenAnim(int unitId, List<Card> tokens, Action callback) {
         if (unitId == 0)
             drawView?.MyGetToken(tokens, callback);

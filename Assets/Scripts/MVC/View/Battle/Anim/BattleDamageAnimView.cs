@@ -8,13 +8,16 @@ public class BattleDamageAnimView : BattleBaseView
 {
     [SerializeField] private BattleLeaderView myLeaderView, opLeaderView;
     [SerializeField] private List<BattleCardView> myCardViews, opCardViews;
+    [SerializeField] private BattleHandView myHandView, opHandView;
 
     public void ShowDamage(BattleCardPlaceInfo info, int damage, Action callback) {
         var leaderView = (info.unitId == 0) ? myLeaderView : opLeaderView;
         var fieldView = (info.unitId == 0) ? myCardViews : opCardViews;
+        var handView = (info.unitId == 0) ? myHandView : opHandView;
 
         switch (info.place) {
             case BattlePlaceId.Leader:
+                handView.SetHandMode(false);
                 leaderView.SetDamage(damage, Color.red, callback);
                 break;
             case BattlePlaceId.Field:
@@ -29,9 +32,11 @@ public class BattleDamageAnimView : BattleBaseView
     public void ShowHeal(BattleCardPlaceInfo info, int heal, Action callback) {
         var leaderView = (info.unitId == 0) ? myLeaderView : opLeaderView;
         var fieldView = (info.unitId == 0) ? myCardViews : opCardViews;
+        var handView = (info.unitId == 0) ? myHandView : opHandView;
 
         switch (info.place) {
             case BattlePlaceId.Leader:
+                handView.SetHandMode(false);
                 leaderView.SetDamage(heal, ColorHelper.green, callback);
                 break;
             case BattlePlaceId.Field:
@@ -42,4 +47,19 @@ public class BattleDamageAnimView : BattleBaseView
                 break;
         }
     }
+
+    public void ShowLeaveField(BattleCardPlaceInfo info, string type, Action callback) {
+        var leaderView = (info.unitId == 0) ? myLeaderView : opLeaderView;
+        var fieldView = (info.unitId == 0) ? myCardViews : opCardViews;
+
+        switch (info.place) {
+            case BattlePlaceId.Field:
+                if (!info.index.IsInRange(0, fieldView.Count))
+                    break;
+
+                fieldView[info.index].SetLeaveField(type, callback);
+                break;
+        }
+    }
+
 }

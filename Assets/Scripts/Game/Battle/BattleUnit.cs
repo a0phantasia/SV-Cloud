@@ -68,8 +68,7 @@ public class BattleUnit : IIdentifyHandler
     /// <summary>
     /// Draw cards.
     /// </summary>
-    /// <returns>Total cards drawn, including inHand and inGrave.</returns>
-    
+    /// <returns>Total cards drawn, including inHand and inGrave.</returns>    
     public List<BattleCard> Draw(int count, out List<BattleCard> inHand, out List<BattleCard> inGrave) {
         return Draw(count, new BattleCardFilter(-1), out inHand, out inGrave);
     }

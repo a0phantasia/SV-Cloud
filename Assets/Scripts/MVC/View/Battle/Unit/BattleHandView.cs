@@ -68,6 +68,9 @@ public class BattleHandView : BattleBaseView
     }
 
     public void SetHandMode(bool active) {
+        if (id == 1)
+            return;
+
         if (active && Anim.IsSelectingTarget)
             return;
 

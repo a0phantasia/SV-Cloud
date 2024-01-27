@@ -41,10 +41,10 @@ public class CardInfoView : IMonoBehaviour
     public void SetCard(Card card, string additionalDescription = null) {
         SetActive(card != null);
         buttonView?.Reset();
-        SetBackgroundSizeAuto();
 
         if (card == null) {
             descriptionText?.SetText(string.Empty);
+            SetBackgroundSizeAuto();
             return;
         }
         
@@ -71,8 +71,10 @@ public class CardInfoView : IMonoBehaviour
         float normalMinSizeY = (card.Type == CardType.Leader) ? 85 : 160;
         normalSizeY = Mathf.Clamp(GetDescriptionTextPreferredSize(false), normalMinSizeY, 240);
         evolveSizeY = Mathf.Clamp(GetDescriptionTextPreferredSize(true), 110, 350 - normalSizeY);
+        evolveSizeY = card.IsFollower() ? evolveSizeY : 0;
         
         // Adjust view size.
+        SetBackgroundSizeAuto();
         infoRect?.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, normalSizeY);
         evolveView?.SetAnchoredPos(new Vector2(0, -(normalSizeY + 5)));
         evolveView?.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, evolveSizeY);

@@ -14,6 +14,7 @@ public class VersionData
     public string releaseNote;
     public string News => releaseNote.TrimEmpty(false);
     
+    public int keywordCount;
     public int cardCount;
     public string cardPack;
     [XmlIgnore] public List<int> NewPackIds => cardPack.ToIntList('/');

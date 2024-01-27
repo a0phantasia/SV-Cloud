@@ -79,8 +79,6 @@ public static class SpriteResources {
     public static Sprite EPContainer => RM.instance.GetSprite("Game/ep/container/1");
     public static Sprite EPContainerUsed => RM.instance.GetSprite("Game/ep/container/0");
     public static Sprite DeathCard => RM.instance.GetSprite("Game/icon/death");
-    public static Sprite Lastword => RM.instance.GetSprite("Card Style/icon/lastword");
-    public static Sprite Flag => RM.instance.GetSprite("Card Style/icon/flag");
 
     public static void SetSprite(this Image image, Sprite sprite) {
         if (image == null)
@@ -110,6 +108,8 @@ public static class SpriteResources {
             _ => Color.black,
         };
     }
+
+    public static Sprite GetCardIcon(string icon) => RM.instance.GetSprite("Card Style/icon/" + icon);
 
     public static Sprite GetCardFrameSprite(int type, int rarity) {
         type = (type == (int)CardType.Evolved) ? (int)CardType.Follower : type;

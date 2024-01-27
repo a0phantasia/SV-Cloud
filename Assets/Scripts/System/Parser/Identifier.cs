@@ -11,6 +11,11 @@ public static class Identifier {
         var trimId = string.Empty;
         var lhsUnit = effect.invokeUnit;
         var rhsUnit = state.GetRhsUnitById(lhsUnit.id);
+
+        if (id.TryTrimStart("necromance", out trimId)) {
+            var necromance = Parser.ParseEffectExpression(trimId.TrimParentheses(), effect, state);
+            return (lhsUnit.grave.GraveCount >= necromance) ? 1 : 0;
+        }
         
         if (id.TryTrimStart("sourceEffect.", out trimId))
             return effect.GetSourceEffectIdentifier(trimId, state);

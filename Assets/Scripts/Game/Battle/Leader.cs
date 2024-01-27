@@ -68,7 +68,8 @@ public class Leader : BattlePlace
             "ep" => ep,
             "epMax" => EpMax,
             "isEpUsed" => isEpUsed ? 1 : 0,
-            "isAwake"  => ((options.Get("lockAwake") <= 0) && (PPMax >= 7) || (options.Get("forceAwake") > 0))  ? 1 : 0,
+            "isAwake"  => ((options.Get("lockAwake") <= 0) && ((PPMax >= 7) || (options.Get("forceAwake") > 0)))  ? 1 : 0,
+            "isVenge"  => ((options.Get("lockVenge") <= 0) && ((Hp <= 10) || (options.Get("forceVenge") > 0)))  ? 1 : 0,
             _ => base.GetIdentifier(id),
         };
     }

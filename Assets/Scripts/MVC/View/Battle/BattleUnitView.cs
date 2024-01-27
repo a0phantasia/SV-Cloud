@@ -126,6 +126,23 @@ public class BattleUnitView : BattleBaseView
                 }
                 break;
 
+            case EffectAbility.Destroy:
+            case EffectAbility.Vanish:
+            case EffectAbility.Return:
+                var leaveFieldIndexList = effect.hudOptionDict.Get("myIndex", string.Empty).ToIntList('/');
+                var leaveFieldValueList = effect.hudOptionDict.Get("myValue", string.Empty).Split('/').ToList();
+                var lastVanishIndex = leaveFieldValueList.LastIndexOf("vanish");
+                var lastCallbackIndex = (lastVanishIndex == -1) ? (leaveFieldIndexList.Count - 1) : lastVanishIndex;
+
+                if (List.IsNullOrEmpty(leaveFieldIndexList) || List.IsNullOrEmpty(leaveFieldValueList))
+                    goto default;
+
+                for (int i = 0; i < leaveFieldIndexList.Count; i++) {
+                    Anim.LeaveFieldAnim(0, leaveFieldIndexList[i], leaveFieldValueList[i], 
+                        (i == lastCallbackIndex) ? SetMyUnit : null);
+                }
+                break;
+
             case EffectAbility.GetToken:
                 var whoGetToken = effect.hudOptionDict.Get("who", "me");
                 if (whoGetToken != who)
@@ -199,7 +216,6 @@ public class BattleUnitView : BattleBaseView
                 break;
 
             case EffectAbility.Damage:
-                var damageSituation = effect.hudOptionDict.Get("situation", string.Empty);
                 var damageIndexList = effect.hudOptionDict.Get("opIndex", string.Empty).ToIntList('/');
                 var damageValueList = effect.hudOptionDict.Get("opDamage", string.Empty).ToIntList('/');
 
@@ -222,6 +238,24 @@ public class BattleUnitView : BattleBaseView
                 for (int i = 0; i < healIndexList.Count; i++) {
                     Anim.HealAnim(1, healIndexList[i], healValueList[i], 
                         (i == healIndexList.Count - 1) ? SetOpUnit : null);
+                }
+                break;
+
+            case EffectAbility.Destroy:
+            case EffectAbility.Vanish:
+            case EffectAbility.Return:
+                var leaveFieldIndexList = effect.hudOptionDict.Get("opIndex", string.Empty).ToIntList('/');
+                var leaveFieldValueList = effect.hudOptionDict.Get("opValue", string.Empty).Split('/').ToList();
+                var lastVanishIndex = leaveFieldValueList.LastIndexOf("vanish");
+                var lastCallbackIndex = (lastVanishIndex == -1) ? (leaveFieldIndexList.Count - 1) : lastVanishIndex;
+
+                if (List.IsNullOrEmpty(leaveFieldIndexList) || List.IsNullOrEmpty(leaveFieldValueList))
+                    goto default;
+
+                for (int i = 0; i < leaveFieldIndexList.Count; i++) {
+                    
+                    Anim.LeaveFieldAnim(1, leaveFieldIndexList[i], leaveFieldValueList[i], 
+                        (i == lastCallbackIndex) ? SetOpUnit : null);
                 }
                 break;
 
