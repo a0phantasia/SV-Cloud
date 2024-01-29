@@ -69,7 +69,7 @@ public class CardInfoView : IMonoBehaviour
 
         // Calculate size.
         float normalMinSizeY = (card.Type == CardType.Leader) ? 85 : 160;
-        normalSizeY = Mathf.Clamp(GetDescriptionTextPreferredSize(false), normalMinSizeY, 240);
+        normalSizeY = Mathf.Clamp(GetDescriptionTextPreferredSize(false) + 85, normalMinSizeY, 240);
         evolveSizeY = Mathf.Clamp(GetDescriptionTextPreferredSize(true), 110, 350 - normalSizeY);
         evolveSizeY = card.IsFollower() ? evolveSizeY : 0;
         

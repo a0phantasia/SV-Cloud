@@ -11,9 +11,10 @@ public class DatabaseManager : Singleton<DatabaseManager>
     public List<Card> cardMaster = new List<Card>();
     public Dictionary<int, Card> cardInfoDict = new Dictionary<int, Card>();
     public Dictionary<int, Effect> effectInfoDict = new Dictionary<int, Effect>();
-    public Dictionary<int, string> keywordNameDict = new Dictionary<int, string>();
-    public Dictionary<int, string> keywordEnglishNameDict = new Dictionary<int, string>();
-    public Dictionary<int, string> keywordInfoDict = new Dictionary<int, string>();
+    public Dictionary<CardTrait, string> traitNameDict = new Dictionary<CardTrait, string>();
+    public Dictionary<CardKeyword, string> keywordNameDict = new Dictionary<CardKeyword, string>();
+    public Dictionary<CardKeyword, string> keywordEnglishNameDict = new Dictionary<CardKeyword, string>();
+    public Dictionary<CardKeyword, string> keywordInfoDict = new Dictionary<CardKeyword, string>();
 
     // public Dictionary<string, ActivityInfo> activityInfoDict = new Dictionary<string, ActivityInfo>();
 
@@ -23,10 +24,14 @@ public class DatabaseManager : Singleton<DatabaseManager>
             cardMaster = cardInfoDict.Select(entry => entry.Value).ToList();
         }, (y) => effectInfoDict = y);
 
+        RM.LoadTraitInfo((x) => {
+            traitNameDict = x.ToDictionary(entry => (CardTrait)entry.Key, entry => entry.Value[0]);
+        });
+
         RM.LoadKeywordInfo((x) => {
-            keywordNameDict = x.ToDictionary(entry => entry.Key, entry => entry.Value[0]);
-            keywordEnglishNameDict = x.ToDictionary(entry => entry.Key, entry => entry.Value[1]);
-            keywordInfoDict = x.ToDictionary(entry => entry.Key, entry => entry.Value[2].GetDescription("-"));
+            keywordNameDict = x.ToDictionary(entry => (CardKeyword)entry.Key, entry => entry.Value[0]);
+            keywordEnglishNameDict = x.ToDictionary(entry => (CardKeyword)entry.Key, entry => entry.Value[1]);
+            keywordInfoDict = x.ToDictionary(entry => (CardKeyword)entry.Key, entry => entry.Value[2].GetDescription("-"));
         });
     }
 
@@ -35,14 +40,14 @@ public class DatabaseManager : Singleton<DatabaseManager>
             error = "獲取關鍵字說明資料失敗 (" + keywordInfoDict.Count + "/" + GameManager.versionData.keywordCount  + ")";
             return false;
         }
+        if (traitNameDict.Count != GameManager.versionData.traitCount) {
+            error = "獲取關鍵字說明資料失敗 (" + traitNameDict.Count + "/" + GameManager.versionData.traitCount  + ")";
+            return false;
+        }
         if (cardInfoDict.Count != GameManager.versionData.cardCount) {
             error = "獲取卡片資料失敗 (" + cardInfoDict.Count + "/" + GameManager.versionData.cardCount + ")";
             return false;
         }
-        // if (buffInfoDict.Count == 0) {
-        //     error = "获取Buff档案失败";
-        //     return false;
-        // }
         error = string.Empty;
         return true;
     }
@@ -61,16 +66,19 @@ public class DatabaseManager : Singleton<DatabaseManager>
         return effectInfoDict.Get(id);
     }
     
-    public string GetKeywordName(int keywordId) {
-        return keywordNameDict.Get(keywordId, "-");
+    public string GetTraitName(CardTrait trait) {
+        return traitNameDict.Get(trait, "-");
+    }
+    public string GetKeywordName(CardKeyword keyword) {
+        return keywordNameDict.Get(keyword, "-");
     }
 
-    public string GetKeywordEnglishName(int keywordId) {
-        return keywordEnglishNameDict.Get(keywordId, "-");
+    public string GetKeywordEnglishName(CardKeyword keyword) {
+        return keywordEnglishNameDict.Get(keyword, "-");
     }
 
-    public string GetKeywordInfo(int keywordId) {
-        return keywordInfoDict.Get(keywordId, string.Empty);
+    public string GetKeywordInfo(CardKeyword keyword) {
+        return keywordInfoDict.Get(keyword, string.Empty);
     }
     
 }

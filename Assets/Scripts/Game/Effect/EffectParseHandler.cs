@@ -7,6 +7,19 @@ using System;
 
 public static class EffectParseHandler
 {
+    public static Func<int[], Dictionary<string, string>> GetParseFunc(EffectAbility ability) {
+        return ability switch {
+            EffectAbility.SetResult => SetResult,
+            EffectAbility.KeepCard  => KeepCard,
+            EffectAbility.Use       => Use,
+            EffectAbility.Attack    => Attack,
+            EffectAbility.Evolve    => Evolve,
+            EffectAbility.Draw      => Draw,
+            EffectAbility.Summon    => Summon,
+            _ => ((data) => new Dictionary<string, string>()),
+        };
+    }
+
     public static Dictionary<string, string> SetResult(int[] data) {
         var dict = new Dictionary<string, string>();
         var result = (BattleResultState)data[0] switch {

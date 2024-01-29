@@ -112,6 +112,9 @@ public class BattleUnit : IIdentifyHandler
             "isFirst"   => isFirst ? 1 : 0,
             "isMyTurn"  => isMyTurn ? 1 : 0,
             "isDone"    => isDone ? 1 : 0,
+            "isAwake"  => leader.GetIdentifier("isAwake"),
+            "isVenge"  => leader.GetIdentifier("isVenge"),
+            "isReson"  => 1 - (deck.Count % 2),
             _ => float.MinValue,
         };
     }

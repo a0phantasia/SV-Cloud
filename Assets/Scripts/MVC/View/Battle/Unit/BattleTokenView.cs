@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -33,6 +34,40 @@ public class BattleTokenView : BattleBaseView
             yield return null;
         }
 
+        callback?.Invoke();
+    }
+
+    public void AddDeckAnim(bool isMe, List<Card> tokens, Action callback) {
+        StartCoroutine(AddDeckCoroutine(isMe, tokens, callback));
+    }
+    
+    private IEnumerator AddDeckCoroutine(bool isMe, List<Card> tokens, Action callback) {
+        for (int i = 0; i < cardViews.Count; i++)
+            cardViews[i].SetCard((i < tokens.Count) ? tokens[i] : null);
+        
+        rectTransform.anchoredPosition = new Vector2(GetLayoutGroupPosition(415, tokens.Count), 140);
+        layoutGroup.spacing = GetLayoutGroupSpacing(tokens.Count);
+    
+        yield return new WaitForSeconds(waitSeconds);
+    
+        var tokenCardViews = cardViews.Take(tokens.Count).ToList();
+        var initPos = tokenCardViews.Select(x => x.rectTransform.anchoredPosition).ToList();
+        var middlePos = (initPos.First() + initPos.Last()) / 2;
+
+        float currentTime = 0, finishTime = 0.15f, percent = 0;
+        while (currentTime < finishTime) {
+            percent = currentTime / finishTime;
+            for (int i = 0; i < tokenCardViews.Count; i++)
+                tokenCardViews[i].rectTransform.anchoredPosition = Vector2.Lerp(initPos[i], middlePos, percent);
+
+            currentTime += Time.deltaTime;
+            yield return null;
+        }
+
+        rectTransform.anchoredPosition = new Vector2(GetLayoutGroupPosition(415, tokens.Count), 460);
+        for (int i = 0; i < tokenCardViews.Count; i++)
+            tokenCardViews[i].rectTransform.anchoredPosition = initPos[i];
+    
         callback?.Invoke();
     }
 

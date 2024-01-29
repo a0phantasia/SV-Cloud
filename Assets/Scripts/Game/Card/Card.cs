@@ -13,13 +13,14 @@ public class Card : IIdentifyHandler
 {
     public const int DATA_COL = 7;
     public const int DESC_COL = 2;
-    public static string[] StatusName => new string[] { "cost", "atk", "hp" };
+    public static string[] StatusNames => new string[] { "cost", "atk", "hp" };
     public static Card Get(int id) => DatabaseManager.instance.GetCardInfo(id);
     public static GameObject Prefab => ResourceManager.instance.GetPrefab("Card");
+    public static int GetBaseId(int uid) => ((CardType)(uid % 1000 / 100) != CardType.Evolved) ? uid : (uid - uid % 1000 + 100 + uid % 100);
+    public static int GetEvolveId(int uid) => ((CardType)(uid % 1000 / 100) != CardType.Follower) ? 0 : (uid - uid % 1000 + 900 + uid % 100);
 
     public int id;
     public int Id => id;
-    public int EvolveId => (Type != CardType.Follower) ? 0 : (id - id % 1000 + 900 + id % 100);
     public int GroupId => id / (int)1e8;
     public int ZoneId => id % (int)1e8 / (int)1e7;
     public int PackId => id % (int)1e8 / (int)1e4;
@@ -52,7 +53,8 @@ public class Card : IIdentifyHandler
     public string description;
 
     public Task<Texture2D> Artwork => Addressables.LoadAssetAsync<Texture2D>(ArtworkId.ToString()).Task;
-    public Card EvolveCard => DatabaseManager.instance.GetCardInfo(EvolveId);
+    public Card BaseCard => Card.Get(Card.GetBaseId(id));
+    public Card EvolveCard => Card.Get(Card.GetEvolveId(id));
 
 
     public static Card GetLeaderCard(int craft) => Card.Get(100000000 + craft * 1000);
@@ -153,8 +155,8 @@ public class Card : IIdentifyHandler
         }
 
         return id switch {
-            "id" => this.id,
-            "name" => NameId,
+            "uid" => this.id,
+            "id" => NameId,
             "group" => GroupId,
             "zone" => ZoneId,
             "pack" => PackId,
@@ -180,7 +182,7 @@ public class Card : IIdentifyHandler
 
     public void SetIdentifier(string id, float value)
     {
-        
+        options.Set(id, value.ToString());
     }
 
     public bool IsFollower() => (Type == CardType.Follower) || (Type == CardType.Evolved);

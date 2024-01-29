@@ -117,4 +117,11 @@ public class BattleAnimManager : Manager<BattleAnimManager>
             drawView?.OpGetToken(tokens, callback);
     }
 
+    public void AddDeckAnim(int unitId, List<Card> tokens, bool hide, Action callback) {
+        if (unitId == 0)
+            drawView?.MyAddDeck(tokens, hide, callback);
+        else
+            drawView?.OpAddDeck(tokens, hide, callback);
+    }
+
 }

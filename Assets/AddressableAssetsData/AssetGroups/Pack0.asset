@@ -422,6 +422,161 @@ MonoBehaviour:
     m_ReadOnly: 0
     m_SerializedLabels:
     - vampire
+  - m_GUID: 7db7acb0fb2ad4c44aeab8862ab7a92c
+    m_Address: 100007111
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - bishop
+  - m_GUID: 8c34aeeaa225fad499fa9cf43d334abf
+    m_Address: 100007112
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - bishop
+  - m_GUID: fe5f6c87e91e8f74a911fcdc4a19f192
+    m_Address: 100007121
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - bishop
+  - m_GUID: 768b909683290a5498859e2311b0f867
+    m_Address: 100007122
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - bishop
+  - m_GUID: 142e74264e04b224cb90e39ddb30b9ea
+    m_Address: 100007211
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - bishop
+  - m_GUID: 551581a115f1cc841ba73814fea7caec
+    m_Address: 100007212
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - bishop
+  - m_GUID: 135454bd2c047a44e981d2f76c67707d
+    m_Address: 100007213
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - bishop
+  - m_GUID: afbd4ab29ec41284caa42f0a91f20041
+    m_Address: 100007311
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - bishop
+  - m_GUID: dc7628a493835524f9078fa7ee5430fa
+    m_Address: 100007312
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - bishop
+  - m_GUID: b4887b5eb5600d546ab19570a6dc7b97
+    m_Address: 100007313
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - bishop
+  - m_GUID: 5ffd8006eb512744dbdf44ed17455f81
+    m_Address: 100007321
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - bishop
+  - m_GUID: aa78e92b37b205e45bff477da6985a0c
+    m_Address: 900007111
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - bishop
+  - m_GUID: 86a697da6384e054d94f329354893cc6
+    m_Address: 900007112
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - bishop
+  - m_GUID: a175afdb000a113449ad83f2daa41695
+    m_Address: 900007113
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - bishop
+  - m_GUID: 669d31795485c4e4597478a49339697d
+    m_Address: 100008111
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - nemesis
+  - m_GUID: 5618428dcb5589746bc4e23774eceb19
+    m_Address: 100008112
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - nemesis
+  - m_GUID: d2a7b5285b701dc4d8239978b2c55d45
+    m_Address: 100008113
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - nemesis
+  - m_GUID: e3cd0d2349491dd4d8308423f3f792fd
+    m_Address: 100008114
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - nemesis
+  - m_GUID: c1a089144c848de448e59ea8d0cd5948
+    m_Address: 100008115
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - nemesis
+  - m_GUID: ee4109df9d869ef43b33d0b773740c6f
+    m_Address: 100008116
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - nemesis
+  - m_GUID: af83749b680a6b94e80886a523132b24
+    m_Address: 100008117
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - nemesis
+  - m_GUID: f13e3ce2de0bb09419d7e1a2bdd21dd1
+    m_Address: 100008121
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - nemesis
+  - m_GUID: 06e21f8ee4bc70d4d9a8dcb320d52968
+    m_Address: 100008122
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - nemesis
+  - m_GUID: 38bff300d0c2c9c4e81160cb49d97afc
+    m_Address: 100008211
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - nemesis
+  - m_GUID: c0fc71eefd56bef4fb82db78551aa540
+    m_Address: 100008221
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - nemesis
+  - m_GUID: 273269d51a4ed9a469e3b546222cd505
+    m_Address: 900008111
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - nemesis
+  - m_GUID: 6bead6bda602de347a3b0efa5db00841
+    m_Address: 900008112
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - nemesis
+  - m_GUID: 81001544090aafe4ba5f33ac031ca259
+    m_Address: 900008113
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - nemesis
+  - m_GUID: fcf5ab06c7ad1a747a0628b4a7d1e95e
+    m_Address: 900008114
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - nemesis
+  - m_GUID: a3661d6efb8b30241af6eed815d18bdb
+    m_Address: 900008115
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - nemesis
+  - m_GUID: 5ded60dab7b3716499832a83b7e95c87
+    m_Address: 900008116
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - nemesis
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: 69e741ee149781a478094fca2d01f357, type: 2}
   m_SchemaSet:

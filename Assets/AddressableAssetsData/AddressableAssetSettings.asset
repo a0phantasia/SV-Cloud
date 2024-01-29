@@ -86,6 +86,8 @@ MonoBehaviour:
     - dragon
     - necro
     - vampire
+    - bishop
+    - nemesis
   m_SchemaTemplates: []
   m_GroupTemplateObjects:
   - {fileID: 11400000, guid: c27a5fe4de6de064dbaff13ad3ef3b77, type: 2}

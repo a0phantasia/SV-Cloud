@@ -17,6 +17,7 @@ public class Effect : IIdentifyHandler
 
     public BattleCard source = null;
     public Effect sourceEffect = null;
+    public BattlePlace sourcePlace = null;
     public List<BattleCard> invokeTarget = null;
     public BattleUnit invokeUnit = null;
 
@@ -169,18 +170,7 @@ public class Effect : IIdentifyHandler
     }
 
     public Dictionary<string, string> Parse(EffectAbility action, int[] data) {
-        Func<int[], Dictionary<string, string>> ParseFunc = action switch {
-            EffectAbility.SetResult => EffectParseHandler.SetResult,
-            EffectAbility.KeepCard  => EffectParseHandler.KeepCard,
-            EffectAbility.Use       => EffectParseHandler.Use,
-            EffectAbility.Attack    => EffectParseHandler.Attack,
-            EffectAbility.Evolve    => EffectParseHandler.Evolve,
-
-            EffectAbility.Draw      => EffectParseHandler.Draw,
-            EffectAbility.Summon    => EffectParseHandler.Summon,
-            _ => ((data) => new Dictionary<string, string>()),
-        };
-        return ParseFunc.Invoke(data);
+        return EffectParseHandler.GetParseFunc(action).Invoke(data);
     }
 
     public bool Condition(BattleState state) {
@@ -193,9 +183,8 @@ public class Effect : IIdentifyHandler
     }
     
     public bool Apply(BattleState state = null) {
-        if (state != null) {
-            state.currentEffect = this;
-        }
+        
+        state.currentEffect = this;
 
         var result = true;
         var repeat = int.Parse(abilityOptionDict.Get("repeat", "1"));

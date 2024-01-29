@@ -8,13 +8,15 @@ public class CardFilter
 {
     public virtual string[] GetSetStringType() => new string[] { "name", "description", "trait", "keyword" };
     public virtual string[] GetSetIntType() => new string[] { "format", "zone" };
-    public virtual string[] GetSelectIntType() => new string[] { "craft", "pack", "type", "rarity",
-        "cost", "atk", "hp" };
+    public virtual string[] GetSelectIntType() => new string[] { 
+        "uid", "id", "craft", "pack", "type", "rarity",
+        "cost", "atk", "hp", "countdown" };
     public virtual string[] GetSetBoolType() => new string[] { "token" };
 
     public int format, zone;
     public string name, traitName, keywordName, description;
-    public List<int> craftList, packList, typeList, rarityList, costList, atkList, hpList;
+    public List<int> uidList, idList, craftList, packList, typeList, rarityList, 
+        costList, atkList, hpList, countdownList;
     public bool isWithToken;
 
     /// <summary>
@@ -25,6 +27,8 @@ public class CardFilter
         format = formatId;
         zone = -1;
         name = traitName = keywordName = description = string.Empty;
+        uidList = new List<int>();
+        idList = new List<int>();
         craftList = new List<int>();
         packList = new List<int>();
         typeList = new List<int>();
@@ -32,6 +36,7 @@ public class CardFilter
         costList = new List<int>();
         atkList = new List<int>();
         hpList = new List<int>();
+        countdownList = new List<int>();
         isWithToken = false;
     }
 
@@ -90,13 +95,16 @@ public class CardFilter
 
     public virtual void SelectInt(string which, int item) {
         var list = which switch {
-            "craft" => craftList,
-            "pack"  => packList,
-            "type"  => typeList,
-            "rarity"=> rarityList,
-            "cost"  => costList,
-            "atk"   => atkList,
-            "hp"    => hpList, 
+            "uid"       => uidList,
+            "id"        => idList,
+            "craft"     => craftList,
+            "pack"      => packList,
+            "type"      => typeList,
+            "rarity"    => rarityList,
+            "cost"      => costList,
+            "atk"       => atkList,
+            "hp"        => hpList,
+            "countdown" => countdownList, 
             _ => null,
         };
 
@@ -105,7 +113,7 @@ public class CardFilter
             return;
         }
 
-        if (Card.StatusName.Contains(which) && (item < 0)) {
+        if (Card.StatusNames.Contains(which) && (item < 0)) {
             if (list.Count <= 0)
                 return;
 
@@ -125,8 +133,9 @@ public class CardFilter
     }
 
     public bool Filter(Card card) {
-        return FormatFilter(card) && ZoneFilter(card) && NameFilter(card)
-            && CostFilter(card) && AtkFilter(card) && HpFilter(card)
+        return FormatFilter(card) && ZoneFilter(card)
+            && UIDFilter(card) && IDFilter(card) && NameFilter(card)
+            && CostFilter(card) && AtkFilter(card) && HpFilter(card) && CountdownFilter(card)
             && CraftFilter(card) && PackFilter(card) && TypeFilter(card) 
             && RarityFilter(card) && TraitFilter(card) && KeywordFilter(card) 
             && DescriptionFilter(card) && TokenFilter(card);
@@ -135,11 +144,13 @@ public class CardFilter
     public virtual bool FormatFilter(Card card) => (format == -1) || card.IsFormat((GameFormat)format);
     public virtual bool ZoneFilter(Card card) => (zone == -1) || (card.ZoneId == zone) || (card.PackId == 0);
     public virtual bool NameFilter(Card card) => string.IsNullOrEmpty(name) || card.name.Contains(name);
+    public virtual bool UIDFilter(Card card) => List.IsNullOrEmpty(uidList) || uidList.Contains(card.id);
+    public virtual bool IDFilter(Card card) => List.IsNullOrEmpty(idList) || idList.Contains(Card.GetBaseId(card.NameId)) || idList.Contains(Card.GetEvolveId(card.NameId));
     public virtual bool CraftFilter(Card card) => List.IsNullOrEmpty(craftList) || craftList.Contains(card.CraftId);
     public virtual bool PackFilter(Card card) => List.IsNullOrEmpty(packList) || packList.Contains(card.PackId);
     public virtual bool TypeFilter(Card card) => (card.Type != CardType.Leader) && (card.Type != CardType.Evolved) && (List.IsNullOrEmpty(typeList) || typeList.Contains(card.TypeId));
     public virtual bool RarityFilter(Card card) => List.IsNullOrEmpty(rarityList) || rarityList.Contains(card.RarityId);
-    public virtual bool TraitFilter(Card card) => string.IsNullOrEmpty(traitName) || card.traits.Select(x => x.GetTraitName()).Contains(traitName);
+    public virtual bool TraitFilter(Card card) => string.IsNullOrEmpty(traitName) || card.traits.Contains(CardTrait.All) || card.traits.Select(x => x.GetTraitName()).Contains(traitName);
     public virtual bool KeywordFilter(Card card) => string.IsNullOrEmpty(keywordName) || card.keywords.Select(x => x.GetKeywordName()).Contains(keywordName);
     public virtual bool DescriptionFilter(Card card) => string.IsNullOrEmpty(description) || card.description.Contains(description);
     public virtual bool TokenFilter(Card card) => (card.Group == CardGroup.Normal) || (isWithToken && (card.Group == CardGroup.Token));
@@ -147,7 +158,7 @@ public class CardFilter
     public virtual bool CostFilter(Card card) => List.IsNullOrEmpty(costList) || costList.Contains(Mathf.Min(card.cost, 10));
     public virtual bool AtkFilter(Card card) => List.IsNullOrEmpty(atkList) || atkList.Contains(Mathf.Min(card.atk, 10));
     public virtual bool HpFilter(Card card) => List.IsNullOrEmpty(hpList) || hpList.Contains(Mathf.Min(card.hp, 10));
-
+    public virtual bool CountdownFilter(Card card) => List.IsNullOrEmpty(countdownList) || countdownList.Contains(Mathf.Min(card.countdown, 10));
 }
 
 public class BattleCardFilter : CardFilter {
@@ -199,7 +210,7 @@ public class BattleCardFilter : CardFilter {
             return;
         }
 
-        if (Card.StatusName.Contains(which.ToLower().TrimStart("init")) && (item < 0)) {
+        if (Card.StatusNames.Contains(which.ToLower().TrimStart("init")) && (item < 0)) {
             if (list.Count <= 0)
                 return;
             var below = Enumerable.Range(0, list.Max() + 1);
@@ -222,7 +233,7 @@ public class BattleCardFilter : CardFilter {
     }
 
     public override bool TypeFilter(Card card) => List.IsNullOrEmpty(typeList) || typeList.Contains(card.TypeId);
-    public override bool TraitFilter(Card card) => List.IsNullOrEmpty(traitList) || traitList.Select(x => (CardTrait)x).Intersect(card.traits).Any();
+    public override bool TraitFilter(Card card) => List.IsNullOrEmpty(traitList) || card.traits.Contains(CardTrait.All) || traitList.Select(x => (CardTrait)x).Intersect(card.traits).Any();
     public override bool KeywordFilter(Card card) => List.IsNullOrEmpty(keywordList) || keywordList.Select(x => (CardKeyword)x).Intersect(card.keywords).Any();
     
 

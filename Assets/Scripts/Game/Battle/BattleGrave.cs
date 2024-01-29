@@ -36,5 +36,6 @@ public enum BattleCardGraveReason {
     None = 0,
     DrawTooMuch = 1,
     Destroy = 2,
-    Return = 3,
+    Vanish = 3,
+    Return = 4,
 }

@@ -10,6 +10,7 @@ public class BattleDrawAnimView : BattleBaseView
     [SerializeField] private float drawSeconds;
     [SerializeField] private float waitSeconds = 0.5f;
     [SerializeField] private BattleTokenView tokenView;
+    [SerializeField] private Vector2 myDrawInitPos;
     [SerializeField] private Vector2 opDrawInitPos;
     [SerializeField] private List<Image> opSleeves;
     [SerializeField] private Image drawSleeve;
@@ -51,5 +52,52 @@ public class BattleDrawAnimView : BattleBaseView
 
     public void OpGetToken(List<Card> tokens, Action callback) {
         tokenView?.GetTokenAnim(false, tokens, callback);
+    }
+
+    public void MyAddDeck(List<Card> tokens, bool hide, Action callback) {
+        if (hide)
+            StartCoroutine(AddDeck(true, callback));
+        else
+            tokenView?.AddDeckAnim(true, tokens, () => StartCoroutine(AddDeck(true, callback)));
+    }
+
+    public void OpAddDeck(List<Card> tokens, bool hide, Action callback) {
+        if (hide)
+            StartCoroutine(AddDeck(false, callback));
+        else
+            tokenView?.AddDeckAnim(false, tokens, () => StartCoroutine(AddDeck(false, callback)));
+    }
+
+    private IEnumerator AddDeck(bool isMe, Action callback) {
+        float currentTime = 0, finishTime = waitSeconds, percent = 0;
+
+        drawSleeve.rectTransform.anchoredPosition = Vector2.zero;
+        drawSleeve.rectTransform.localScale = Vector3.one * 1.5f;
+        drawSleeve.gameObject.SetActive(true);
+
+        while (currentTime < finishTime) {
+            percent = currentTime / finishTime;
+            drawSleeve.rectTransform.localRotation = Quaternion.Euler(0, 0, Mathf.Lerp(0, isMe ? -95 : -75, percent));
+            currentTime += Time.deltaTime;
+            yield return null;
+        }
+
+        yield return new WaitForSeconds(waitSeconds);
+
+        currentTime = 0; finishTime = waitSeconds; percent = 0;
+
+        while (currentTime < finishTime) {
+            percent = currentTime / finishTime;
+            drawSleeve.rectTransform.localScale = Vector3.one * Mathf.Lerp(1.5f, 1, percent);
+            drawSleeve.rectTransform.anchoredPosition = Vector2.Lerp(Vector2.zero, isMe ? myDrawInitPos : opDrawInitPos, percent);
+            currentTime += Time.deltaTime;
+            yield return null;
+        }
+
+        yield return new WaitForSeconds(waitSeconds);
+
+        drawSleeve.gameObject.SetActive(false);
+
+        callback?.Invoke();
     }
 }

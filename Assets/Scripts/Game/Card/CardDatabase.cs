@@ -73,10 +73,10 @@ public static class CardDatabase
         { BattlePlaceId.Grave,        "grave"     },
     };
 
-    public static Dictionary<CardTrait, string> traitNameDict = new Dictionary<CardTrait, string>() {
-        { CardTrait.All,        "全部"      },
-        { CardTrait.Soldier,    "士兵"      },
-        { CardTrait.Commander,  "指揮官"    },
+    public static string[] PropertyEffects => new string[] { "leaveVanish", "destroyVanish", "returnVanish" };
+    public static CardKeyword[] KeywordEffects => new CardKeyword[] { 
+        CardKeyword.Storm, CardKeyword.Ward, CardKeyword.Bane,
+        CardKeyword.Rush, CardKeyword.Ambush, CardKeyword.Drain,
     };
 
     public static string GetPackName(this CardPack pack) => packNameDict.Get(pack, "-");
@@ -87,10 +87,10 @@ public static class CardDatabase
     public static string GetTypeName(this CardType type) => typeNameDict.Get(type, "主戰者");
     public static string GetTypeEnglishName(this CardType type) => typeEnglishNameDict.Get(type, "主戰者");
     public static string GetRarityName(this CardRarity rarity) => rarityNameDict.Get(rarity, "傳說");
-    public static string GetTraitName(this CardTrait trait) => traitNameDict.Get(trait, "-");
-    public static string GetKeywordName(this CardKeyword keyword) => DatabaseManager.instance.GetKeywordName((int)keyword);
-    public static string GetKeywordEnglishName(this CardKeyword keyword) => DatabaseManager.instance.GetKeywordEnglishName((int)keyword);
-    public static string GetKeywordInfo(this CardKeyword keyword) => DatabaseManager.instance.GetKeywordInfo((int)keyword);
+    public static string GetTraitName(this CardTrait trait) => DatabaseManager.instance.GetTraitName(trait);
+    public static string GetKeywordName(this CardKeyword keyword) => DatabaseManager.instance.GetKeywordName(keyword);
+    public static string GetKeywordEnglishName(this CardKeyword keyword) => DatabaseManager.instance.GetKeywordEnglishName(keyword);
+    public static string GetKeywordInfo(this CardKeyword keyword) => DatabaseManager.instance.GetKeywordInfo(keyword);
 
     public static int GetMaxCardCountInDeck(this GameFormat format) => format switch {
         GameFormat.TwoPick => 30,
@@ -174,7 +174,7 @@ public enum CardRarity
 public enum CardTrait 
 {
     All = 0,
-    Soldier = 1, Commander = 2,
+    Soldier = 1, Commander = 2, Earth = 3, Artifact = 4,
 }
 
 public enum CardKeyword 

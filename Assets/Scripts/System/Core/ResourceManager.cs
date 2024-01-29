@@ -224,6 +224,10 @@ public class ResourceManager : Singleton<ResourceManager>
         });
     }
 
+    public void LoadTraitInfo(Action<Dictionary<int, string[]>> onSuccess = null) {
+        LoadCSV(cardUrl + "trait.csv", (data) => onSuccess?.Invoke(GetDescriptionInfoDict(data, 1)));
+    }
+
     public void LoadKeywordInfo(Action<Dictionary<int, string[]>> onSuccess = null) {
         LoadCSV(cardUrl + "keyword.csv", (data) => onSuccess?.Invoke(GetDescriptionInfoDict(data, 3)));
     }
