@@ -8,15 +8,18 @@ public static class CardDatabase
 {
     public static List<Card> CardMaster => DatabaseManager.instance.cardMaster;
     public static Func<Card, long> Sorter => (card) => {
-        return card.cost * (long)1e10 + card.id;
+        return card.cost * (long)1e12 + card.CraftId * (long)1e11 
+            + card.TypeId * (long)1e10 + card.id;
     };
 
     public static Dictionary<CardPack, string> packNameDict = new Dictionary<CardPack, string>() {
         { CardPack.Basic, "基本卡包" },
+        { CardPack.EngineeringBasic, "基本卡包" },
     };
 
     public static Dictionary<CardZone, string> zoneNameDict = new Dictionary<CardZone, string>() {
         { CardZone.Cygames, "官方卡包" },   { CardZone.Engineering, "工程區" },
+        { CardZone.Art, "藝術園區" },
     };
 
     public static Dictionary<GameFormat, string> formatNameDict = new Dictionary<GameFormat, string>() {
@@ -138,7 +141,7 @@ public enum GameFormat
 
 public enum CardZone 
 {
-    Cygames = 0,   Engineering = 1,
+    Cygames = 0,   Engineering = 1, Art = 2,     
     Beyond = 8,    Custom = 9
 }
 
@@ -151,6 +154,7 @@ public enum BestOf
 public enum CardPack
 {
     Basic = 0,
+    EngineeringBasic = 100,
 }
 
 public enum CardCraft 

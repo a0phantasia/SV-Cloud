@@ -199,6 +199,16 @@ public static class TextHelper {
     }
 }
 
+public static class AudioResources {
+    public static AudioClip Title => RM.instance.GetAudio("Title");
+    public static AudioClip Main => RM.instance.GetAudio("Main");
+    public static AudioClip Win => RM.instance.GetAudio("Win");
+    public static AudioClip Lose => RM.instance.GetAudio("Lose");
+    public static AudioClip GetThemeBattleClip(int craft) {
+        return RM.instance.GetAudio("Theme/" + craft);
+    }    
+}
+
 public static class ColorHelper {
     public static Color black192 => new Color32(0, 0, 0, 192);
     public static Color gray192 => new Color32(192, 192, 192, 255);
@@ -206,6 +216,7 @@ public static class ColorHelper {
     public static Color gold => new Color32(255, 187, 0, 255);
     public static Color red => Color.red;
     public static Color green => new Color32(119, 226, 12, 255);
+    public static Color green192 => new Color32(0, 192, 0, 255);
     public static Color blue => new Color32(82, 229, 249, 255);
 
     // public static Color secretSkill => new Color32(252, 237, 105, 255); 

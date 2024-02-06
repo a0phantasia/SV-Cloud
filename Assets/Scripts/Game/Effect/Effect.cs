@@ -263,6 +263,9 @@ public class Effect : IIdentifyHandler
             case "random":
                 invokeTarget = allCards.Random(info.num, false);
                 break;
+            case "first":
+                invokeTarget = allCards.Take(info.num).ToList();
+                break;
             case "index":
                 invokeTarget = new List<BattleCard>();
                 for (int i = 0; i <= info.num; i++) {

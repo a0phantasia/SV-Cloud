@@ -33,13 +33,12 @@ public class BattleFieldView : BattleBaseView
             index = index,
         };
 
-        cardInfoView?.SetBattleCard(card);
+        cardInfoView?.SetBattleCard(card, () => {
+            if (id != 0)
+                return;
 
-        if (id != 0)
-            return;
-
-        cardInfoView?.buttonView?.SetEvolvable(card?.IsEvolvable(unit) ?? false);
-        cardInfoView?.SetBackgroundSizeAuto();
+            cardInfoView?.buttonView?.SetEvolvable(card?.IsEvolvable(unit) ?? false);
+        });
     }
 
     public void OnBeginDrag(int index) {

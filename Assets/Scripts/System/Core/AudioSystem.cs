@@ -7,10 +7,6 @@ public class AudioSystem : Singleton<AudioSystem>
     [SerializeField] private AudioSource musicSource = null;
     [SerializeField] private AudioSource soundSource = null;
 
-    public void PlayMusic(string path) {
-        PlayMusic(ResourceManager.instance.GetAudio(path));
-    }
-
     public void PlayMusic(AudioClip clip) {
         if (clip == null)
             return;

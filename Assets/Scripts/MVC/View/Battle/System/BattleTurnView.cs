@@ -19,7 +19,7 @@ public class BattleTurnView : BattleBaseView
 
     public void ShowBattleResult(string whosTurn, string description, Action callback = null) {
         gameObject.SetActive(true);
-        StartCoroutine(ShowTurnCoroutine(whosTurn, description, waitSeconds + 1, callback));
+        StartCoroutine(ShowTurnCoroutine(whosTurn, description, waitSeconds + 2, callback));
     }
 
     private IEnumerator ShowTurnCoroutine(string whosTurn, string description, float waitTime, Action callback) {

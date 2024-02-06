@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using ExitGames.Client.Photon.StructWrapping;
@@ -13,6 +14,7 @@ public class CardInfoView : IMonoBehaviour
     [SerializeField] private IText descriptionText;
     [SerializeField] private CardInfoView evolveView;
     [SerializeField] public CardInfoButtonView buttonView;
+    [SerializeField] public CardInfoEffectView effectView;
 
     private Text costText, atkText, hpText;
     private float normalSizeY, evolveSizeY;
@@ -61,6 +63,7 @@ public class CardInfoView : IMonoBehaviour
         descriptionText?.SetText((additionalDescription ?? string.Empty) + card.description);
         descriptionText?.Rect?.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, descriptionText.PreferredSize.y);
         evolveView?.SetCard(card.EvolveCard);
+        effectView?.gameObject.SetActive(false);
 
         // Show cost/atk/hp or not.
         costObject?.SetActive((card.Type != CardType.Leader) && (card.Type != CardType.Evolved));
@@ -81,14 +84,21 @@ public class CardInfoView : IMonoBehaviour
         buttonView?.SetAnchoredPos(new Vector2(0, -(normalSizeY + evolveSizeY + 10)));
     }
 
-    public void SetBattleCard(BattleCard card) {
+    public void SetBattleCard(BattleCard card, Action setButtonViewFunc = null) {
         var baseCard = card?.baseCard;
-        SetCard(baseCard, card?.GetAdditionalDescription());
+        SetCard(baseCard, card?.GetConditionDescription());
+
+        setButtonViewFunc?.Invoke();
+
+        effectView?.SetBattleCard(card);
+        effectView?.SetAnchoredPos(new Vector2(0, -(normalSizeY + evolveSizeY + buttonView.RectSize + 10)));
+
+        SetBackgroundSizeAuto();
     }
 
     public float GetDescriptionTextPreferredSize(bool isEvolve = false) {
         var text = isEvolve ? evolveView?.descriptionText : descriptionText;
-        return (text == null) ? 0 : text.PreferredSize.y;
+        return text?.PreferredSize.y ?? 0;
     }
 
     /// <summary>
@@ -98,7 +108,8 @@ public class CardInfoView : IMonoBehaviour
         if (backgroundRect == null)
             return;
 
-        backgroundRect?.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, normalSizeY + evolveSizeY + 10 + 45 * buttonView.ActiveButtonCount);
+        backgroundRect?.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, normalSizeY + evolveSizeY + 10 
+            + buttonView.RectSize + effectView.RectSize);
     }
 
     public void SetAnchoredPos(Vector2 pos) {

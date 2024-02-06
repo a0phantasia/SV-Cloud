@@ -11,7 +11,7 @@ public class BattleMenuView : BattleBaseView
     [SerializeField] private Text myName, opName;
 
     public void SetActive(bool active) {
-        if (active && Hud.IsLocked)
+        if (active && (Hud.IsLocked || Anim.IsSelectingTarget))
             return;
 
         gameObject.SetActive(active);

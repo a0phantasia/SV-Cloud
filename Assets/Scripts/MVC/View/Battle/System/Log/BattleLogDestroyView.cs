@@ -17,20 +17,24 @@ public class BattleLogDestroyView : BattleBaseView
         if (state.currentEffect.ability != EffectAbility.Destroy)
             return;
 
-        var invokeUnit = state.currentEffect.invokeUnit;
-        bool isMyLog = invokeUnit.id == state.myUnit.id;
-        var destroyedFollowers = invokeUnit.grave.destroyedFollowers;
-        var distinctFollowers = invokeUnit.grave.DistinctDestroyedFollowers;
-        var battleLogs = isMyLog ? myBattleLogs : opBattleLogs;
+        SetDestroyFollowers(state, state.myUnit);
+        SetDestroyFollowers(state, state.opUnit);
+    }
+
+    private void SetDestroyFollowers(BattleState state, BattleUnit unit) {
+        bool isMyUnit = unit.id == state.myUnit.id;
+        var destroyedFollowers = unit.grave.destroyedFollowers;
+        var distinctFollowers = unit.grave.DistinctDestroyedFollowers;
+        var battleLogs = isMyUnit ? myBattleLogs : opBattleLogs;
 
         if (battleLogs.Count < distinctFollowers.Count) {
             var obj = Instantiate(SpriteResources.Log, scrollRect.content);
             var logPrefab = obj.GetComponent<LogInfoView>();
             battleLogs.Add(logPrefab);
 
-            obj.SetActive(isMyLog == isMe);
+            obj.SetActive(isMyUnit == isMe);
         }
-        
+
         for (int i = 0; i < battleLogs.Count; i++) {
             int copy = i;
             var count = destroyedFollowers.Count(x => x.id == distinctFollowers[i].id);

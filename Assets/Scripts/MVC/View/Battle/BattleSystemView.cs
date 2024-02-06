@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class BattleSystemView : BattleBaseView
 {
@@ -37,6 +38,9 @@ public class BattleSystemView : BattleBaseView
                     BattleLoseReason.TurnOverMax=> (result == "LOSE" ? "你" : "對手") + "的回合數已達上限",
                     _ => string.Empty,
                 };
+                
+                AudioSystem.instance.PlayMusic((result == "WIN") ? AudioResources.Win : AudioResources.Lose);
+
                 Anim.ResultAnim("YOU " + result, reason, () => {
                     IsDone = true;
                     Hud.OnConfirmBattleResult();

@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Photon.Pun;
 using UnityEngine;
+using UnityEngine.UI;
 using Random = UnityEngine.Random;
 
 public class RoomManager : Manager<RoomManager>
@@ -19,7 +20,7 @@ public class RoomManager : Manager<RoomManager>
     }
 
     protected override void Start() {
-        AudioSystem.instance.PlayMusic("Main");
+        AudioSystem.instance.PlayMusic(AudioResources.Main);
 
         InitPlayer();
         SetMyReady(false);

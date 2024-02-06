@@ -108,7 +108,7 @@ public class BattleCard : IIdentifyHandler
         return result;
     }
 
-    public string GetAdditionalDescription() {
+    public string GetConditionDescription() {
         var card = CurrentCard;
         var description = string.Empty;
         var leaderInfoKeys = new List<string>();
@@ -140,6 +140,32 @@ public class BattleCard : IIdentifyHandler
         }
 
         return description;
+    }
+
+    public string GetAdditionalDescription() {
+        var description = string.Empty;
+        var costBuff = buffController.CostBuff;
+        var atkBuff = buffController.AtkBuff;
+        var hpBuff = buffController.HpBuff;
+        var originalKeywords = Card.Get(Id).keywords;
+
+        description += atkBuff.ToStringWithSign() + "/" + hpBuff.ToStringWithSign() + "\n";
+
+        if (costBuff != 0)
+            description += "消費" + costBuff.ToStringWithSign() + "\n";
+
+        var keywords = CardDatabase.KeywordEffects.Where(x => !originalKeywords.Contains(x)).ToList();
+        for (int i = 0; i < keywords.Count; i++) {
+            if (actionController.IsKeywordAvailable(keywords[i]))
+                description += ("[ffbb00]" + keywords[i].GetKeywordName() + "[-]").GetDescription() + "\n";
+        }
+
+        for (int i = 0; i < newEffects.Count; i++) {
+            if (newEffects[i].hudOptionDict.TryGetValue("description", out var effectDesc))
+                description += effectDesc + "\n";
+        }
+
+        return (description.Count(x => x == '\n') == 1) ? string.Empty : description.TrimEnd('\n');
     }
 
     public void GetTargetEffectWithTiming(string timing, out Queue<Effect> targetEffectQueue, out Queue<EffectTargetInfo> targetInfoQueue, out Queue<List<short>> selectableTargetQueue) {

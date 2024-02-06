@@ -41,7 +41,7 @@ public class DatabaseManager : Singleton<DatabaseManager>
             return false;
         }
         if (traitNameDict.Count != GameManager.versionData.traitCount) {
-            error = "獲取關鍵字說明資料失敗 (" + traitNameDict.Count + "/" + GameManager.versionData.traitCount  + ")";
+            error = "獲取類型資料失敗 (" + traitNameDict.Count + "/" + GameManager.versionData.traitCount  + ")";
             return false;
         }
         if (cardInfoDict.Count != GameManager.versionData.cardCount) {

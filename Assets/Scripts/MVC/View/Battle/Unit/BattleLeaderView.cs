@@ -33,7 +33,7 @@ public class BattleLeaderView : BattleBaseView
             index = 0,
         };
 
-        cardInfoView?.SetCard(currentLeader.leaderCard.CurrentCard);        
+        cardInfoView?.SetBattleCard(currentLeader.leaderCard);
     }
 
     public void SetTargeting(bool isTargeting) {

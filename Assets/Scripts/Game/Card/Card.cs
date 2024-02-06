@@ -23,12 +23,12 @@ public class Card : IIdentifyHandler
     public int Id => id;
     public int GroupId => id / (int)1e8;
     public int ZoneId => id % (int)1e8 / (int)1e7;
-    public int PackId => id % (int)1e8 / (int)1e4;
-    public int CraftId => id % (int)1e4 / 1000;
+    public int PackId => id % (int)1e8 / (int)1e5;
+    public int CraftId => id % (int)1e5 / 10000;
+    public int RarityId => id % 10000 / 1000;
     public int TypeId => id % 1000 / 100;
     public int EvolveTypeId => (int)EvolveType;
-    public int RarityId => id % 100 / 10;
-    public int SerialNum => id % 10;
+    public int SerialNum => id % 100;
 
     public int NameId { get; protected set; }
     public int ArtworkId { get; protected set; }
@@ -57,7 +57,7 @@ public class Card : IIdentifyHandler
     public Card EvolveCard => Card.Get(Card.GetEvolveId(id));
 
 
-    public static Card GetLeaderCard(int craft) => Card.Get(100000000 + craft * 1000);
+    public static Card GetLeaderCard(int craft) => Card.Get(100000000 + craft * 10000);
 
     public Card(string[] _data, int startIndex) {
         string[] _slicedData = new string[DATA_COL];
@@ -81,7 +81,7 @@ public class Card : IIdentifyHandler
 
     private void InitExtraPorperty() {
         int ArtId = int.Parse(options.Get("artId", id.ToString()));
-        ArtworkId = (Type == CardType.Evolved) ? (ArtId - ArtId % 1000 + 100 + ArtId % 100) : ArtId;
+        ArtworkId = (Type == CardType.Evolved) ? Card.GetBaseId(ArtId) : ArtId;
 
         NameId = int.Parse(options.Get("nameId", id.ToString()));
         CountLimit = int.Parse(options.Get("limit", "3"));
@@ -189,8 +189,8 @@ public class Card : IIdentifyHandler
     public bool IsFormat(GameFormat format) {
         int newPackId = GameManager.versionData.NewPackIds[ZoneId];
         return format switch {
-            GameFormat.Rotation => (PackId == 0) || (PackId == ZoneId * 1000) ||
-                (PackId % 1000).IsWithin(newPackId - 4, newPackId),
+            GameFormat.Rotation => (PackId == ZoneId * 100) ||
+                (PackId % 100).IsWithin(newPackId - 4, newPackId),
             _ => true,
         };
     }

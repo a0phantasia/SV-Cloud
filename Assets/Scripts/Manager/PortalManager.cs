@@ -10,6 +10,8 @@ public class PortalManager : Manager<PortalManager>
     [SerializeField] private ScrollRect scrollRect;
 
     protected override void Start() {
+        AudioSystem.instance.PlayMusic(AudioResources.Main);
+
         resultController.SetStorage(CardDatabase.CardMaster);
         searchController.Search();
     }

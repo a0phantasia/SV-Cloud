@@ -50,6 +50,7 @@ public static class Identifier {
 
             return Random.Range(startRange, endRange + 1);
         }
+
         return float.TryParse(id, out num) ? num : 0;
     }
 

@@ -129,14 +129,14 @@ public class BattleTargetView : BattleBaseView
         if (isSuccess) {
             onSuccessTarget?.Invoke(selectedTargetList);
         } else {
-            Clear();
-
             Battle.CurrentState.currentEffect = Effect.None;
             Hud.SetState(Battle.CurrentState);
             Hud.ProcessQueue();
             
             onFailTarget?.Invoke();
         }
+        
+        Clear();
     }
 
 }

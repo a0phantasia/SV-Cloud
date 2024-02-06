@@ -1,7 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Security.Cryptography.X509Certificates;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -12,6 +12,18 @@ public class BattleCardFollowerView : BattleBaseView
     [SerializeField] private IButton cardFrameButton;
     [SerializeField] private RawImage artworkRawImage;
     [SerializeField] private Image flagImage, outlineImage;
+
+    public static string[] FlagProperties => new string[] { "bane", "drain", "flag", "lastword" };
+    private Dictionary<string, bool> flagResultDict = new Dictionary<string, bool>();
+    private Coroutine flagCoroutine = null;
+
+    private void OnEnable() {
+        flagCoroutine = StartCoroutine(ShowFlagIcon());
+    }
+
+    private void OnDisable() {
+        StopCoroutine(flagCoroutine);
+    }
 
     public async void SetBattleCard(BattleCard battleCard) {
         if (battleCard == null)
@@ -42,20 +54,13 @@ public class BattleCardFollowerView : BattleBaseView
 
     private void SetFlagIcon(BattleCard card) {
         var effects = card.CurrentCard.effects;
-        var icon = SpriteResources.Empty;
 
-        if (effects.Exists(x => x.timing == "on_this_destroy"))
-            icon = SpriteResources.GetCardIcon("lastword");
-        else if (effects.Exists(x => (x.timing.TryTrimStart("on_", out var trimTiming)) && (!trimTiming.StartsWith("this_"))))
-            icon = SpriteResources.GetCardIcon("flag");
-        else if (effects.Exists(x => (x.timing == "on_this_attack") || (x.timing == "on_this_defense") || (x.timing == "on_this_evolve")))
-            icon = SpriteResources.GetCardIcon("flag");
-        else if (card.actionController.IsKeywordAvailable(CardKeyword.Bane))
-            icon = SpriteResources.GetCardIcon("bane");
-        else if (card.actionController.IsKeywordAvailable(CardKeyword.Drain))
-            icon = SpriteResources.GetCardIcon("drain");
+        flagResultDict.Set("lastword", effects.Exists(x => x.timing == "on_this_destroy"));
+        flagResultDict.Set("flag", effects.Exists(x => ((x.timing.TryTrimStart("on_", out var trimTiming)) && (!trimTiming.StartsWith("this_")))
+            || (x.timing == "on_this_attack") || (x.timing == "on_this_defense") || (x.timing == "on_this_evolve")));
 
-        flagImage?.SetSprite(icon);
+        flagResultDict.Set("bane", card.actionController.IsKeywordAvailable(CardKeyword.Bane));
+        flagResultDict.Set("drain", card.actionController.IsKeywordAvailable(CardKeyword.Drain));
     }
 
     public void SetOutline(BattleCard battleCard) {
@@ -74,5 +79,41 @@ public class BattleCardFollowerView : BattleBaseView
 
     public void SetOutlineColor(Color color) {
         outlineImage?.SetColor(color);
+    }
+
+    private IEnumerator ShowFlagIcon() {
+        int index = 0;
+        while (true) {
+            var trueCount = flagResultDict.Count(entry => entry.Value);
+            flagImage?.SetColor((trueCount == 0) ? Color.clear : Color.white);
+            if (trueCount == 1)
+                flagImage?.SetSprite(SpriteResources.GetCardIcon(flagResultDict.First(x => x.Value).Key));
+                        
+            if (trueCount < 2) {
+                yield return new WaitUntil(() => flagResultDict.Count(entry => entry.Value) != trueCount);
+                continue;
+            }
+            for (int i = 0; i < FlagProperties.Length; i++) {
+                var circularIndex = (index + i) % FlagProperties.Length;
+                var key = FlagProperties[circularIndex];
+                if (flagResultDict.Get(key, false)) {
+                    index = circularIndex;
+                    flagImage?.SetSprite(SpriteResources.GetCardIcon(key));
+                    break;
+                }
+            }
+            float currentTime = 0, finishTime = 3, percent = 0;
+            while (currentTime < finishTime) {
+                percent = currentTime / finishTime;
+                var color = (percent <= 0.5f) ? Color.Lerp(new Color(1, 1, 1, 0), Color.white, percent * 2) :
+                    Color.Lerp(Color.white, new Color(1, 1, 1, 0), percent * 2 - 1);
+
+                flagImage?.SetColor(color);
+                currentTime += Time.deltaTime;
+                yield return null;
+            }
+            index++;
+            yield return null;
+        }
     }
 }

@@ -11,10 +11,8 @@ public class BattleDeck : BattlePlace
         zone = zoneId;
         format = formatId;
         craft = craftId;
-
-        if (!GameManager.instance.debugMode) {
-            cards.Shuffle();
-        }
+        
+        cards.Shuffle();
     }
 
     public BattleDeck(BattleDeck rhs) : base(rhs) {

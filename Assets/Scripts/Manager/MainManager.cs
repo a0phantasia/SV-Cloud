@@ -1,11 +1,12 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class MainManager : Manager<MainManager>
 {
     protected override void Start() {
-        AudioSystem.instance.PlayMusic("Main");
+        AudioSystem.instance.PlayMusic(AudioResources.Main);
     }
 
     public void BackToTitleScene() {

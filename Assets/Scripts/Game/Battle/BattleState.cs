@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using Photon.Pun;
+using UnityEditor.UI;
 using UnityEngine;
 
 public class BattleState
@@ -24,8 +25,7 @@ public class BattleState
         this.settings = settings;
         this.result = new BattleResult();
 
-        //! Debug mode always go first/last
-        isMasterTurn = GameManager.instance.debugMode ? false : (Random.Range(0, 2) == 0);
+        isMasterTurn = Random.Range(0, 2) == 0;
 
         masterUnit = new BattleUnit(0, settings.masterName , masterDeck, isMasterTurn);
         clientUnit = new BattleUnit(1, settings.clientName , clientDeck, !isMasterTurn);

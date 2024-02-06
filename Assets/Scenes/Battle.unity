@@ -8635,6 +8635,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cardInfoView: {fileID: 0}
+  background: {fileID: 1382899223}
   myOrderView: {fileID: 1916318137}
   opOrderView: {fileID: 2047173419}
 --- !u!1 &616531067
@@ -19790,10 +19791,40 @@ PrefabInstance:
       propertyPath: onPointerClickEvent.m_PersistentCalls.m_Calls.Array.data[1].m_Arguments.m_ObjectArgumentAssemblyTypeName
       value: UnityEngine.Object, UnityEngine
       objectReference: {fileID: 0}
+    - target: {fileID: 3737452230102256801, guid: 4230d0f5f4577074fa1cef17cd8cec05,
+        type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3737452230102256801, guid: 4230d0f5f4577074fa1cef17cd8cec05,
+        type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3737452230102256801, guid: 4230d0f5f4577074fa1cef17cd8cec05,
+        type: 3}
+      propertyPath: m_SizeDelta.x
+      value: -1
+      objectReference: {fileID: 0}
     - target: {fileID: 5320915547931456646, guid: 4230d0f5f4577074fa1cef17cd8cec05,
         type: 3}
       propertyPath: m_SizeDelta.y
-      value: 10
+      value: 20
+      objectReference: {fileID: 0}
+    - target: {fileID: 7235560249732517383, guid: 4230d0f5f4577074fa1cef17cd8cec05,
+        type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7235560249732517383, guid: 4230d0f5f4577074fa1cef17cd8cec05,
+        type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0.99999964
+      objectReference: {fileID: 0}
+    - target: {fileID: 7235560249732517383, guid: 4230d0f5f4577074fa1cef17cd8cec05,
+        type: 3}
+      propertyPath: m_AnchorMin.y
+      value: 0.25882316
       objectReference: {fileID: 0}
     - target: {fileID: 8878150086263174560, guid: 4230d0f5f4577074fa1cef17cd8cec05,
         type: 3}
@@ -21870,7 +21901,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 5abc80a30e5c4984ea32eb39491eb03b, type: 3}
+  m_Sprite: {fileID: 21300000, guid: b833386fef96f6b488c0c877aa95411f, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1

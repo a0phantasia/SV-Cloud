@@ -10,6 +10,7 @@ public class CardInfoButtonView : IMonoBehaviour
     [SerializeField] private List<IButton> buttons;
 
     public int ActiveButtonCount => buttons.Count(x => x.gameObject.activeSelf);
+    public float RectSize => (ActiveButtonCount == 0) ? 0 : (20 + 30 * ActiveButtonCount);
 
     protected override void Awake()
     {

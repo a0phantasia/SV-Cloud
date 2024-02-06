@@ -222,6 +222,9 @@ public class BattleUnitView : BattleBaseView
                 var inHand = effect.invokeTarget.Select(x => x.CurrentCard).ToList();
                 var inGrave = unit.grave.cards.TakeLast(count - effect.invokeTarget.Count).Select(x => x.CurrentCard).ToList();
 
+                if (count <= 0)
+                    goto default;
+
                 Anim.DrawAnim(1, false, inHand, inGrave, SetOpUnit);
                 break;
 

@@ -65,6 +65,10 @@ public static class String {
         return result;
     }
 
+    public static string ToStringWithSign(this int num) {
+        return ((num < 0) ? string.Empty : "+") + num.ToString();
+    }
+
     /// <summary>
     /// Count length without rich-text tags.
     /// </summary>

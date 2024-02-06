@@ -37,13 +37,13 @@ public class BattleDamageAnimView : BattleBaseView
         switch (info.place) {
             case BattlePlaceId.Leader:
                 handView.SetHandMode(false);
-                leaderView.SetDamage(heal, ColorHelper.green, callback);
+                leaderView.SetDamage(heal, ColorHelper.green192, callback);
                 break;
             case BattlePlaceId.Field:
                 if (!info.index.IsInRange(0, fieldView.Count))
                     break;
 
-                fieldView[info.index].SetDamage(heal, ColorHelper.green, callback);
+                fieldView[info.index].SetDamage(heal, ColorHelper.green192, callback);
                 break;
         }
     }

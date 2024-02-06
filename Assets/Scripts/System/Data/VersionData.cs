@@ -32,8 +32,8 @@ public class VersionData
     }
 
     public static int CompareTo(string lhsVersion, string rhsVersion) {
-        float lhs = 0, rhs = 0;
-        if (!float.TryParse(lhsVersion, out lhs) || !float.TryParse(rhsVersion, out rhs))
+        decimal lhs = 0, rhs = 0;
+        if (!decimal.TryParse(lhsVersion, out lhs) || !decimal.TryParse(rhsVersion, out rhs))
             return 0;
 
         return lhs.CompareTo(rhs);
