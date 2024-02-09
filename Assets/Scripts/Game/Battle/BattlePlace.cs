@@ -10,6 +10,7 @@ public class BattlePlace
     public List<BattleCard> cards = new List<BattleCard>();
     public int MaxCount;
     public int Count => cards.Count;
+    public int AvailableCount => MaxCount - Count;
     public bool IsFull => Count >= MaxCount;
     public Dictionary<string, float> options = new Dictionary<string, float>();
 
@@ -51,10 +52,11 @@ public class BattlePlace
         }
 
         return id switch {
-            "count"     => Count,
-            "maxCount"  => MaxCount,
-            "isFull"    => IsFull ? 1 : 0,
-            _           => options.Get(id, 0),
+            "count"         => Count,
+            "maxCount"      => MaxCount,
+            "availableCount"=> AvailableCount,
+            "isFull"        => IsFull ? 1 : 0,
+            _               => options.Get(id, 0),
         };
     }
 

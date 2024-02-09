@@ -95,8 +95,8 @@ public class Card : IIdentifyHandler
         atk = rhs.atk;
         hp = rhs.hp;
         hpMax = rhs.hpMax;
-        traits = rhs.traits.Select(x => x).ToList();
-        keywords = rhs.keywords.Select(x => x).ToList();
+        traits = rhs.traits.ToList();
+        keywords = rhs.keywords.ToList();
         effectIds = new List<int>(rhs.effectIds);
         tokenIds = new List<int>(rhs.tokenIds);
         options = new Dictionary<string, string>(rhs.options);
@@ -114,6 +114,19 @@ public class Card : IIdentifyHandler
     public void SetEffects(List<int> effectIds, Func<int, Effect> effectFunc = null) {
         effectFunc ??= (x => Effect.Get(x));
         effects = effectIds.Select(effectFunc).Where(x => x != null).ToList();
+    }
+
+    public void ClearEffects(string timing = "all") {
+        if (timing == "all") {
+            effectIds.Clear();
+            effects.Clear();
+
+            foreach (var property in CardDatabase.PropertyEffects)
+                SetIdentifier(property, 0);
+        } else {
+            effectIds.RemoveAll(x => Effect.Get(x)?.timing == timing);
+            effects.RemoveAll(x => x.timing == timing);
+        }
     }
 
     public void SetDescription(string[] _data) {

@@ -43,7 +43,7 @@ public class BattleHandView : BattleBaseView
         handCards = hand.cards.ToList();
         for (int i = 0; i < cardViews.Count; i++) {
             var card = (i < hand.Count) ? hand.cards[i] : null;
-            var useCost = (i < hand.Count) ? hand.cards[i].GetUseCost(leader) : 0;
+            var useCost = (i < hand.Count) ? hand.cards[i].GetUseCost(leader, out _) : 0;
             var isUsable = (i < hand.Count) ? hand.cards[i].IsUsable(unit) : false;
 
             cardViews[i].SetBattleCard(card);

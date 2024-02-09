@@ -94,7 +94,8 @@ public class DeckBuilderModel : IMonoBehaviour
     }
 
     public int[] GetPortalSelectionsCardCount(Card[] selections) {
-        return selections.Select(x => Mathf.Max(0, x.CountLimit - CurrentDeck.CardIdDistribution.Get(x.id, 0))).ToArray();
+        return selections.Select(x => Mathf.Max(0, Card.Get(x.NameId).CountLimit - 
+            CurrentDeck.CardNameIdDistribution.Get(x.NameId, 0))).ToArray();
     }
 
     public void SetCardSource(bool isPortal) {

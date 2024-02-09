@@ -24,6 +24,7 @@ public class BattleManager : Manager<BattleManager>
     protected override void Awake()
     {
         base.Awake();
+        CurrentState = Battle.CurrentState;
         if (Battle.Settings.isLocal)
             return;
             

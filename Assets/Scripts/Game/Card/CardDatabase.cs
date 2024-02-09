@@ -76,10 +76,13 @@ public static class CardDatabase
         { BattlePlaceId.Grave,        "grave"     },
     };
 
-    public static string[] PropertyEffects => new string[] { "leaveVanish", "destroyVanish", "returnVanish" };
+    public static string[] PropertyEffects => new string[] { 
+        "leaveVanish", "destroyVanish", "returnVanish" 
+    };
     public static CardKeyword[] KeywordEffects => new CardKeyword[] { 
         CardKeyword.Storm, CardKeyword.Ward, CardKeyword.Bane,
         CardKeyword.Rush, CardKeyword.Ambush, CardKeyword.Drain,
+        CardKeyword.Pressure, CardKeyword.Aura,
     };
 
     public static string GetPackName(this CardPack pack) => packNameDict.Get(pack, "-");
@@ -178,7 +181,7 @@ public enum CardRarity
 public enum CardTrait 
 {
     All = 0,
-    Soldier = 1, Commander = 2, Earth = 3, Artifact = 4,
+    Soldier = 1, Commander = 2, Earth = 3, Artifact = 4, Golem = 5,
 }
 
 public enum CardKeyword 
@@ -186,7 +189,8 @@ public enum CardKeyword
     None = 0, Storm = 1, Ward = 2, Bane = 3, Rush = 4, Ambush = 5, Drain = 6,
     Fanfare = 7, Lastword = 8, Attack = 9, Defense = 10, Evolve = 11, 
     Combo = 12, Rally = 13, SpellBoost = 14, Awake = 15, Necromance = 16,
-    Venge = 17, Countdown = 18,
+    Venge = 17, Countdown = 18, Reson = 19, EarthRitual = 20, Enhance = 21,
+    Pressure = 22, Bury = 23, Reanimate = 24, Aura = 25,
 }
 
 public enum BattlePlaceId 

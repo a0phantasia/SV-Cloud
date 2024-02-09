@@ -161,6 +161,13 @@ public class BattleUnitView : BattleBaseView
                 var addDeckList = effect.hudOptionDict.Get("token", string.Empty).ToIntList('/');
                 Anim.AddDeckAnim(0, addDeckList.Select(Card.Get).ToList(), hide, SetMyUnit);
                 break;
+
+            case EffectAbility.Bury:
+                if (invokeUnit.id != unit.id)
+                    goto default;
+
+                Anim.BuryAnim(SetMyUnit);
+                break;
         };
     }
 
@@ -289,6 +296,13 @@ public class BattleUnitView : BattleBaseView
                 var hide = bool.Parse(effect.hudOptionDict.Get("hide", "false"));
                 var addDeckList = effect.hudOptionDict.Get("token", string.Empty).ToIntList('/');
                 Anim.AddDeckAnim(1, addDeckList.Select(Card.Get).ToList(), hide, SetOpUnit);
+                break;
+
+            case EffectAbility.Bury:
+                if (invokeUnit.id != unit.id)
+                    goto default;
+
+                Anim.BuryAnim(SetOpUnit);
                 break;
         };
     }

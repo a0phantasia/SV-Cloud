@@ -12,6 +12,17 @@ public static class Identifier {
         var lhsUnit = effect.invokeUnit;
         var rhsUnit = state.GetRhsUnitById(lhsUnit.id);
 
+        if (id.TryTrimStart("enhance", out trimId)) {
+            var enhance = Parser.ParseEffectExpression(trimId.TrimParentheses(), effect, state);
+            return lhsUnit.leader.PP >= enhance ? 1 : 0;
+        }
+
+        if (id.TryTrimStart("earth", out trimId)) {
+            var earth = Parser.ParseEffectExpression(trimId.TrimParentheses(), effect, state);
+            var filter = BattleCardFilter.Parse("[trait:3][type:3]");
+            return (lhsUnit.field.cards.Count(filter.FilterWithCurrentCard) >= earth) ? 1 : 0;
+        }
+
         if (id.TryTrimStart("necromance", out trimId)) {
             var necromance = Parser.ParseEffectExpression(trimId.TrimParentheses(), effect, state);
             return (lhsUnit.grave.GraveCount >= necromance) ? 1 : 0;

@@ -12,7 +12,6 @@ public class BattleCardAmuletView : BattleBaseView
     [SerializeField] private RawImage artworkRawImage;
     [SerializeField] private Image flagImage, outlineImage;
 
-    public static string[] FlagProperties => new string[] { "bane", "drain", "flag", "lastword" };
     private Dictionary<string, bool> flagResultDict = new Dictionary<string, bool>();
     private Coroutine flagCoroutine = null;
 
@@ -57,7 +56,8 @@ public class BattleCardAmuletView : BattleBaseView
     }
 
     private void SetFlagIcon(BattleCard card) {
-        var effects = card.CurrentCard.effects;
+        var currentCard = card.CurrentCard;
+        var effects = currentCard.effects;
     
         flagResultDict.Set("lastword", effects.Exists(x => x.timing == "on_this_destroy"));
         flagResultDict.Set("flag", effects.Exists(x => ((x.timing.TryTrimStart("on_", out var trimTiming)) && (!trimTiming.StartsWith("this_")))
@@ -65,6 +65,7 @@ public class BattleCardAmuletView : BattleBaseView
         
         flagResultDict.Set("bane", card.actionController.IsKeywordAvailable(CardKeyword.Bane));
         flagResultDict.Set("drain", card.actionController.IsKeywordAvailable(CardKeyword.Drain));
+        flagResultDict.Set("earth", currentCard.traits.Contains(CardTrait.Earth));
     }
 
     public void SetOutlineColor(Color color) {
@@ -83,9 +84,9 @@ public class BattleCardAmuletView : BattleBaseView
                 yield return new WaitUntil(() => flagResultDict.Count(entry => entry.Value) != trueCount);
                 continue;
             }
-            for (int i = 0; i < FlagProperties.Length; i++) {
-                var circularIndex = (index + i) % FlagProperties.Length;
-                var key = FlagProperties[circularIndex];
+            for (int i = 0; i < BattleCard.FlagProperties.Length; i++) {
+                var circularIndex = (index + i) % BattleCard.FlagProperties.Length;
+                var key = BattleCard.FlagProperties[circularIndex];
                 if (flagResultDict.Get(key, false)) {
                     index = circularIndex;
                     flagImage?.SetSprite(SpriteResources.GetCardIcon(key));

@@ -20,6 +20,7 @@ public class BattleCardEffectView : IMonoBehaviour
         }
         effectObjects[0]?.SetActive(card.actionController.IsKeywordAvailable(CardKeyword.Ward));
         effectObjects[1]?.SetActive(card.actionController.IsKeywordAvailable(CardKeyword.Ambush));
+        effectObjects[2]?.SetActive(card.actionController.IsKeywordAvailable(CardKeyword.Pressure));
     }
 
     public void SetTargeting(bool isTargeting) {

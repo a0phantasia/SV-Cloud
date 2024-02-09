@@ -124,4 +124,8 @@ public class BattleAnimManager : Manager<BattleAnimManager>
             drawView?.OpAddDeck(tokens, hide, callback);
     }
 
+    public void BuryAnim(Action callback) {
+        StartCoroutine(WaitForSeconds(0.75f, callback));
+    }
+
 }

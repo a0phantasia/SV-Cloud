@@ -40,6 +40,9 @@ public static class EffectDatabase {
         {"set_countdown",   EffectAbility.SetCountdown  },
         {"add_deck",        EffectAbility.AddDeck       },
         {"hybrid",          EffectAbility.Hybrid        },
+
+        {"bury",            EffectAbility.Bury          },
+        {"reanimate",       EffectAbility.Reanimate     },
     };
 
     private static Dictionary<string, string> leaderInfoDict = new Dictionary<string, string>() {
@@ -126,4 +129,7 @@ public enum EffectAbility {
     SetCountdown= 118,
     AddDeck     = 119,
     Hybrid      = 120,
+
+    Bury        = 121,
+    Reanimate   = 122,
 }

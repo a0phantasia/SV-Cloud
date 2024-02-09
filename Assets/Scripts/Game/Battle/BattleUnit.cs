@@ -89,7 +89,7 @@ public class BattleUnit : IIdentifyHandler
 
         hand.cards.AddRange(inHand);
         grave.cards.AddRange(inGrave);
-        deck.cards.RemoveRange(0, result.Count);
+        deck.cards.RemoveAll(result.Contains);
 
         return result;
     }

@@ -9,10 +9,14 @@ public class BattleTargetView : BattleBaseView
 {
     [SerializeField] private float selectTargetScale = 0.5f;
     [SerializeField] private Vector2 selectTargetPos;
+    [SerializeField] private Image selectHandBackground;
+    [SerializeField] private GridLayoutGroup gridLayoutGroup;
     [SerializeField] private BattleLeaderView myLeaderView, opLeaderView;
     [SerializeField] private List<BattleCardView> myFieldCardViews, opFieldCardViews;
     [SerializeField] private BattleHandView myHandView, opHandView;
     [SerializeField] private CardView cardView;
+    [SerializeField] private List<CardView> selectHandViews;
+    [SerializeField] private List<IButton> selectHandButtons;
 
     public bool IsSelectingTarget { get; private set; } = false;
 
@@ -69,14 +73,40 @@ public class BattleTargetView : BattleBaseView
 
     private void ShowTargetSelections() {
         var cardPlaceInfos = currentSelectableList.Select(BattleCardPlaceInfo.Parse);
+        var myHandIndex = cardPlaceInfos.Where(x => (x.unitId == 0) && (x.place == BattlePlaceId.Hand)).Select(x => x.index).ToList();
+        var myLeaderIndex = cardPlaceInfos.Where(x => (x.unitId == 0) && (x.place == BattlePlaceId.Leader)).Select(x => x.index).ToList();
+        var opLeaderIndex = cardPlaceInfos.Where(x => (x.unitId == 1) && (x.place == BattlePlaceId.Leader)).Select(x => x.index).ToList();
         var myFieldIndex = cardPlaceInfos.Where(x => (x.unitId == 0) && (x.place == BattlePlaceId.Field)).Select(x => x.index).ToList();
         var opFieldIndex = cardPlaceInfos.Where(x => (x.unitId == 1) && (x.place == BattlePlaceId.Field)).Select(x => x.index).ToList();
 
-        myFieldIndex.ForEach(x => myFieldCardViews[x].SetOutlineColor(ColorHelper.target));
-        opFieldIndex.ForEach(x => opFieldCardViews[x].SetOutlineColor(ColorHelper.target));
-
-        if (currentSelectableList.Count == 0)
+        if (currentSelectableList.Count == 0) {
             OnSelectTarget(0);
+            return;
+        }
+
+        selectHandBackground.gameObject.SetActive(false);
+
+        if ((myLeaderIndex.Count > 0) || (opLeaderIndex.Count > 0) ||
+            (myFieldIndex.Count > 0) || (opFieldIndex.Count > 0)) {
+            myFieldIndex.ForEach(x => myFieldCardViews[x].SetOutlineColor(ColorHelper.target));
+            opFieldIndex.ForEach(x => opFieldCardViews[x].SetOutlineColor(ColorHelper.target));
+            return;
+        }
+
+        selectHandBackground.gameObject.SetActive(true);
+        gridLayoutGroup.spacing = new Vector2(Mathf.Max(150 - 25 * myHandIndex.Count, 50), gridLayoutGroup.spacing.y);
+
+        if (myHandIndex.Count > 0) {
+            for (int i = 0; i < selectHandViews.Count; i++) {
+                int copy = i;
+                var card = myHandIndex.Contains(copy) ? Hud.CurrentState.myUnit.hand.cards[copy].CurrentCard : null;
+                selectHandViews[i].SetCard(card);
+                selectHandViews[i].SetCallback(() => myHandView.ShowHandInfo(copy));
+                selectHandButtons[i].gameObject.SetActive(card != null);
+            }
+            return;
+        }
+        
     }
 
     public void OnSelectTarget(int infoCode) {
@@ -93,11 +123,20 @@ public class BattleTargetView : BattleBaseView
             selectedTargetList.Add(code);
             selectNum++;
 
-            if (info.place == BattlePlaceId.Field)
-                fieldCardView[info.index].SetOutlineColor(Color.cyan);
+            switch (info.place) {
+                default:
+                    break;
+                case BattlePlaceId.Field:
+                    fieldCardView[info.index].SetOutlineColor(Color.cyan);
+                    break;
+                case BattlePlaceId.Hand:
+                    selectHandButtons[info.index].gameObject.SetActive(false);
+                    break;   
+            }
         }
 
         if ((selectNum == currentInfo.num) || (currentSelectableList.Count == 0)) {
+            selectHandBackground.gameObject.SetActive(false);
             selectedTargetList.Add(0);
 
             if (infoQueue.Count <= 0) {
@@ -119,6 +158,7 @@ public class BattleTargetView : BattleBaseView
 
     public void OnCancelTarget(bool isSuccess) {
         cardView.SetCard(null);
+        selectHandBackground.gameObject.SetActive(false);
 
         if (!IsSelectingTarget)
             return;

@@ -33,7 +33,6 @@ public class BattleCardActionController
     public float GetIdentifier(string id) 
     {
         return id switch {
-            "isWard" => IsKeywordAvailable(CardKeyword.Ward) ? 1 : 0,
             _ => options.Get(id, 0),
         };
     }

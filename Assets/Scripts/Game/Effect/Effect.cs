@@ -198,7 +198,8 @@ public class Effect : IIdentifyHandler
             result &= abilityFunc.Invoke(this, state);
         }
 
-        EffectAbilityHandler.Postprocess(this, state);
+        if (result)
+            EffectAbilityHandler.Postprocess(this, state);
         
         return result;
     }

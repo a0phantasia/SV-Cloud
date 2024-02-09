@@ -15,9 +15,11 @@ public class Deck
 
     [XmlIgnore] public int CardCount => cardIds.Count;
     [XmlIgnore] public int MaxCardCount => ((GameFormat)format).GetMaxCardCountInDeck();
-    [XmlIgnore] public List<Card> Cards => cardIds.Select(x => Card.Get(x)).ToList();
-    [XmlIgnore] public List<Card> DistinctCards => cardIds.Distinct().Select(x => Card.Get(x)).ToList();
+    [XmlIgnore] public List<Card> Cards => cardIds.Select(Card.Get).ToList();
+    [XmlIgnore] public List<Card> DistinctCards => cardIds.Distinct().Select(Card.Get).ToList();
+    [XmlIgnore] public List<Card> DistinctNameCards => Cards.Select(x => x.NameId).Distinct().Select(Card.Get).ToList();
     [XmlIgnore] public Dictionary<int, int> CardIdDistribution => GetCardIdDistribution();
+    [XmlIgnore] public Dictionary<int, int> CardNameIdDistribution => GetCardNameIdDistribution();
     [XmlIgnore] public List<int> CostDistribution => GetCostDistribution();
 
     public Deck() {}
@@ -56,12 +58,21 @@ public class Deck
     }
 
     public Dictionary<int, int> GetCardIdDistribution() {
-        Dictionary<int, int> cdf = new Dictionary<int, int>();
+        Dictionary<int, int> idf = new Dictionary<int, int>();
         for (int i = 0; i < DistinctCards.Count; i++) {
             Card card = DistinctCards[i];
-            cdf.Add(card.id, cardIds.Count(id => card.id == id));
+            idf.Add(card.id, cardIds.Count(id => card.id == id));
         }
-        return cdf;
+        return idf;
+    }
+
+    public Dictionary<int, int> GetCardNameIdDistribution() {
+        Dictionary<int, int> ndf = new Dictionary<int, int>();
+        for (int i = 0; i < DistinctNameCards.Count; i++) {
+            Card card = DistinctNameCards[i];
+            ndf.Add(card.id, Cards.Count(x => card.id == x.NameId));
+        }
+        return ndf;
     }
 
     public List<int> GetCostDistribution() {

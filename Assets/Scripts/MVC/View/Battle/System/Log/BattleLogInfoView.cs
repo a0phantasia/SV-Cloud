@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -46,6 +47,14 @@ public class BattleLogInfoView : BattleBaseView
                 opCount++;
             }
         }
+        for (int i = myCount; i < myBattleLogs.Count; i++)
+            Destroy(myBattleLogs[i].gameObject);
+
+        for (int i = opCount; i < opBattleLogs.Count; i++)
+            Destroy(opBattleLogs[i].gameObject);
+
+        myBattleLogs = myBattleLogs.GetRange(0, myCount);
+        opBattleLogs = opBattleLogs.GetRange(0, opCount);
     }
 
     public void SetWho(bool isMe) {
