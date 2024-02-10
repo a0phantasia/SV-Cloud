@@ -11,7 +11,7 @@ public class DeckListController : IMonoBehaviour
     [SerializeField] private DeckListView deckView;
     [SerializeField] private PageView pageView;
 
-    public event Action onUseDeckEvent;
+    public event Action<Deck> onUseDeckEvent;
 
     public override void Init()
     {
@@ -60,8 +60,8 @@ public class DeckListController : IMonoBehaviour
         infoPanel.onDeckChangeEvent.SetListener(() => SetDeckList(deckModel.DefaultDeckList));
     }
 
-    private void UseDeck() {
-        onUseDeckEvent?.Invoke();
+    private void UseDeck(Deck deck) {
+        onUseDeckEvent?.Invoke(deck);
     }
 
     private void CreateDeck(CardCraft craft) {

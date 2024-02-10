@@ -24,7 +24,7 @@ public class SettingsModel : IMonoBehaviour
             Utility.SetScreenSize(Width, Height);
             Hintbox.OpenHintbox("已儲存設定");
         } else {
-            Hintbox.OpenHintbox("設定的螢幕畫面過大或過小，無法設定");
+            Hintbox.OpenHintbox("設定的視窗畫面過大或過小，無法設定");
         }
         SaveSystem.SaveData();
         AudioSystem.instance.OnConfirmSettings();

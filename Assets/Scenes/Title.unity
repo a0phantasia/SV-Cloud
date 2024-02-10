@@ -3099,6 +3099,7 @@ MonoBehaviour:
   loadingScreen: {fileID: 1507767452}
   loadingPanel: {fileID: 607506859}
   loadingSlider: {fileID: 1479492980}
+  loadingIndicator: {fileID: 1754246783}
   loadingText: {fileID: 754280381}
   CornerLoadingObject: {fileID: 1034790349}
 --- !u!4 &2081939353

@@ -8,7 +8,9 @@ public class DeckInfoPanel : Panel
 {
     [SerializeField] private DeckInfoView infoView;
     public UnityEvent onDeckChangeEvent = new UnityEvent();
-    public UnityEvent onDeckUseEvent = new UnityEvent();
+    public UnityEvent<Deck> onDeckUseEvent = new UnityEvent<Deck>();
+
+    private Deck currentDeck;
 
     private void OnDestroy() {
         onDeckChangeEvent?.RemoveAllListeners();
@@ -16,7 +18,7 @@ public class DeckInfoPanel : Panel
     }
 
     public void SetDeck(Deck deck) {
-        Player.currentDeck = deck;
+        currentDeck = deck;
         infoView.SetDeck(deck);
     }
 
@@ -29,10 +31,10 @@ public class DeckInfoPanel : Panel
             if (string.IsNullOrEmpty(newName))
                 return;
                 
-            Player.currentDeck.name = newName;
+            currentDeck.name = newName;
             SaveSystem.SaveData();
 
-            SetDeck(Player.currentDeck);
+            SetDeck(currentDeck);
             onDeckChangeEvent?.Invoke();
         }
         var hintbox = Hintbox.OpenHintbox<InputHintbox>();
@@ -45,16 +47,17 @@ public class DeckInfoPanel : Panel
 
     public void CheckDeck() {
         var panel = Panel.OpenPanel<DeckDetailPanel>();
-        panel.SetDeck(Player.currentDeck);
+        panel.SetDeck(currentDeck);
     }
 
     public void EditDeck() {
+        Player.currentDeck = currentDeck;
         SceneLoader.instance.ChangeScene(SceneId.DeckBuilder);
     }
 
     public void DeleteDeck() {
         void OnConfirmDelete() {
-            Player.gameData.decks.Remove(Player.currentDeck);
+            Player.gameData.decks.Remove(currentDeck);
             SaveSystem.SaveData();
             onDeckChangeEvent?.Invoke();
             ClosePanel();
@@ -68,12 +71,12 @@ public class DeckInfoPanel : Panel
     }
 
     public void CopyDeck() {
-        Player.currentDeck = new Deck(Player.currentDeck) { name = string.Empty };
+        currentDeck = new Deck(currentDeck) { name = string.Empty };
         EditDeck();
     }
 
     public void UseDeck() {
-        onDeckUseEvent?.Invoke();
+        onDeckUseEvent?.Invoke(currentDeck);
         ClosePanel();
     }
 }

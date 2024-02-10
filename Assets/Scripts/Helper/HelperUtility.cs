@@ -17,9 +17,6 @@ public static class Utility {
     public static void InitScreenSizeWithRatio(float widthRatio, float heightRatio) {
         Resolution resolution = Screen.currentResolution;
         var screen = new Vector2(resolution.width, resolution.height);
-        if (Application.platform == RuntimePlatform.WindowsPlayer) {
-            screen = screen * 4 / 5;
-        }
         var width = (int)screen.x;
         var height = (int)screen.y;
         var screenRatio = screen.x / screen.y;

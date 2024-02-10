@@ -25,7 +25,7 @@ public class GameManager : Singleton<GameManager>
         OnBeforeStateChanged?.Invoke(newState);
         state = newState;
         
-        Debug.Log($"New State: {newState}");
+        // Debug.Log($"New State: {newState}");
 
         switch(newState) {
             case GameState.Init:
@@ -62,7 +62,6 @@ public class GameManager : Singleton<GameManager>
             Utility.InitScreenSizeWithRatio(16, 9);
 
         ResourceManager.LoadXML<VersionData>(versionDataUrl, OnRequestSuccess, OnRequestFail);
-        ChangeState(GameState.Play);
     }
 
     private void GameQuit() {
@@ -71,11 +70,6 @@ public class GameManager : Singleton<GameManager>
 
     private void GamePlay() {
         
-    }
-
-    protected override void OnApplicationQuit() {
-        SaveSystem.SaveData();
-        base.OnApplicationQuit();
     }
 
 }

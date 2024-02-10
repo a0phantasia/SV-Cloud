@@ -6,6 +6,7 @@ using System;
 
 public class DatabaseManager : Singleton<DatabaseManager>
 {
+    public const int LoadingGoal = 3;
     private ResourceManager RM => ResourceManager.instance;
 
     public List<Card> cardMaster = new List<Card>();
@@ -16,26 +17,34 @@ public class DatabaseManager : Singleton<DatabaseManager>
     public Dictionary<CardKeyword, string> keywordEnglishNameDict = new Dictionary<CardKeyword, string>();
     public Dictionary<CardKeyword, string> keywordInfoDict = new Dictionary<CardKeyword, string>();
 
-    // public Dictionary<string, ActivityInfo> activityInfoDict = new Dictionary<string, ActivityInfo>();
+    public bool IsReady => loadingProgress == LoadingGoal;
+    private int loadingProgress = 0;
 
     public void Init() {
         RM.LoadCardInfo((x) => { 
             cardInfoDict = x; 
             cardMaster = cardInfoDict.Select(entry => entry.Value).ToList();
+            loadingProgress += 1;
         }, (y) => effectInfoDict = y);
 
         RM.LoadTraitInfo((x) => {
             traitNameDict = x.ToDictionary(entry => (CardTrait)entry.Key, entry => entry.Value[0]);
+            loadingProgress += 1;
         });
 
         RM.LoadKeywordInfo((x) => {
             keywordNameDict = x.ToDictionary(entry => (CardKeyword)entry.Key, entry => entry.Value[0]);
             keywordEnglishNameDict = x.ToDictionary(entry => (CardKeyword)entry.Key, entry => entry.Value[1]);
             keywordInfoDict = x.ToDictionary(entry => (CardKeyword)entry.Key, entry => entry.Value[2].GetDescription("-"));
+            loadingProgress += 1;
         });
     }
 
     public bool VerifyData(out string error) {
+        if (!IsReady) {
+            error = "正在初始化資料庫 (" + loadingProgress + "/" + LoadingGoal + ")\n請稍候再試";
+            return false;
+        }
         if (keywordInfoDict.Count != GameManager.versionData.keywordCount) {
             error = "獲取關鍵字說明資料失敗 (" + keywordInfoDict.Count + "/" + GameManager.versionData.keywordCount  + ")";
             return false;

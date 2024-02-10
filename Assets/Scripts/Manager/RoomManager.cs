@@ -31,7 +31,7 @@ public class RoomManager : Manager<RoomManager>
         NetworkManager.instance.onOtherPlayerJoinedRoomEvent += OnOtherPlayerJoin;
         NetworkManager.instance.onOtherPlayerLeftRoomEvent += OnOtherPlayerLeft;
 
-        deckListController.onUseDeckEvent += () => SetDeckListPanelActive(false);
+        deckListController.onUseDeckEvent += UseDeck;
     }
 
     private void RemoveSubscriptions() {
@@ -131,9 +131,13 @@ public class RoomManager : Manager<RoomManager>
 
     public void SetDeckListPanelActive(bool active) {
         deckListController?.gameObject.SetActive(active);
-        if (!active) {
-            myView?.SetDeck(Player.currentDeck);
-        }
+    }
+
+    public void UseDeck(Deck deck) {
+        Player.currentDeck = deck;
+
+        SetDeckListPanelActive(false);
+        myView?.SetDeck(deck);
     }
 
     public void CheckDeck() {
@@ -146,8 +150,7 @@ public class RoomManager : Manager<RoomManager>
     }
 
     public void StartBattle() {
-        RequestManager.OnRequestFail("battle start");
-        // SceneLoader.instance.ChangeScene(SceneId.Battle, true);
+        SceneLoader.instance.ChangeScene(SceneId.Battle, true);
     }
 
 

@@ -12,9 +12,6 @@ public class GameData
     [XmlArray("deckList"), XmlArrayItem(typeof(Deck), ElementName = "deck")]
     public List<Deck> decks;
 
-    
-
-
     public GameData() {
         
     }

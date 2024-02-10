@@ -34,7 +34,8 @@ public class SettingsController : IMonoBehaviour
     public void SetNickname() {
         void SetPlayerName(string name) {
             Player.gameData.SetNickname(name);
-            settingsView.SetName(Player.gameData.nickname);     
+            settingsView.SetName(Player.gameData.nickname);
+            SaveSystem.SaveData();     
         }
 
         InputHintbox hintbox = Hintbox.OpenHintbox<InputHintbox>();
