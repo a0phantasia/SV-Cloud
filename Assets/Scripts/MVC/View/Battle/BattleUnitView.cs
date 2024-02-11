@@ -3,6 +3,8 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using Photon.Pun;
+using Photon.Realtime;
 
 public class BattleUnitView : BattleBaseView
 {
@@ -21,6 +23,11 @@ public class BattleUnitView : BattleBaseView
     {
         base.Init();
         SetUnit((id == 0) ? Battle.CurrentState.myUnit : Battle.CurrentState.opUnit);
+    }
+
+    [PunRPC]
+    private void RPCPlayerAction(short[] data) {
+        Battle.PlayerAction(data.Select(x => (int)x).ToArray(), false);
     }
 
     public void SetLock(bool isLocked) {

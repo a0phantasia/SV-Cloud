@@ -47,8 +47,10 @@ public class SceneLoader : Singleton<SceneLoader>
             var coroutine = (GameManager.instance.state == GameState.Init) ? DownloadResourcesCoroutine(index) : ChangeSceneAsync(index);
             StartCoroutine(coroutine);
         } else {
-            if (!PhotonNetwork.IsConnected)
+            if (!PhotonNetwork.IsConnected) {
+                loadingIndicator?.SetText("連線已中斷");    
                 return;
+            }   
 
             if (PhotonNetwork.IsMasterClient)
                 PhotonNetwork.LoadLevel((int)index);

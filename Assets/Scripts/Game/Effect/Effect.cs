@@ -3,7 +3,6 @@ using System.Linq;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using ExitGames.Client.Photon.StructWrapping;
 
 public class Effect : IIdentifyHandler
 {
@@ -205,8 +204,6 @@ public class Effect : IIdentifyHandler
     }
 
     public void SetInvokeTarget(BattleState state) {
-        var currentUnit = state.currentUnit;
-
         var rhsUnit = state.GetRhsUnitById(invokeUnit.id);
         var info = GetEffectTargetInfo(state);
 
@@ -270,7 +267,7 @@ public class Effect : IIdentifyHandler
             case "index":
                 invokeTarget = new List<BattleCard>();
                 for (int i = 0; i <= info.num; i++) {
-                    var target = currentUnit.targetQueue.Dequeue();
+                    var target = invokeUnit.targetQueue.Dequeue();
                     if (target == null)
                         break;
 

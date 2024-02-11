@@ -14,7 +14,7 @@ public class RequestManager : Singleton<RequestManager>
     }
 
     public static void OnRequestSuccess(string text) {
-        Debug.Log(text);
+        Hintbox.OpenHintbox(text);
     }
 
     public static void OnRequestFail(string text) {

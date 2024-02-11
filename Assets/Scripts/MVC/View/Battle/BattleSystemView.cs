@@ -41,9 +41,10 @@ public class BattleSystemView : BattleBaseView
                 
                 AudioSystem.instance.PlayMusic((result == "WIN") ? AudioResources.Win : AudioResources.Lose);
 
+                Hud.OnConfirmBattleResult(true);
                 Anim.ResultAnim("YOU " + result, reason, () => {
                     IsDone = true;
-                    Hud.OnConfirmBattleResult();
+                    Hud.BackToScene();
                 }); 
                 break;
 

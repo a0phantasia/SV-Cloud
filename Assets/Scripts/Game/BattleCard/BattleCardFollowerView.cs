@@ -66,6 +66,9 @@ public class BattleCardFollowerView : BattleBaseView
 
     public void SetOutline(BattleCard battleCard) {
         var unit = Hud.CurrentState.GetBelongUnit(battleCard);
+        if (unit == null) 
+            return;
+
         var isLeaderAttackable = battleCard.IsLeaderAttackable(unit);
         var isFollowerAttackable = battleCard.IsFollowerAttackable(unit);
         

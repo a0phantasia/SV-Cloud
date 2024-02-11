@@ -26,6 +26,10 @@ public class RoomManager : Manager<RoomManager>
         SetMyReady(false);
     }
 
+    private void OnDestroy() {
+        RemoveSubscriptions();
+    }
+
     private void InitSubscriptions() {
         NetworkManager.instance.onPlayerPropsUpdateEvent += OnPlayerReady;
         NetworkManager.instance.onOtherPlayerJoinedRoomEvent += OnOtherPlayerJoin;
@@ -38,6 +42,8 @@ public class RoomManager : Manager<RoomManager>
         NetworkManager.instance.onPlayerPropsUpdateEvent -= OnPlayerReady;
         NetworkManager.instance.onOtherPlayerJoinedRoomEvent -= OnOtherPlayerJoin;
         NetworkManager.instance.onOtherPlayerLeftRoomEvent -= OnOtherPlayerLeft;
+
+        deckListController.onUseDeckEvent -= UseDeck;
     }
 
     private void InitPlayer() {
@@ -58,8 +64,8 @@ public class RoomManager : Manager<RoomManager>
         opView.SetName((otherPlayer.Length == 0) ? string.Empty : otherPlayer[0].NickName);
         opView.SetVictory((otherPlayer.Length == 0) ? 0 : (int)otherPlayer[0].CustomProperties["win"]);
 
-        deckListController.SetZone(zfb / 1000);
-        deckListController.SetFormat(zfb % 1000 / 100);
+        deckListController.SetZone(zfb / 100);
+        deckListController.SetFormat(zfb % 100 / 10);
     }
 
     public void LeaveRoom() {
@@ -97,7 +103,7 @@ public class RoomManager : Manager<RoomManager>
             opView.SetReady(true);
         }
 
-        bool isAllReady = (allPlayers.Length > 1) && allPlayers.All(x => (bool)x.CustomProperties["ready"]);
+        bool isAllReady = (allPlayers.Length > 1) && allPlayers.All(x => (x != null) && (bool)x.CustomProperties["ready"]);
         if (isAllReady) {
             Battle battle = new Battle(
                 PhotonNetwork.CurrentRoom.CustomProperties,

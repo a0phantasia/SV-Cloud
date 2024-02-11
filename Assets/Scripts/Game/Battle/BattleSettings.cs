@@ -11,6 +11,7 @@ public class BattleSettings
     public int evolveStart = 4;
     public string masterName;
     public string clientName;
+    public int seed = 0;
 
     public BattleSettings(CardZone zoneId, GameFormat formatId, bool local = false, int hp = 20, int evolveStartTurn = 4) {
         isLocal = local;
@@ -28,5 +29,6 @@ public class BattleSettings
         evolveStart = rhs.evolveStart;
         masterName = rhs.masterName;
         clientName = rhs.clientName;
+        seed = rhs.seed;
     }
 }

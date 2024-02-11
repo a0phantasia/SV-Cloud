@@ -29,8 +29,12 @@ public class DeckListController : IMonoBehaviour
         OnDeckListSetPage();
     }
 
+    public void SetZoneWithoutCygames(int zoneWithoutCygames) {
+        SetZone(zoneWithoutCygames + 1);
+    }
+
     public void SetZone(int zone) {
-        deckModel.SetZone(zone + 1);
+        deckModel.SetZone(zone);
         FilterDeckList();
     }
 

@@ -78,13 +78,13 @@ public class BattleOrderView : BattleBaseView
 
         callback?.Invoke();
 
-        StartCoroutine(RemoveBackground(unit, callback));
+        StartCoroutine(RemoveBackground());
     }
 
-    private IEnumerator RemoveBackground(BattleUnit unit, Action callback) {
+    private IEnumerator RemoveBackground() {
         float currentTime = 0, finishTime = waitSeconds, percent = 0;
         var size = background.rectTransform.rect.size.y;
-        var targetPos = new Vector2(0, size * (unit.id * 2 - 1));
+        var targetPos = new Vector2(0, size * (id * 2 - 1));
 
         while (currentTime < finishTime) {
             percent = currentTime / finishTime;

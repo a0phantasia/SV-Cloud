@@ -39,7 +39,7 @@ public class BattleManager : Manager<BattleManager>
         hintbox.SetTitle("提示");
         hintbox.SetContent(message);
         hintbox.SetOptionNum(1);
-        hintbox.SetOptionCallback(OnConfirmBattleResult);
+        hintbox.SetOptionCallback(() => OnConfirmBattleResult(false));
     }
 
     public void OnLocalPlayerDisconnect(DisconnectCause disconnectCause, string failedMessage) {
@@ -60,11 +60,6 @@ public class BattleManager : Manager<BattleManager>
         photonView.RPC("RPCPlayerAction", RpcTarget.Others, (object)data);
     }
 
-    [PunRPC]
-    private void RPCPlayerAction(short[] data) {
-        Battle.PlayerAction(data.Select(x => (int)x).ToArray(), false);
-    }
-
     public void SetLock(bool locked) {
         if (locked == IsLocked)
             return;
@@ -73,8 +68,22 @@ public class BattleManager : Manager<BattleManager>
         myView.SetLock(IsLocked);
     }
 
-    public void OnConfirmBattleResult() {
-        var scene = Battle.Settings.isLocal ? SceneId.Main : SceneId.Room;
+    public void OnConfirmBattleResult(bool isBattleEnd) {
+        if (!isBattleEnd) {
+            BackToScene();
+            return;
+        }
+
+        var masterWin = (Battle.Result.masterState == BattleResultState.Win) ? 1 : 0;
+        var addWin = PhotonNetwork.IsMasterClient ? masterWin : (1 - masterWin);
+        var hashtable = PhotonNetwork.LocalPlayer.CustomProperties;
+        hashtable["win"] = (int)hashtable["win"] + addWin;
+        PhotonNetwork.LocalPlayer.SetCustomProperties(hashtable);
+    }
+
+    public void BackToScene() {
+        bool isLocal = Battle.Settings.isLocal;
+        var scene = isLocal ? SceneId.Main : SceneId.Room;
         SceneLoader.instance.ChangeScene(scene);
     }
 

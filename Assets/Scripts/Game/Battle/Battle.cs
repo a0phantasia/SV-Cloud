@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using Photon.Pun;
 using Hashtable = ExitGames.Client.Photon.Hashtable;
 using UnityEngine;
+using Random = UnityEngine.Random;
 using System.Linq;
+using System;
 
 public class Battle
 {
@@ -13,6 +15,7 @@ public class Battle
     public BattleState CurrentState;
 
     public Queue<Effect> effectQueue = new Queue<Effect>();
+    public Queue<Tuple<int[], bool>> playerActionQueue = new Queue<Tuple<int[], bool>>();
 
     public Battle() {}
 
@@ -27,23 +30,23 @@ public class Battle
     /// <param name="myHash">Local Player properties</param>
     /// <param name="opHash">Opponent properties</param>
     public Battle(Hashtable roomHash, Hashtable myHash, string myName, Hashtable opHash, string opName) {
-        Random.InitState((int)roomHash["seed"]);
-
         int zfb = (int)roomHash["zfb"];
         int zone = zfb / 100;
         int format = zfb % 100 / 10;
         var settings = new BattleSettings((CardZone)zone, (GameFormat)format) {
             masterName = PhotonNetwork.IsMasterClient ? myName : opName,
             clientName = PhotonNetwork.IsMasterClient ? opName : myName,
+            seed = (int)roomHash["seed"],
         };
 
-        var myDeck = new BattleDeck(zone, format, (int)myHash["craft"], (int[])myHash["deck"]);
-        var opDeck = new BattleDeck(zone, format, (int)opHash["craft"], (int[])opHash["deck"]);
+        Random.InitState(settings.seed);
 
-        if (PhotonNetwork.IsMasterClient)
-            Init(myDeck, opDeck, settings);
-        else
-            Init(opDeck, myDeck, settings);
+        var masterHash = PhotonNetwork.IsMasterClient ? myHash : opHash;
+        var clientHash = PhotonNetwork.IsMasterClient ? opHash : myHash;
+        var masterDeck = new BattleDeck(zone, format, (int)masterHash["craft"], (int[])masterHash["deck"]);
+        var clientDeck = new BattleDeck(zone, format, (int)clientHash["craft"], (int[])clientHash["deck"]);
+        
+        Init(masterDeck, clientDeck, settings);
     }
 
     private void Init(BattleDeck masterDeck, BattleDeck clientDeck, BattleSettings settings) {
@@ -60,13 +63,20 @@ public class Battle
     ///     "Draw" on side B deals with effect (Draw, isMe = false), <br/>
     /// </summary>
     public void PlayerAction(int[] data, bool isMe) {
+
+        // Enqueue action when still handling effects so that action order is preserved.
+        if (effectQueue.Count > 0) {
+            playerActionQueue.Enqueue(new Tuple<int[], bool>(data, isMe));
+            return;
+        }
+
         if (isMe) {
             short[] enemyData = data.Select(x => (short)x).ToArray();
             var ability = (EffectAbility)data[0];
-            
+
             if (ability.IsTargetSelectableAbility()) {
                 for (int i = 2; i < data.Length; i++)
-                    enemyData[i] = (short)((1 - (data[i] / 100)) * 100 + data[i] % 100);
+                    enemyData[i] = (short)((data[i] == 0) ? 0 : ((1 - (data[i] / 100)) * 100 + data[i] % 100));
             }
             Hud.EnemyPlayerAction(enemyData);
         }
@@ -83,14 +93,20 @@ public class Battle
 
     public void ProcessQueue() {
         while (effectQueue.Count > 0) {
-            if (CurrentState.result.masterState != BattleResultState.None)
-                break;
-
+            if (CurrentState.result.masterState != BattleResultState.None) {
+                Hud.ProcessQueue();
+                return;
+            }
             var e = effectQueue.Peek();
             e.Apply(CurrentState);
             effectQueue.Dequeue();
         }
         Hud.ProcessQueue();
+
+        if (playerActionQueue.Count > 0) {
+            var action = playerActionQueue.Dequeue();
+            PlayerAction(action.Item1, action.Item2);
+        }
     }
 
     public void EnqueueEffect(Effect effect) {
