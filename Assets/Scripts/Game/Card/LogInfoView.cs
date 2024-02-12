@@ -19,11 +19,8 @@ public class LogInfoView : IMonoBehaviour
         rectTransform = gameObject.GetComponent<RectTransform>();
     }
 
-    public void SetEffect(string log, BattleState state, Action onClickCallback = null) {
-        var effect = state.currentEffect;
+    public void SetEffect(string log, Color color, Effect effect, Action onClickCallback = null) {
         bool buttonMode = effect.ability != EffectAbility.TurnStart;
-        bool isMyUnit = state.myUnit.id == effect.invokeUnit.id;
-        Color color = isMyUnit ? Color.cyan : Color.red;
 
         buttonObject?.SetActive(buttonMode);
         splitLineObject?.SetActive(!buttonMode);

@@ -16,6 +16,7 @@ public class BattleLogMainView : BattleBaseView
         var effect = state.currentEffect;
         string log = effect.hudOptionDict.Get("log", string.Empty).TrimEnd("\n");
         var logCard = (effect.ability == EffectAbility.Summon) ? effect.invokeTarget[0] : effect.source;
+        var color = (effect.invokeUnit.id == state.myUnit.id) ? Color.cyan : Color.red;
 
         if (string.IsNullOrEmpty(log))
             return;
@@ -30,7 +31,7 @@ public class BattleLogMainView : BattleBaseView
             var obj = Instantiate(SpriteResources.Log, scrollRect.content);
             var logPrefab = obj.GetComponent<LogInfoView>();
 
-            logPrefab.SetEffect(logArray[i], state, () => cardInfoView?.SetCard(logCard.baseCard));
+            logPrefab.SetEffect(logArray[i], color, effect, () => cardInfoView?.SetCard(logCard.baseCard));
             battleLogs.Add(logPrefab);
         }
     }

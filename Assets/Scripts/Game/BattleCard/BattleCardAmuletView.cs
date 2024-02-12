@@ -81,7 +81,7 @@ public class BattleCardAmuletView : BattleBaseView
                 flagImage?.SetSprite(SpriteResources.GetCardIcon(flagResultDict.First(x => x.Value).Key));
             
             if (trueCount < 2) {
-                yield return new WaitUntil(() => flagResultDict.Count(entry => entry.Value) != trueCount);
+                yield return null;
                 continue;
             }
             for (int i = 0; i < BattleCard.FlagProperties.Length; i++) {

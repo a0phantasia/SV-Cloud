@@ -26,6 +26,7 @@ public class BattleLogUseView : BattleBaseView
         var usedCards = unit.grave.usedCards;
         var distinctCards = unit.grave.DistinctUsedCards;
         var battleLogs = isMyUnit ? myBattleLogs : opBattleLogs;
+        var color = isMyUnit ? Color.cyan : Color.red;
 
         if (battleLogs.Count < distinctCards.Count) {
             var obj = Instantiate(SpriteResources.Log, scrollRect.content);
@@ -38,7 +39,7 @@ public class BattleLogUseView : BattleBaseView
         for (int i = 0; i < battleLogs.Count; i++) {
             int copy = i;
             var count = usedCards.Count(x => x.id == distinctCards[i].id);
-            battleLogs[i].SetEffect(distinctCards[i].name, state, () => cardInfoView?.SetCard(distinctCards[copy]));
+            battleLogs[i].SetEffect(distinctCards[i].name, color, state.currentEffect, () => cardInfoView?.SetCard(distinctCards[copy]));
             battleLogs[i].SetCount("x " + count);
         }
     }

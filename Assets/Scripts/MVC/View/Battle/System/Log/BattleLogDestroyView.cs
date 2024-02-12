@@ -26,6 +26,7 @@ public class BattleLogDestroyView : BattleBaseView
         var destroyedFollowers = unit.grave.destroyedFollowers;
         var distinctFollowers = unit.grave.DistinctDestroyedFollowers;
         var battleLogs = isMyUnit ? myBattleLogs : opBattleLogs;
+        var color = isMyUnit ? Color.cyan : Color.red;
 
         if (battleLogs.Count < distinctFollowers.Count) {
             var obj = Instantiate(SpriteResources.Log, scrollRect.content);
@@ -38,7 +39,7 @@ public class BattleLogDestroyView : BattleBaseView
         for (int i = 0; i < battleLogs.Count; i++) {
             int copy = i;
             var count = destroyedFollowers.Count(x => x.id == distinctFollowers[i].id);
-            battleLogs[i].SetEffect(distinctFollowers[i].name, state, () => cardInfoView?.SetCard(distinctFollowers[copy]));
+            battleLogs[i].SetEffect(distinctFollowers[i].name, color, state.currentEffect, () => cardInfoView?.SetCard(distinctFollowers[copy]));
             battleLogs[i].SetCount("x " + count);
         }
     }

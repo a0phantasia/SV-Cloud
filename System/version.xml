@@ -1,10 +1,11 @@
 <versionData>
     <gameVersion>0.1</gameVersion>
     <buildVersion>0.1</buildVersion>
-    <releaseDate>2023-02-10+08:00</releaseDate>
+    <releaseDate>2023-02-12+08:00</releaseDate>
     <releaseNote>
     【當前版本】0.1
-    【版本日期】2023/02/10
+    【版本日期】2023/02/12
+    【已知錯誤】對戰中存在部分情形會導致UI顯示錯誤
 
     【1】當前版本為測試版本，流量達到上限後無法進行私人對戰。
     【2】初次加載資源會非常慢，請耐心等待並確保網路連線環境順暢。

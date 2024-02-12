@@ -30,6 +30,9 @@ public class BattleLogManager : Manager<BattleLogManager>
     }
 
     public void Log(BattleState state) {
+        if (state.currentEffect.ability == EffectAbility.None)
+            return;
+
         mainView?.LogState(state);
         useView?.LogUse(state);
         destroyView?.LogDestroy(state);

@@ -360,13 +360,14 @@ public static class EffectAbilityHandler
 
     public static bool Use(this Effect effect, BattleState state) {
         var unit = effect.invokeUnit;
+        var isMyUnit = unit.id == state.myUnit.id;
 
         int index = int.Parse(effect.abilityOptionDict.Get("index", "0"));
         if (!index.IsInRange(0, unit.hand.Count))
             return false;
 
         var useCard = unit.hand.cards[index];
-        if (!useCard.IsUsable(unit))
+        if (isMyUnit && (!useCard.IsUsable(unit)))
             return false;
 
         // Record selected target.
@@ -590,7 +591,7 @@ public static class EffectAbilityHandler
         var filterOptions = effect.abilityOptionDict.Get("filter", "none");
         var inGraveCards = new List<BattleCard>();
 
-        bool isMyUnit = state.myUnit.id == drawUnit.id;
+        bool isMyUnit = who == "me";
 
         effect.hudOptionDict.Set("who", isMyUnit ? "me" : "op");
 
@@ -599,7 +600,7 @@ public static class EffectAbilityHandler
 
             drawUnit.grave.GraveCount += inGraveCards.Count;
 
-            string log = (isMyUnit ? string.Empty : "對手") + "抽取 " + drawCount + " 張卡片\n";       
+            string log = (isMyUnit ? string.Empty : "使對手") + "抽取 " + drawCount + " 張卡片\n";       
             if (inGraveCards.Count > 0) {
                 if (isMyUnit)
                     inGraveCards.ForEach(x => log += x.CurrentCard.name + " 爆牌進入墓地\n");
@@ -629,7 +630,7 @@ public static class EffectAbilityHandler
 
             drawUnit.grave.GraveCount += inGraveCards.Count;
 
-            string log = (isMyUnit ? string.Empty : "對手") + "檢索 " + total.Count + " 張卡片\n";       
+            string log = (isMyUnit ? string.Empty : "使對手") + "檢索 " + total.Count + " 張卡片\n";       
 
             if (inGraveCards.Count > 0) {
                 if (isMyUnit)
@@ -1480,7 +1481,8 @@ public static class EffectAbilityHandler
 
         for (int i = 0; i < effect.invokeTarget.Count; i++) {
             var info = state.GetCardPlaceInfo(effect.invokeTarget[i]);
-            if ((info.unitId != 0) || (info.place != BattlePlaceId.Hand))
+            var infoUnit = (info.unitId == 0) ? state.myUnit : state.opUnit;
+            if ((infoUnit.id != unit.id) || (info.place != BattlePlaceId.Hand))
                 return false;
         }
 
