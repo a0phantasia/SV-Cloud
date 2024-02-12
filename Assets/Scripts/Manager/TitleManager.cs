@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using SimpleFileBrowser;
+using Unity.IO.LowLevel.Unsafe;
 
 public class TitleManager : Manager<TitleManager>
 {
@@ -71,6 +72,7 @@ public class TitleManager : Manager<TitleManager>
         hintbox.SetContent("檢測到新版本。點擊確認選擇下載位置。\n建議預留 " + (size / 1_000_000) + " MB 以上空間。\n下載後舊版本可自行刪除。");
         hintbox.SetOptionNum(2);
         hintbox.SetOptionCallback(OpenSaveFileBrowser, true);
+        hintbox.SetOptionCallback(OnCancel, false);
     }
 
     private void OpenSaveFileBrowser() {
@@ -81,16 +83,30 @@ public class TitleManager : Manager<TitleManager>
     }
 
     private void OnSuccess(string[] paths) {
-        var loadingText = SceneLoader.instance.loadingText;
-        SceneLoader.instance.StartCornerLoading();
+        SceneLoader.instance.loadingScreen.SetActive(true);
 
+        var loadingText = SceneLoader.instance.loadingText;
+        var loadingSlider = SceneLoader.instance.loadingSlider;
+        
         loadingText?.SetText("正在下載新版本");
+
         RequestManager.instance.Download(GameManager.gameDownloadUrl, paths[0], 
-            () => loadingText?.SetText("下載完成，請關閉遊戲並解壓縮新檔案\n舊版本可自行刪除"),
-            (error) => loadingText?.SetText("下載失敗，請重新啟動\n錯誤：" + error),
-            (progress) => loadingText?.SetText(Mathf.CeilToInt(progress).ToString())
+            () => { 
+                loadingText?.SetText("下載完成");
+                Hintbox.OpenHintbox("下載完成，請關閉遊戲並解壓縮新檔案\n舊版本可自行刪除");
+            }, 
+            (error) => {
+                SceneLoader.instance.loadingScreen.SetActive(false);
+                RequestManager.OnRequestFail("下載失敗，請重新啟動\n錯誤：" + error);
+            },
+            (progress) => {
+                loadingText?.SetText(Mathf.Clamp(Mathf.CeilToInt(progress * 100), 0, 100) + " %");
+                loadingSlider.value = progress;
+            }
         );
     }
 
-    private void OnCancel() {}
+    private void OnCancel() {
+        IsLoading = false;
+    }
 }
