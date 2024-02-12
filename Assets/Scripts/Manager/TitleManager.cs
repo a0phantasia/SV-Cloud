@@ -92,12 +92,12 @@ public class TitleManager : Manager<TitleManager>
 
         RequestManager.instance.Download(GameManager.gameDownloadUrl, paths[0], 
             () => { 
-                loadingText?.SetText("下載完成");
                 Hintbox.OpenHintbox("下載完成，請關閉遊戲並解壓縮新檔案\n舊版本可自行刪除");
+                SceneLoader.instance.loadingScreen.SetActive(false);
             }, 
             (error) => {
-                SceneLoader.instance.loadingScreen.SetActive(false);
                 RequestManager.OnRequestFail("下載失敗，請重新啟動\n錯誤：" + error);
+                SceneLoader.instance.loadingScreen.SetActive(false);
             },
             (progress) => {
                 loadingText?.SetText(Mathf.Clamp(Mathf.CeilToInt(progress * 100), 0, 100) + " %");
