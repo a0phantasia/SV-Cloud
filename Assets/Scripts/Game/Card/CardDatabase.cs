@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Text.RegularExpressions;
 using System.Linq;
 using UnityEngine;
 
@@ -81,13 +82,14 @@ public static class CardDatabase
     public static string[] PropertyEffects => new string[] { 
         "leaveVanish", "destroyVanish", "returnVanish" 
     };
-    public static CardKeyword[] KeywordEffects => new CardKeyword[] { 
-        CardKeyword.Storm, CardKeyword.Ward, CardKeyword.Bane,
-        CardKeyword.Rush, CardKeyword.Ambush, CardKeyword.Drain,
-        CardKeyword.Pressure, CardKeyword.Aura,
-    };
 
-    public static string GetPackName(this CardPack pack) => packNameDict.Get(pack, "-");
+    public static readonly CardTrait[] traits = Enum.GetValues(typeof(CardTrait)).Cast<CardTrait>().ToArray();
+    public static readonly CardKeyword[] keywords = Enum.GetValues(typeof(CardKeyword)).Cast<CardKeyword>().ToArray();
+    public static readonly Regex descPattern = new Regex(@"\[([^\]]+)\]", RegexOptions.Compiled);
+
+    public static CardKeyword[] KeywordEffects => keywords.Where(x => (int)x < 100).ToArray();
+
+    public static string GetPackName(this CardPack pack) => packNameDict.Get(pack, " - ");
     public static string GetZoneName(this CardZone zone) => zoneNameDict.Get(zone, "自訂");
     public static string GetFormatName(this GameFormat format) => formatNameDict.Get(format, "無限制");
     public static string GetBestOfName(this BestOf bestOf) => bestOfNameDict.Get(bestOf, "無限制");
@@ -149,7 +151,7 @@ public enum CardGroup
 
 public enum GameFormat 
 {
-    Unlimited = 0,      Rotation = 1, GemOfFortune = 2,
+    Unlimited = 0,  Rotation = 1, GemOfFortune = 2,
     TwoPick = 3, AllStarTwoPick = 4,
 }
 
@@ -199,11 +201,26 @@ public enum CardTrait
 public enum CardKeyword 
 {
     None = 0, Storm = 1, Ward = 2, Bane = 3, Rush = 4, Ambush = 5, Drain = 6,
-    Fanfare = 7, Lastword = 8, Attack = 9, Defense = 10, Evolve = 11, 
-    Combo = 12, Rally = 13, SpellBoost = 14, Awake = 15, Necromance = 16,
-    Venge = 17, Countdown = 18, Reson = 19, EarthRitual = 20, Enhance = 21,
-    Pressure = 22, Bury = 23, Reanimate = 24, Aura = 25, Accelerate = 26,
-    Crystalize = 27, Travel = 28,
+    Countdown = 7, Pressure = 8, Aura = 9,
+    Fanfare = 101, 
+    Lastword = 102, 
+    Attack = 103, 
+    Defense = 104, 
+    Evolve = 105, 
+    Combo = 106, 
+    Rally = 107, 
+    SpellBoost = 108, 
+    Awake = 109, 
+    Necromance = 110,
+    Venge = 111, 
+    Reson = 113, 
+    EarthRitual = 114, 
+    Enhance = 115,
+    Bury = 116, 
+    Reanimate = 117, 
+    Accelerate = 118,
+    Crystalize = 119, 
+    Travel = 120
 }
 
 public enum BattlePlaceId 

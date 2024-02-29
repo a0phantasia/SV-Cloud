@@ -37,7 +37,7 @@ public static class Parser {
         var conditions = new List<ICondition>();
         var _options = data.Split(new char[] {'&'}, StringSplitOptions.RemoveEmptyEntries);
         for (int i = 0; i < _options.Length; i++) {
-            foreach (var op in Operator.condDict.Keys) {
+            foreach (var op in Operator.sortedCondDict) {
                 int index = _options[i].IndexOf(op);
                 if (index > 0) {
                     var result = _options[i].Split(new string[] { op }, StringSplitOptions.RemoveEmptyEntries);
@@ -122,5 +122,30 @@ public static class Parser {
         }
         return Mathf.RoundToInt(value);
     }
-    
+
+    public static int ParseBuffExpression(string expr, Buff buff, BattleState state)
+    {
+        bool negativeFirst = expr.StartsWith("-");
+
+        if (negativeFirst)
+        {
+            expr = expr.Substring(1);
+        }
+
+        string[] id = expr.Split(Operator.opDict.Keys.ToArray(), StringSplitOptions.RemoveEmptyEntries);
+        float value = Identifier.GetIdentifier(id[0], buff, state) * (negativeFirst ? -1 : 1);
+
+        if (id.Length == 1)
+            return Mathf.RoundToInt(value);
+
+        for (int i = 1, opStartIdx = id[0].Length, opEndIdx = 0; i < id.Length; i++)
+        {
+            opEndIdx = expr.IndexOf(id[i], opStartIdx);
+            string op = expr.Substring(opStartIdx, opEndIdx - opStartIdx);
+            value = Operator.Operate(op, value, Identifier.GetIdentifier(id[i], buff, state));
+            opStartIdx = opEndIdx + id[i].Length;
+        }
+        return Mathf.RoundToInt(value);
+    }
+
 }

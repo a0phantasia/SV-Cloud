@@ -12,8 +12,8 @@ public class BattleField : BattlePlace
 
     public List<int> GetAttackableTargetIndex(BattleCard attackSource, BattleUnit sourceUnit) {
         var result = cards.Where(x => (x.CurrentCard.IsFollower()) || (x.CurrentCard.Type == CardType.Leader));
-        var attackable = result.Where(x => (!x.actionController.IsKeywordAvailable(CardKeyword.Ambush)) && (!x.actionController.IsKeywordAvailable(CardKeyword.Pressure)));
-        var ward = attackable.Where(x => x.actionController.IsKeywordAvailable(CardKeyword.Ward));
+        var attackable = result.Where(x => (!x.IsKeywordAvailable(CardKeyword.Ambush)) && (!x.IsKeywordAvailable(CardKeyword.Pressure)));
+        var ward = attackable.Where(x => x.IsKeywordAvailable(CardKeyword.Ward));
 
         result = ward.Any() ? ward : attackable;
         var index = result.Select(x => cards.IndexOf(x)).ToList();

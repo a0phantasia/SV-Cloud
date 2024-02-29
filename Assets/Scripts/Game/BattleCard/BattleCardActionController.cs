@@ -14,6 +14,7 @@ public class BattleCardActionController
         set => SetIdentifier("maxAttackChance", value); 
     }
 
+
     public int CurrentAttackChance {
         get => Mathf.Clamp((int)GetIdentifier("attackChance"), 0, MaxAttackChance);
         set => SetIdentifier("attackChance", Mathf.Clamp(value, 0, MaxAttackChance));

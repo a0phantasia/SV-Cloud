@@ -7,12 +7,17 @@ using UnityEngine;
 public class BattleCardBuffController
 {
     private int costBuff, atkBuff, hpBuff, damage;
+    public List<Buff> buffs;
     public List<KeyValuePair<Func<bool>, CardStatus>> tmpBuff = new List<KeyValuePair<Func<bool>, CardStatus>>();
     public Dictionary<string, float> options = new Dictionary<string, float>();
 
-    public int CostBuff => costBuff + tmpBuff.Sum(x => x.Value.cost);
-    public int AtkBuff => atkBuff + tmpBuff.Sum(x => x.Value.atk);
-    public int HpBuff => hpBuff + tmpBuff.Sum(x => x.Value.hp);
+
+    public List<CardTrait> TraitBuff => buffs.SelectMany(buff => buff.traits).Distinct().ToList();
+    public List<CardKeyword> KeywordBuff => buffs.SelectMany(buff => buff.keywords).Distinct().ToList();
+
+    public int CostBuff => costBuff + buffs.Sum(x => x.cost);
+    public int AtkBuff => atkBuff + buffs.Sum(x => x.atk);
+    public int HpBuff => hpBuff + buffs.Sum(x => x.hp);
     public int Damage {
         get => damage;
         set => damage = value;
@@ -20,6 +25,7 @@ public class BattleCardBuffController
 
     public BattleCardBuffController() {
         costBuff = atkBuff = hpBuff = damage = 0;
+        buffs = new List<Buff>();
         tmpBuff = new List<KeyValuePair<Func<bool>, CardStatus>>();
         options = new Dictionary<string, float>();
     }
@@ -29,6 +35,7 @@ public class BattleCardBuffController
         atkBuff = rhs.atkBuff;
         hpBuff = rhs.hpBuff;
         damage = rhs.damage;
+        buffs = rhs.buffs;
         tmpBuff = rhs.tmpBuff.ToList();
         options = new Dictionary<string, float>(rhs.options);
     }
@@ -64,10 +71,37 @@ public class BattleCardBuffController
         }
         tmpBuff.Add(new KeyValuePair<Func<bool>, CardStatus>(untilCondition, status));
     }
-    
+
+    public void TakeBuff(CardStatus status, string untilCondition)
+    {
+        var tuple = GetCheckCondition(untilCondition);
+        var buff = new Buff(status.cost, status.atk, status.hp, tuple.timing, tuple.condition)
+        {
+        };
+        buffs.Add(buff);
+    }
+
+    public void OnTurnStart()
+    {
+        buffs.ForEach(x => x.OnTurnStart());
+    }
+
     public void ClearCostBuff() {
         costBuff = 0;
+        buffs.ForEach(x => x.cost = 0);
+        buffs.RemoveAll(x => x.IsEmpty());
         tmpBuff.RemoveAll(x => x.Value.cost != 0);
+    }
+
+    public (string timing, string condition) GetCheckCondition(string untilCondition)
+    {
+        return untilCondition switch
+        {
+            "turn_end" => ("on_turn_end", "none"),
+            "me_turn_end" => ("on_turn_end", "me.isMyTurn=1"),
+            "op_turn_end" => ("on_turn_end", "me.isMyTurn=0"),
+            _ => ("none", "none"),
+        };
     }
 
 }

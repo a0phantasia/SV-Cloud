@@ -158,6 +158,7 @@ public class CardFilter
             && DescriptionFilter(card) && TokenFilter(card);
     }
 
+
     public virtual bool FormatFilter(Card card) => (format == -1) || card.IsFormat((GameFormat)format);
     public virtual bool ZoneFilter(Card card) => (zone == -1) || (card.ZoneId == zone) || (card.PackId == 0);
     public virtual bool NameFilter(Card card) => string.IsNullOrEmpty(name) || card.name.Contains(name);
@@ -168,8 +169,19 @@ public class CardFilter
     public virtual bool TypeFilter(Card card) => (card.Type != CardType.Leader) && (card.Type != CardType.Evolved) && (List.IsNullOrEmpty(typeList) || typeList.Contains(card.TypeId));
     public virtual bool RarityFilter(Card card) => List.IsNullOrEmpty(rarityList) || rarityList.Contains(card.RarityId);
     public virtual bool TraitFilter(Card card) => List.IsNullOrEmpty(traitList) || card.traits.Contains(CardTrait.All) || traitList.Select(x => (CardTrait)x).Intersect(card.traits).Any();
-    public virtual bool KeywordFilter(Card card) => List.IsNullOrEmpty(keywordList) || keywordList.Select(x => (CardKeyword)x).Intersect(card.keywords).Any();
-    public virtual bool DescriptionFilter(Card card) => string.IsNullOrEmpty(description) || card.description.Contains(description);
+    public virtual bool KeywordFilter(Card card) {
+        if (List.IsNullOrEmpty(keywordList)) 
+            return true;
+
+        var keywords = keywordList.Select(x => (CardKeyword)x).ToList();
+        var allKeywords = card.keywords.Concat(card.EvolveCard.keywords)
+                            .Concat(card.effects.SelectMany(effect => effect.keywords))
+                            .Concat(card.EvolveCard.effects.SelectMany(effect => effect.keywords))
+                            .Distinct();
+
+        return keywords.Intersect(allKeywords).Any();
+    }
+    public virtual bool DescriptionFilter(Card card) => string.IsNullOrEmpty(description) || card.description.Contains(description) || card.EvolveCard.description.Contains(description);
     public virtual bool TokenFilter(Card card) => (card.Group == CardGroup.Normal) || (isWithToken && (card.Group == CardGroup.Token));
 
     public virtual bool CostFilter(Card card) => List.IsNullOrEmpty(costList) || costList.Contains(Mathf.Min(card.cost, 10));
@@ -178,117 +190,256 @@ public class CardFilter
     public virtual bool CountdownFilter(Card card) => List.IsNullOrEmpty(countdownList) || countdownList.Contains(Mathf.Min(card.countdown, 10));
 }
 
-public class BattleCardFilter : CardFilter {
-    public override string[] GetSetStringType() => new string[] { "name", "description" };
-    public override string[] GetSelectIntType() => base.GetSelectIntType().Concat(new string[] { "initCost", "initAtk", "initHp" }).ToArray();
-    public override string[] GetSetIntType() => base.GetSetIntType().Concat(new string[] { "isAttackFinished" }).ToArray();
+public class BattleCardFilter{
 
-    public Dictionary<string, float> options;
-    public int isAttackFinished = -1;
-    public bool isInitStatus = false;
+    public List<KeyValuePair<string, List<string>>> filterItems;
 
-    public BattleCardFilter(int formatId) : base(formatId) {
-        traitList = new List<int>();
-        keywordList = new List<int>();
-        options = new Dictionary<string, float>();
-
-        isWithToken = true;
-        isAttackFinished = -1;
-        isInitStatus = false;
-    }
-
-    public static new BattleCardFilter Parse(string options, Func<string, string, string> transformFunc = null) {
-        var filter = new BattleCardFilter(-1);
+    public static BattleCardFilter Parse(string options, Func<string, string, string> transformFunc = null)
+    {
+        var filter = new BattleCardFilter();
         if (string.IsNullOrEmpty(options) || (options == "none"))
             return filter;
 
         transformFunc ??= ((x, y) => y);
 
-        while (options.TryTrimParentheses(out string trimOptions)) {
+        while (options.TryTrimParentheses(out string trimOptions))
+        {
             var split = trimOptions.Split(':');
             var type = split[0];
             var items = split[1].Split('|');
-
-            for (int i = 0; i < items.Length; i++) {
-                filter.SetParam(type, transformFunc.Invoke(type, items[i]));
+            var itemList = new List<string>();
+            for (int i = 0; i < items.Length; i++)
+            {
+                foreach (var cond in Operator.sortedCondDict)
+                {
+                    if (items[i].TryTrimStart(cond, out items[i]))
+                    {
+                        itemList.Add(string.Concat(cond, transformFunc.Invoke(type, items[i])));
+                        break;
+                    }
+                }
             }
-
+            filter.filterItems.Add(new KeyValuePair<string, List<string>>(type, itemList));
             options = options.TrimStart("[" + trimOptions + "]");
         }
         return filter;
     }
 
-    public override void SetInt(string which, int item)
+    public virtual Func<BattleCard, string, bool> GetFilter(string type)
     {
-        switch (which) {
-            default:
-                base.SetInt(which, item);
-                return;
-            case "isAttackFinished":
-                isAttackFinished = item;
-                return;
-        }
+        Func<BattleCard, string, bool> func = type switch
+        {
+            "isAttacked" => AttackedFilter,
+            _ => (battlecard, item) => GetCardFilter(type)(battlecard.CurrentCard,item),
+        };
+        return func;
     }
 
-    public override void SelectInt(string which, int item)
+    public virtual Func<Card, string, bool> GetCardFilter(string type)
     {
-        if (which.ToLower().TryTrimStart("init", out var initWhich) && Card.StatusNames.Contains(initWhich)) {
-            isInitStatus = true;
-            which = initWhich;
-        }
-
-        var list = which switch {
-            "trait"     => traitList,
-            "keyword"   => keywordList,
-            _           => null,
+        Func<Card, string, bool> func = type switch
+        {
+            "format" => FormatFilter,
+            "zone" => ZoneFilter,
+            "name" => NameFilter,
+            "description" => DescriptionFilter,
+            "uid" => UIDFilter,
+            "id" => IDFilter,
+            "group" => GroupFilter,
+            "craft" => CraftFilter,
+            "pack" => PackFilter,
+            "type" => TypeFilter,
+            "rarity" => RarityFilter,
+            "trait" => TraitFilter,
+            "keyword" => KeywordFilter,
+            "fieldkeyword" => KeywordFilter,
+            "cost" => CostFilter,
+            "atk" => AtkFilter,
+            "hp" => HpFilter,
+            "countdown" => CountdownFilter,
+            "initcost" => InitCostFilter,
+            "initatk" => InitAtkFilter,
+            "inithp" => InitHpFilter,
+            _ =>  (card, item) => DefaultFilter(),
         };
-
-        if (list == null) {
-            base.SelectInt(which, item);
-            return;
-        }
-
-        if (item == -1) {
-            list?.Clear();
-            return;
-        }
-
-        if (Card.StatusNames.Contains(which.ToLower().TrimStart("init")) && (item < 0)) {
-            if (list.Count <= 0)
-                return;
-            var below = Enumerable.Range(0, list.Max() + 1);
-            var above = Enumerable.Range(list.Min(), 10 - list.Min() + 1);
-            var result = item switch {
-                -2 => below,
-                -3 => above,
-                _ => list,
-            };
-            list.Clear();
-            list.AddRange(result);
-            return;
-        }
-        list?.Fluctuate(item);
+        return func;
     }
 
     public bool FilterWithCurrentCard(BattleCard battleCard) {
-        var card = battleCard.CurrentCard;
-        return base.Filter(card) && AttackFinishFilter(battleCard);
+        if (DefaultFilter(battleCard))
+        {
+            foreach (var filterItem in filterItems)
+            {
+                var filterResult = false;
+                var filter = GetFilter(filterItem.Key);
+                foreach (var item in filterItem.Value)
+                {
+                    if (filter(battleCard, item))
+                    {
+                        filterResult = true;
+                        break;
+                    }
+                }
+                if (!filterResult) return false;
+            }
+            return true;
+        }
+        return false;
     }
 
-    public override bool TypeFilter(Card card) => List.IsNullOrEmpty(typeList) || typeList.Contains(card.TypeId);
-    public override bool TokenFilter(Card card) => (card.Group == CardGroup.Normal) || isWithToken;
+    public bool Filter(Card card){
+        if (DefaultFilter(card))
+        {
+            foreach (var filterItem in filterItems)
+            {
+                var filterResult = false;
+                var filter = GetCardFilter(filterItem.Key);
+                foreach (var item in filterItem.Value)
+                {
+                    if (filter(card, item))
+                    {
+                        filterResult = true;
+                        break;
+                    }
+                }
+                if (!filterResult) return false;
+            }
+            return true;
+        }
+        return false;
+    }
 
-    public override bool CostFilter(Card card) {
-        var filterCard = isInitStatus ? card.BaseCard : card;
-        return List.IsNullOrEmpty(costList) || costList.Contains(Mathf.Min(filterCard.cost, 10));
-    } 
-    public override bool AtkFilter(Card card) {
-        var filterCard = isInitStatus ? card.BaseCard : card;
-        return List.IsNullOrEmpty(atkList) || atkList.Contains(Mathf.Min(filterCard.atk, 10));
-    } 
-    public override bool HpFilter(Card card) {
-        var filterCard = isInitStatus ? card.BaseCard : card;
-        return List.IsNullOrEmpty(hpList) || hpList.Contains(Mathf.Min(filterCard.hp, 10));
-    } 
-    public bool AttackFinishFilter(BattleCard card) => (isAttackFinished == -1) || (card.actionController.GetIdentifier("isAttackFinished") == isAttackFinished);
+    public virtual bool DefaultFilter() => true;
+
+    public virtual bool DefaultFilter(Card card) => true;
+    public virtual bool DefaultFilter(BattleCard battleCard) => true;
+
+    public virtual bool GeneralFilter(int value, string item)
+    {
+        string op = "=";
+
+        foreach (var condOp in Operator.sortedCondDict)
+        {
+            if (item.TryTrimStart(condOp, out item))
+            {
+                op = condOp;
+                break;
+            }
+        }
+        if (!int.TryParse(item, out int number))
+        {
+            return true;
+        }
+
+        return Operator.Condition(op, value, number);
+    }
+
+    //TODO 考虑增加Effect相关筛选？
+    public virtual bool FormatFilter(Card card, string item)
+    {
+        if (int.TryParse(item, out var format))
+            return card.IsFormat((GameFormat)format);
+        else
+            return true;
+    }
+    public virtual bool ZoneFilter(Card card, string item)
+    {
+        if (int.TryParse(item, out var zone))
+            return (card.ZoneId == zone) || (card.PackId == 0);
+        else
+            return true;
+    }
+    public virtual bool NameFilter(Card card, string item) => string.IsNullOrEmpty(item) || card.name.Contains(item);
+    public virtual bool UIDFilter(Card card, string item)
+    {
+        if (int.TryParse(item, out var uid))
+            return card.id == uid;
+        else
+            return true;
+    }
+    public virtual bool IDFilter(Card card, string item)
+    {
+        return GeneralFilter(Card.GetBaseId(card.id), item) || GeneralFilter(Card.GetEvolveId(card.id), item) || GeneralFilter(Card.GetBaseId(card.NameId), item) || GeneralFilter(Card.GetEvolveId(card.NameId), item);
+    }
+    public virtual bool GroupFilter(Card card, string item) => GeneralFilter(card.GroupId, item);
+    public virtual bool CraftFilter(Card card, string item) => GeneralFilter(card.CraftId, item);
+    public virtual bool PackFilter(Card card, string item) => GeneralFilter(card.PackId, item);
+    public virtual bool TypeFilter(Card card, string item) => GeneralFilter(card.TypeId, item);
+    public virtual bool RarityFilter(Card card, string item) => GeneralFilter(card.RarityId, item);
+    public virtual bool TraitFilter(Card card, string item)
+    {
+        var allTraits = card.BaseCard.traits.Concat(card.EvolveCard.traits).Distinct();
+
+        if (item.TryTrimStart("!", out item))
+        {
+            if (int.TryParse(item, out var number))
+                return !allTraits.Contains(CardTrait.All) && allTraits.All(trait => !GeneralFilter((int)trait, item));
+            else
+                return true;
+        }
+        else
+        {
+            if (int.TryParse(item, out var number))
+                return allTraits.Contains(CardTrait.All) || allTraits.Any(trait => GeneralFilter((int)trait, item));
+            else
+                return true;
+        }
+    }
+    public virtual bool KeywordFilter(Card card, string item)
+    {
+        var allKeywords = card.keywords.Concat(card.effects.SelectMany(effect => effect.keywords)).Distinct();
+
+        if (item.TryTrimStart("!", out item))
+        {
+            if (int.TryParse(item, out var number))
+                return allKeywords.All(keyword => !GeneralFilter((int)keyword, item));
+            else
+                return true;
+        }
+        else
+        {
+            if (int.TryParse(item, out var number))
+                return allKeywords.Any(keyword => GeneralFilter((int)keyword, item));
+            else
+                return true;
+        }
+    }
+    public virtual bool FieldKeywordFilter(Card card, string item)
+    {
+        var allKeywords = card.BaseCard.keywords.Concat(card.EvolveCard.keywords)
+                            .Concat(card.BaseCard.effects.SelectMany(effect => effect.keywords))
+                            .Concat(card.EvolveCard.effects.SelectMany(effect => effect.keywords))
+                            .Distinct();
+
+        if (item.TryTrimStart("!", out item))
+        {
+            if (int.TryParse(item, out var number))
+                return allKeywords.All(keyword => !GeneralFilter((int)keyword, item));
+            else
+                return true;
+        }
+        else
+        {
+            if (int.TryParse(item, out var number))
+                return allKeywords.Any(keyword => GeneralFilter((int)keyword, item));
+            else
+                return true;
+        }
+    }
+    public virtual bool DescriptionFilter(Card card, string item) => card.BaseCard.description.Contains(item) || card.EvolveCard.description.Contains(item);
+    public virtual bool CostFilter(Card card, string item) => GeneralFilter(card.cost, item);
+    public virtual bool AtkFilter(Card card, string item) => GeneralFilter(card.atk, item);
+    public virtual bool HpFilter(Card card, string item) => GeneralFilter(card.hp, item);
+    public virtual bool InitCostFilter(Card card, string item) => GeneralFilter(card.BaseCard.cost, item);
+    public virtual bool InitAtkFilter(Card card, string item) => GeneralFilter(card.BaseCard.atk, item);
+    public virtual bool InitHpFilter(Card card, string item) => GeneralFilter(card.BaseCard.hp, item);
+    public virtual bool CountdownFilter(Card card, string item) => GeneralFilter(card.countdown, item);
+
+    public bool AttackedFilter(BattleCard card, string item)
+    {
+        if(int.TryParse(item, out var isAttackFinished))
+            return isAttackFinished == 1? card.actionController.IsAttackFinished : !card.actionController.IsAttackFinished;
+        else
+            return true;
+    }
 }

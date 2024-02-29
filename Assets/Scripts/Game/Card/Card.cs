@@ -43,8 +43,11 @@ public class Card : IIdentifyHandler
     public CardRarity Rarity => (CardRarity)RarityId;
 
     public string name;
+    public string Name => name;
+
     public int cost, atk, hp, hpMax, countdown;
     public List<CardTrait> traits = new List<CardTrait>();
+    //TODO
     public List<CardKeyword> keywords = new List<CardKeyword>();
     public List<int> tokenIds = new List<int>();
     public List<int> effectIds = new List<int>();
@@ -116,16 +119,27 @@ public class Card : IIdentifyHandler
         effects = effectIds.Select(effectFunc).Where(x => x != null).ToList();
     }
 
-    public void ClearEffects(string timing = "all") {
-        if (timing == "all") {
-            effectIds.Clear();
-            effects.Clear();
-
-            foreach (var property in CardDatabase.PropertyEffects)
-                SetIdentifier(property, 0);
-        } else {
+    public void ClearEffects(string timing = "all", int id = 0, CardKeyword keyword = CardKeyword.None) {
+        if (timing != "all")
+        {
             effectIds.RemoveAll(x => Effect.Get(x)?.timing == timing);
             effects.RemoveAll(x => x.timing == timing);
+        }else{
+            effectIds.Clear();
+            effects.Clear();
+            keywords.Clear();
+            return;
+        }
+
+        if (id != 0)
+        {
+            effectIds.RemoveAll(x => x == id);
+            effects.RemoveAll(x => x.id == id);
+        }
+
+        if (keyword != CardKeyword.None)
+        {
+            keywords.RemoveAll(x => x == keyword);
         }
     }
 

@@ -6,7 +6,7 @@ using UnityEngine;
 
 public class Effect : IIdentifyHandler
 {
-    public const int DATA_COL = 7;
+    public const int DATA_COL = 9;
     public static Effect Get(int id) {
         var effect = DatabaseManager.instance.GetEffectInfo(id);
         return (effect == null) ? null : new Effect(effect);
@@ -16,14 +16,20 @@ public class Effect : IIdentifyHandler
 
     public BattleCard source = null;
     public Effect sourceEffect = null;
+    public Buff sourceBuff = null;
     public BattlePlace sourcePlace = null;
     public List<BattleCard> invokeTarget = null;
     public BattleUnit invokeUnit = null;
 
+    //TODO 增加回合触发计数
+
     public int id;
     public int Id => id;
+    public string name { get; private set; }
+    public string Name => name;
     public string timing { get; private set; }
     public string target { get; private set; }
+    public List<CardKeyword> keywords { get; private set; }
     public List<string> condition { get; private set; }
     public List<List<ICondition>> condOptionDictList { get; private set; } = new List<List<ICondition>>();
     public EffectAbility ability { get; private set; }
@@ -36,21 +42,28 @@ public class Effect : IIdentifyHandler
 
         source = null;
         id = int.Parse(_slicedData[0]);
-        timing = _slicedData[1];
-        target = _slicedData[2];
-        condition = (_slicedData[3] == "none") ? null : _slicedData[3].Split('/').ToList();
-        condOptionDictList.ParseMultipleCondition(_slicedData[4]);
-        ability = _slicedData[5].ToEffectAbility();
-        abilityOptionDict.ParseOptions(_slicedData[6]);
+        name = _slicedData[1];
+        timing = _slicedData[2];
+        target = _slicedData[3];
+        keywords = _slicedData[4].ToIntList('/').Select(x => (CardKeyword)x).ToList();
+        condition = (_slicedData[5] == "none") ? null : _slicedData[5].Split('/').ToList();
+        condOptionDictList.ParseMultipleCondition(_slicedData[6]);
+        ability = _slicedData[7].ToEffectAbility();
+        abilityOptionDict.ParseOptions(_slicedData[8]);
         hudOptionDict = new Dictionary<string, string>();
     }
 
-    public Effect(string _timing, string _target, 
+    public Effect(string _timing, string _target,
         List<string> _condition, List<List<ICondition>> _condition_option,
-        EffectAbility _ability, Dictionary<string, string> _ability_option) {
+        EffectAbility _ability, Dictionary<string, string> _ability_option,
+        string _name = "default", List<CardKeyword> _keywords = null) {
+
         source = null;
+
+        name = _name;
         timing = _timing;
         target = _target;
+        keywords = _keywords;
         condition = _condition;
         if (_condition_option == null) {
             condOptionDictList.Add(new List<ICondition>());
@@ -85,6 +98,7 @@ public class Effect : IIdentifyHandler
 
         source = rhs.source;
         sourceEffect = rhs.sourceEffect;
+        sourceBuff = rhs.sourceBuff;
         invokeUnit = rhs.invokeUnit;
         invokeTarget = rhs.invokeTarget?.ToList();
     }
@@ -122,7 +136,7 @@ public class Effect : IIdentifyHandler
         var trimId = string.Empty;
 
         if (id.TryTrimStart("target.", out trimId)) {
-            var all = sourceEffect.invokeTarget;
+            var all = invokeTarget;
             var me = all.Where(x => state.GetBelongUnit(x).id == invokeUnit.id).ToList();
             var op = all.Where(x => state.GetBelongUnit(x).id == state.GetRhsUnitById(invokeUnit.id).id).ToList();
 
@@ -156,7 +170,7 @@ public class Effect : IIdentifyHandler
                 };
             }
         } else if (id.TryTrimStart("source.", out trimId)) {
-            var all = sourceEffect.source;
+            var all = source;
 
             return trimId switch {
                 "isMe"  => (invokeUnit.GetBelongPlace(all) != null) ? 1 : 0,
@@ -165,7 +179,7 @@ public class Effect : IIdentifyHandler
             };
         }
 
-        return sourceEffect.GetIdentifier(id);
+        return GetIdentifier(id);
     }
 
     public void SetIdentifier(string id, float value)
@@ -297,5 +311,9 @@ public class Effect : IIdentifyHandler
             "op_turn_end"   => () => (state.currentEffect.ability == EffectAbility.TurnEnd) && (state.GetRhsUnitById(invokeUnit.id).isDone),
             _               => null,
         };
+    }
+    public void OnTurnStart()
+    {
+
     }
 }

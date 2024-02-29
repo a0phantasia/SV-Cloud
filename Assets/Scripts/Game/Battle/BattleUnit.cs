@@ -10,22 +10,27 @@ public class BattleUnit : IIdentifyHandler
     public string name;
     public int turn = 0;
     public Leader leader;
+    public BattleDeck originDeck;
     public BattleDeck deck;
     public BattleField field;
     public BattleHand hand;
     public BattleGrave grave;
+    public List<BattlePlace> Places => new() { deck, field, hand, grave };
 
     public Queue<BattleCard> targetQueue;
 
     public bool isDone = false;
     public bool isMyTurn = false;
     public bool isFirst;
+    public bool isIntro;
 
     public bool IsMasterUnit => id == 0;
     public string IsFirstText => isFirst ? "先手" : "後手";
     public bool isEvolveEnabled => (turn - (isFirst ? 1 : 0)) >= Player.currentBattle.Settings.evolveStart;
 
     public int Id => id;
+    public string Name => name;
+
 
     public BattleUnit(int unitId, string nickname, BattleDeck initDeck, bool first) {
         id = unitId;
@@ -34,6 +39,7 @@ public class BattleUnit : IIdentifyHandler
 
         leader = new Leader(first, initDeck.craft);
         deck = initDeck;
+        originDeck = new BattleDeck(initDeck);
         field = new BattleField();
         hand = new BattleHand();
         grave = new BattleGrave();
@@ -70,7 +76,7 @@ public class BattleUnit : IIdentifyHandler
     /// </summary>
     /// <returns>Total cards drawn, including inHand and inGrave.</returns>    
     public List<BattleCard> Draw(int count, out List<BattleCard> inHand, out List<BattleCard> inGrave) {
-        return Draw(count, new BattleCardFilter(-1), out inHand, out inGrave);
+        return Draw(count, new BattleCardFilter(), out inHand, out inGrave);
     }
     
     public List<BattleCard> Draw(int count, BattleCardFilter filter, out List<BattleCard> inHand, out List<BattleCard> inGrave) {
@@ -115,6 +121,7 @@ public class BattleUnit : IIdentifyHandler
             "isAwake"  => leader.GetIdentifier("isAwake"),
             "isVenge"  => leader.GetIdentifier("isVenge"),
             "isReson"  => 1 - (deck.Count % 2),
+            "isIntro"  => isIntro ? 1 : 0,
             _ => float.MinValue,
         };
     }

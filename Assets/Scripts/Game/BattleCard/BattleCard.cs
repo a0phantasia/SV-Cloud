@@ -12,6 +12,8 @@ public class BattleCard : IIdentifyHandler
     public static string[] FlagProperties => new string[] { "bane", "drain", "earth", "flag", "lastword" };
 
     public int Id => CurrentCard.Id;
+    public string Name => CurrentCard.Name;
+
     public bool IsEvolved { get; protected set; }
     public Card baseCard;
     public Card evolveCard;
@@ -45,10 +47,10 @@ public class BattleCard : IIdentifyHandler
         baseCard?.effects.ForEach(x => x.source = this);
         evolveCard?.effects.ForEach(x => x.source = this);
 
-        newEffects = rhs.newEffects.Select(x => new KeyValuePair<Func<bool>, Effect>
-            (x.Key, new Effect(x.Value))).ToList();
+        /*newEffects = rhs.newEffects.Select(x => new KeyValuePair<Func<bool>, Effect>
+            (x.Key, new Effect(x.Value))).ToList();*/
 
-        newEffects.ForEach(x => x.Value.source = this);
+        //newEffects.ForEach(x => x.Value.source = this);
 
         buffController = new BattleCardBuffController(rhs.buffController);
         actionController = new BattleCardActionController(rhs.actionController);
@@ -109,7 +111,9 @@ public class BattleCard : IIdentifyHandler
         result.atk = Mathf.Max(result.atk + buffController.AtkBuff, 0);
         result.hpMax = Mathf.Max(result.hpMax + buffController.HpBuff, 0);
         result.hp = Mathf.Max(result.hpMax - buffController.Damage, 0);
-        result.effects.AddRange(newEffects.Select(x => x.Value));
+        result.traits.AddRange(buffController.buffs.SelectMany(x => x.traits));
+        result.keywords.AddRange(buffController.buffs.SelectMany(x => x.keywords));
+        result.effects.AddRange(buffController.buffs.SelectMany(x => x.effects));
         result.effects.ForEach(x => x.source = this);
         return result;
     }
@@ -119,7 +123,7 @@ public class BattleCard : IIdentifyHandler
             return this;
 
         var ability = situation.ToEffectAbility();
-        var effect = CurrentCard.effects.Find(x => (x.ability == ability) && (int.Parse(x.abilityOptionDict.Get("accelerate", "-1")) == cost));
+        var effect = CurrentCard.effects.Find(x => (x.ability == ability) && (int.Parse(x.abilityOptionDict.Get(situation, "-1")) == cost));
         if (effect == null)
             return this;
 
@@ -165,29 +169,45 @@ public class BattleCard : IIdentifyHandler
         var costBuff = buffController.CostBuff;
         var atkBuff = buffController.AtkBuff;
         var hpBuff = buffController.HpBuff;
-        var originalKeywords = Card.Get(Id).keywords;
+        //var originalKeywords = Card.Get(Id).keywords;
 
         description += atkBuff.ToStringWithSign() + "/" + hpBuff.ToStringWithSign() + "\n";
 
         // if (costBuff != 0)
         //     description += "消費 " + costBuff.ToStringWithSign() + "\n";
 
-        var keywords = CardDatabase.KeywordEffects.Where(x => !originalKeywords.Contains(x)).ToList();
-        var keywordCount = 0;
+        /*var keywords = CardDatabase.KeywordEffects.ToList();
         for (int i = 0; i < keywords.Count; i++) {
             if (actionController.IsKeywordAvailable(keywords[i])) {
                 description += ("[ffbb00]" + keywords[i].GetKeywordName() + "[-]").GetDescription() + "\n";
                 keywordCount++;
             }
+        }*/
+
+        foreach(var keyword in CardDatabase.keywords)
+        {
+            if (buffController.KeywordBuff.Contains(keyword))
+                description += ("[ffbb00]" + keyword.GetKeywordName() + "[-]").GetDescription() + "\n";
         }
 
-        if ((keywordCount > 0) && (newEffects.Count > 0))
+        foreach (var trait in CardDatabase.traits)
+        {
+            if (buffController.TraitBuff.Contains(trait))
+                description += ("[ffbb00]" + trait.GetTraitName() + "[-]").GetDescription() + "\n";
+        }
+
+        if ((buffController.KeywordBuff.Count > 0|| buffController.TraitBuff.Count > 0) && (buffController.buffs.Count > 0))
             description += "------\n";
 
-        for (int i = 0; i < newEffects.Count; i++) {
+        foreach(var buff in buffController.buffs) {
+            if (!string.IsNullOrEmpty(buff.description))
+                description += buff.description + "\n";
+        }
+
+        /*for (int i = 0; i < newEffects.Count; i++) {
             if (newEffects[i].Value.hudOptionDict.TryGetValue("description", out var effectDesc) && (!string.IsNullOrEmpty(effectDesc)))
                 description += effectDesc + "\n";
-        }
+        }*/
 
         return (description.Count(x => x == '\n') == 1) ? string.Empty : description.TrimEnd('\n');
     }
@@ -295,12 +315,19 @@ public class BattleCard : IIdentifyHandler
             var choiceList = new List<int>() { -1 };
             for (int i = 0; i < effects.Count; i++) {
                 var currentEffect = effects[i];
-                if (currentEffect.abilityOptionDict.TryGetValue(choiceSituation, out var choiceCostId))
+                if (currentEffect.abilityOptionDict.TryGetValue(choiceSituation, out var choiceCostId) && currentEffect.Condition(Hud.CurrentState))
                     choiceList.Add(int.Parse(choiceCostId));
             }
 
             choiceCost = choiceList.Where(x => x <= leader.PP).Max();
             return choiceList;
+        }
+
+        var choiceList = GetSecondChoiceCostList("choice", out var choiceCost);
+        if (choiceCost != -1)
+        {
+            situation = "choice";
+            return choiceCost;
         }
 
         var enhanceList = GetSecondChoiceCostList("enhance", out var enhanceCost);
@@ -367,7 +394,7 @@ public class BattleCard : IIdentifyHandler
     public bool IsLeaderAttackable(BattleUnit sourceUnit) {
         var isAttackChanceLegal = actionController.CurrentAttackChance > 0;
         var isStayTurnLegal = actionController.StayFieldTurn > 0;
-        var isKeywordLegal = actionController.IsKeywordAvailable(CardKeyword.Storm);
+        var isKeywordLegal = IsKeywordAvailable(CardKeyword.Storm);
 
         return sourceUnit.isMyTurn && isAttackChanceLegal && (isStayTurnLegal || isKeywordLegal);
     }
@@ -375,14 +402,14 @@ public class BattleCard : IIdentifyHandler
     public bool IsFollowerAttackable(BattleUnit sourceUnit) {
         var isAttackChanceLegal = actionController.CurrentAttackChance > 0;
         var isStayTurnLegal = actionController.StayFieldTurn > 0;
-        var isKeywordLegal = actionController.IsKeywordAvailable(CardKeyword.Storm) || actionController.IsKeywordAvailable(CardKeyword.Rush);
+        var isKeywordLegal = IsKeywordAvailable(CardKeyword.Storm) || IsKeywordAvailable(CardKeyword.Rush);
 
         return sourceUnit.isMyTurn && isAttackChanceLegal && (IsEvolved || isStayTurnLegal || isKeywordLegal);
     }
 
     public bool IsTargetSelectable() {
-        bool isAmbush = actionController.IsKeywordAvailable(CardKeyword.Ambush);
-        bool isAura = actionController.IsKeywordAvailable(CardKeyword.Aura);
+        bool isAmbush = IsKeywordAvailable(CardKeyword.Ambush);
+        bool isAura = IsKeywordAvailable(CardKeyword.Aura);
         return (!isAmbush) && (!isAura);
     }
 
@@ -396,15 +423,21 @@ public class BattleCard : IIdentifyHandler
         IsEvolved = true;
     }
 
+    public bool IsKeywordAvailable(CardKeyword keyword)
+    {
+        return CurrentCard.keywords.Contains(keyword);
+    }
+
     public void SetKeyword(CardKeyword keyword, ModifyOption option) {
         if (option == ModifyOption.Add) {
             baseCard.keywords.Add(keyword);
             evolveCard?.keywords.Add(keyword);
-            actionController.AddIdentifier(keyword.GetKeywordEnglishName(), 1);
+            //actionController.AddIdentifier(keyword.GetKeywordEnglishName(), 1);
         } else if (option == ModifyOption.Remove) {
             baseCard.keywords.RemoveAll(x => x == keyword);
             evolveCard?.keywords.RemoveAll(x => x == keyword);
-            actionController.SetIdentifier(keyword.GetKeywordEnglishName(), 0);
+            buffController.buffs?.ForEach(x => x.keywords.RemoveAll(y => y == keyword));
+            //actionController.SetIdentifier(keyword.GetKeywordEnglishName(), 0);
         }
     }
 
@@ -416,7 +449,8 @@ public class BattleCard : IIdentifyHandler
         return buffController.TakeHeal(heal);
     }
 
-    public void TakeBuff(CardStatus status, Func<bool> untilCondition) {
+    public void TakeBuff(CardStatus status, string untilCondition) {
+
         buffController.TakeBuff(status, untilCondition);
     }
 
@@ -427,15 +461,22 @@ public class BattleCard : IIdentifyHandler
         return add;
     }
 
-    public void RemoveEffectWithTiming(string timing = "all") {
-        baseCard.ClearEffects(timing);
-        evolveCard.ClearEffects(timing);
-        newEffects.RemoveAll(x => (timing == "all") || (timing == x.Value.timing));
+    public void OnTurnStart()
+    {
+        actionController.OnTurnStartInField();
+        buffController.OnTurnStart();
+    }
 
-        if (timing == "all") {    
-            foreach (var keyword in CardDatabase.KeywordEffects)
-                SetKeyword(keyword, ModifyOption.Remove);
-        }
+    public void RemoveEffect(string timing = "all", int id = 0, CardKeyword keyword = CardKeyword.None) {
+        baseCard.ClearEffects(timing, id, keyword);
+        evolveCard.ClearEffects(timing, id, keyword);
+        buffController.buffs.ForEach(x => x.ClearEffects(timing, id, keyword));
+        //newEffects.RemoveAll(x => (timing == "all") || (timing == x.Value.timing));
+
+        /*if (timing == "all") {    
+            foreach (var cardKeyword in CardDatabase.keywords)
+                SetKeyword(cardKeyword, ModifyOption.Remove);
+        }*/
     }
 
 }

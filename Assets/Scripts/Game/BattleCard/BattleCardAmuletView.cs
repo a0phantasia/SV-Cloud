@@ -59,12 +59,12 @@ public class BattleCardAmuletView : BattleBaseView
         var currentCard = card.CurrentCard;
         var effects = currentCard.effects;
     
-        flagResultDict.Set("lastword", effects.Exists(x => x.timing == "on_this_destroy"));
+        flagResultDict.Set("lastword", effects.Exists(x => x.keywords.Contains(CardKeyword.Lastword)));
         flagResultDict.Set("flag", effects.Exists(x => ((x.timing.TryTrimStart("on_", out var trimTiming)) && (!trimTiming.StartsWith("this_")))
             || (x.timing == "on_this_attack") || (x.timing == "on_this_defense") || (x.timing == "on_this_evolve")));
         
-        flagResultDict.Set("bane", card.actionController.IsKeywordAvailable(CardKeyword.Bane));
-        flagResultDict.Set("drain", card.actionController.IsKeywordAvailable(CardKeyword.Drain));
+        flagResultDict.Set("bane", card.IsKeywordAvailable(CardKeyword.Bane));
+        flagResultDict.Set("drain", card.IsKeywordAvailable(CardKeyword.Drain));
         flagResultDict.Set("earth", currentCard.traits.Contains(CardTrait.Earth));
     }
 

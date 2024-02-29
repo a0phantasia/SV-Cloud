@@ -6,6 +6,7 @@ using UnityEngine;
 
 public class PortalSearchModel : IMonoBehaviour
 {
+    //改为使用字典存储
     public CardFilter filter = new CardFilter(1);
 
     public void Clear() {

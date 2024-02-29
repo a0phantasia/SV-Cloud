@@ -201,6 +201,7 @@ public class ResourceManager : Singleton<ResourceManager>
 
         foreach (var entry in cardInfoDict) {
             var card = entry.Value;
+            //TODO
             if (!card.keywords.Exists(x => (x == CardKeyword.Accelerate) || (x == CardKeyword.Crystalize)))
                 continue;
 
@@ -228,26 +229,36 @@ public class ResourceManager : Singleton<ResourceManager>
         return cardInfoDict;
     }
 
-    public void LoadCardInfo(Action<Dictionary<int, Card>> onCardSuccess = null, Action<Dictionary<int, Effect>> onEffectSuccess = null) {
+    public void LoadCardInfo(Action<Dictionary<int, Card>> onCardSuccess = null, Action<Dictionary<int, Effect>> onEffectSuccess = null, Action<Dictionary<int, Buff>> onBuffSuccess = null) {
         LoadCSV(cardUrl + "info.csv", (data) => {
             var cardInfoDict = GetInfo<Card>(data, Card.DATA_COL, (d, i) => new Card(d, i));
-            LoadCardEffect(cardInfoDict, onCardSuccess, onEffectSuccess);
+            LoadCardEffect(cardInfoDict, onCardSuccess, onEffectSuccess, onBuffSuccess);
         });
     }
 
-    private void LoadCardEffect(Dictionary<int, Card> info, Action<Dictionary<int, Card>> onCardSuccess = null, Action<Dictionary<int, Effect>> onEffectSuccess = null) {
+    private void LoadCardEffect(Dictionary<int, Card> info, Action<Dictionary<int, Card>> onCardSuccess = null, Action<Dictionary<int, Effect>> onEffectSuccess = null, Action<Dictionary<int, Buff>> onBuffSuccess = null) {
         LoadCSV(cardUrl + "effect.csv", (data) => {
             var effectDict = GetInfo<Effect>(data, Effect.DATA_COL, (d, i) => new Effect(d, i));
             onEffectSuccess?.Invoke(effectDict);
 
-            LoadCardDescription(info, effectDict, onCardSuccess);
+            LoadCardDescription(info, effectDict, onCardSuccess, onBuffSuccess);
         });
     }
 
-    private void LoadCardDescription(Dictionary<int, Card> info, Dictionary<int, Effect> effect, Action<Dictionary<int, Card>> onCardSuccess = null) {
+    private void LoadCardDescription(Dictionary<int, Card> info, Dictionary<int, Effect> effect, Action<Dictionary<int, Card>> onCardSuccess = null, Action<Dictionary<int, Buff>> onBuffSuccess = null) {
         LoadCSV(cardUrl + "description.csv", (data) => {
             var descInfoDict = GetDescriptionInfoDict(data, Card.DESC_COL);
             onCardSuccess?.Invoke(GetCardInfo(info, effect, descInfoDict));
+
+            LoadBuff(onBuffSuccess);
+        });
+    }
+
+    private void LoadBuff(Action<Dictionary<int, Buff>> onBuffSuccess = null)
+    {
+        LoadCSV(cardUrl + "buff.csv", (data) => {
+            var buffDict = GetInfo<Buff>(data, Buff.DATA_COL, (d, i) => new Buff(d, i));
+            onBuffSuccess?.Invoke(buffDict);
         });
     }
 

@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System;
@@ -19,7 +19,7 @@ public class GameManager : Singleton<GameManager>
     public static event Action<GameState> OnAfterStateChanged;
     protected override void Awake() {
         base.Awake();
-        
+        Debug.Log(serverUrl);
         if (versionData == null)
             ChangeState(GameState.Init);
     }

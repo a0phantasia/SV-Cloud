@@ -2,6 +2,7 @@ using System;
 using System.Linq;
 using System.Collections;
 using System.Collections.Generic;
+using System.Text.RegularExpressions;
 using UnityEngine;
 
 namespace System {
@@ -48,10 +49,25 @@ public static class String {
     public static string GetDescription(this string data, string defaultReturn = null) {
         var desc = data.TrimEnd('\n', '\t', '\r', ' ').Replace("[ENDL]", "\n");
 
+        desc = CardDatabase.descPattern.Replace(desc, m => {
+            var content = m.Groups[1].Value;
+            if (int.TryParse(content, out var id))
+            {
+                Debug.Log(content);
+                return $"<color=#ffbb00>{Card.Get(id).name}</color>";
+            }
+            else
+            {
+                return $"<color=#ffbb00>{content}</color>";
+            }
+        });
+
         if (desc == "none")
             return defaultReturn;
+        else
+            return desc;
 
-        return desc.Replace("[-]", "</color>").Replace("[", "<color=#").Replace("]", ">");
+        //return desc.Replace("[-]", "</color>").Replace("[", "<color=#").Replace("]", ">");
     }
 
     public static string ConcatToString(this IEnumerable<string> data, string lineEnd = "\n", bool trimEnd = true) {

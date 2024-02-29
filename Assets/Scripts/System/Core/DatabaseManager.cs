@@ -1,4 +1,4 @@
-﻿using System.Linq;
+using System.Linq;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -12,6 +12,7 @@ public class DatabaseManager : Singleton<DatabaseManager>
     public List<Card> cardMaster = new List<Card>();
     public Dictionary<int, Card> cardInfoDict = new Dictionary<int, Card>();
     public Dictionary<int, Effect> effectInfoDict = new Dictionary<int, Effect>();
+    public Dictionary<int, Buff> buffInfoDict = new Dictionary<int, Buff>();
     public Dictionary<CardTrait, string> traitNameDict = new Dictionary<CardTrait, string>();
     public Dictionary<CardKeyword, string> keywordNameDict = new Dictionary<CardKeyword, string>();
     public Dictionary<CardKeyword, string> keywordEnglishNameDict = new Dictionary<CardKeyword, string>();
@@ -25,7 +26,7 @@ public class DatabaseManager : Singleton<DatabaseManager>
             cardInfoDict = x; 
             cardMaster = cardInfoDict.Select(entry => entry.Value).ToList();
             loadingProgress += 1;
-        }, (y) => effectInfoDict = y);
+        }, (y) => effectInfoDict = y, (z) => buffInfoDict = z);
 
         RM.LoadTraitInfo((x) => {
             traitNameDict = x.ToDictionary(entry => (CardTrait)entry.Key, entry => entry.Value[0]);
@@ -74,7 +75,15 @@ public class DatabaseManager : Singleton<DatabaseManager>
 
         return effectInfoDict.Get(id);
     }
-    
+
+    public Buff GetBuffInfo(int id)
+    {
+        if (id == 0)
+            return null;
+
+        return buffInfoDict.Get(id);
+    }
+
     public string GetTraitName(CardTrait trait) {
         return traitNameDict.Get(trait, "-");
     }

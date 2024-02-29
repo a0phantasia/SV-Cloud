@@ -29,11 +29,32 @@ public static class Identifier {
         }
         
         if (id.TryTrimStart("sourceEffect.", out trimId))
-            return effect.GetSourceEffectIdentifier(trimId, state);
+            return effect.sourceEffect.GetSourceEffectIdentifier(trimId, state);
 
         if (id.TryTrimStart("effect.", out trimId))
             return effect.GetIdentifier(trimId);
         
+        if (id.TryTrimStart("me.", out trimId))
+            return lhsUnit.GetIdentifier(trimId);
+
+        if (id.TryTrimStart("op.", out trimId))
+            return rhsUnit.GetIdentifier(trimId);
+
+        return GetNumIdentifier(id);
+    }
+
+    public static float GetIdentifier(string id, Buff buff, BattleState state)
+    {
+        var trimId = string.Empty;
+        var lhsUnit = state.GetBelongUnit(buff.source);
+        var rhsUnit = state.GetRhsUnitById(lhsUnit.id);
+
+        if (id.TryTrimStart("sourceEffect.", out trimId))
+            return buff.sourceEffect.GetSourceEffectIdentifier(trimId, state);
+
+        if (id.TryTrimStart("buff.", out trimId))
+            return buff.GetIdentifier(trimId);
+
         if (id.TryTrimStart("me.", out trimId))
             return lhsUnit.GetIdentifier(trimId);
 

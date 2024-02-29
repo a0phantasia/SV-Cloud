@@ -9,10 +9,14 @@ public static class Operator {
         {"<", LessThan},
         {">", GreaterThan},
         {"=", Equal},
-        {"[LTE]", LessThanOrEqual},
-        {"[GTE]", GreaterThanOrEqual},
-        {"[NOT]", NotEqual}
+        {"<=", LessThanOrEqual},
+        {">=", GreaterThanOrEqual},
+        {"!=", NotEqual},
+        {"!", NotEqual},
     };
+
+    public static List<string> sortedCondDict = Operator.condDict.Keys.OrderByDescending(op => op.Length).ToList();
+
     public static bool Condition(string op, float lhs, float rhs) {
         return condDict.ContainsKey(op) ? condDict.Get(op).Invoke(lhs, rhs) : false;
     }
@@ -87,6 +91,30 @@ public static class Operator {
     }
     public static float Set(float lhs, float rhs) {
         return rhs;
+    }
+
+    public static Dictionary<string, Func<bool, bool, bool>> logDict { get; } = new Dictionary<string, Func<bool, bool, bool>>() {
+        { "&", And}, { "|", Or}, {"!", Not}
+    };
+
+    public static bool Logic(string op, bool lhs, bool rhs)
+    {
+        return logDict.ContainsKey(op) ? logDict.Get(op).Invoke(lhs, rhs) : false;
+    }
+
+    public static bool And(bool lhs, bool rhs)
+    {
+        return lhs && rhs;
+    }
+
+    public static bool Or(bool lhs, bool rhs)
+    {
+        return lhs || rhs;
+    }
+
+    public static bool Not(bool lhs, bool rhs)
+    {
+        return !rhs;
     }
 
 }

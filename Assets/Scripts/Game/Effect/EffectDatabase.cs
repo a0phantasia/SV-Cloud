@@ -33,7 +33,7 @@ public static class EffectDatabase {
         {"return",          EffectAbility.Return        },
         {"transform",       EffectAbility.Transform     },
         {"buff",            EffectAbility.Buff          },
-        {"debuff",          EffectAbility.Debuff        },
+        {"remove_buff",     EffectAbility.RemoveBuff    },
 
         {"get_token",       EffectAbility.GetToken      },
         {"boost",           EffectAbility.SpellBoost    },
@@ -86,7 +86,7 @@ public class EffectTargetInfo
     public List<BattlePlaceId> places;
     public int num;
     public List<string> mode;
-    public BattleCardFilter filter = new BattleCardFilter(-1);
+    public BattleCardFilter filter = new BattleCardFilter();
     public List<string> options;
 
     public static EffectTargetInfo Parse(Effect effect, BattleState state) {
@@ -127,7 +127,7 @@ public enum EffectAbility {
     Return      = 107,
     Transform   = 108,
     Buff        = 109,
-    Debuff      = 110,
+    RemoveBuff  = 110,
 
     GetToken    = 111,
     SpellBoost  = 112,

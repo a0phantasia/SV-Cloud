@@ -18,10 +18,10 @@ public class BattleCardEffectView : IMonoBehaviour
             effectObjects.ForEach(x => x?.SetActive(false));
             return;
         }
-        effectObjects[0]?.SetActive(card.actionController.IsKeywordAvailable(CardKeyword.Ward));
-        effectObjects[1]?.SetActive(card.actionController.IsKeywordAvailable(CardKeyword.Ambush));
-        effectObjects[2]?.SetActive(card.actionController.IsKeywordAvailable(CardKeyword.Pressure));
-        effectObjects[3]?.SetActive(card.actionController.IsKeywordAvailable(CardKeyword.Aura));
+        effectObjects[0]?.SetActive(card.IsKeywordAvailable(CardKeyword.Ward));
+        effectObjects[1]?.SetActive(card.IsKeywordAvailable(CardKeyword.Ambush));
+        effectObjects[2]?.SetActive(card.IsKeywordAvailable(CardKeyword.Pressure));
+        effectObjects[3]?.SetActive(card.IsKeywordAvailable(CardKeyword.Aura));
     }
 
     public void SetTargeting(bool isTargeting) {

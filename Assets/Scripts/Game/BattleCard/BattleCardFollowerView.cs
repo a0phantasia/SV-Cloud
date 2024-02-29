@@ -59,8 +59,8 @@ public class BattleCardFollowerView : BattleBaseView
         flagResultDict.Set("flag", effects.Exists(x => ((x.timing.TryTrimStart("on_", out var trimTiming)) && (!trimTiming.StartsWith("this_")))
             || (x.timing == "on_this_attack") || (x.timing == "on_this_defense") || (x.timing == "on_this_evolve")));
 
-        flagResultDict.Set("bane", card.actionController.IsKeywordAvailable(CardKeyword.Bane));
-        flagResultDict.Set("drain", card.actionController.IsKeywordAvailable(CardKeyword.Drain));
+        flagResultDict.Set("bane", card.IsKeywordAvailable(CardKeyword.Bane));
+        flagResultDict.Set("drain", card.IsKeywordAvailable(CardKeyword.Drain));
         flagResultDict.Set("earth", currentCard.traits.Contains(CardTrait.Earth));
     }
 
